@@ -9,6 +9,7 @@
         {{ ucwords(str_replace('_', ' ', $setup->app_name)) }} |
         {{ ucwords(str_replace(['.', '_', 'index'], [' ', ' ', ''], Route::currentRouteName())) }}</title>
     <meta name="description" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('template.sneat.style')
 </head>
 <body>

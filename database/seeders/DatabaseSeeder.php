@@ -6,12 +6,17 @@ namespace Database\Seeders;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Setup;
+use App\Models\Account;
 use App\Models\Feature;
+use App\Models\TaxRate;
 use App\Models\Permission;
+use App\Models\SubAccount;
+use App\Models\MainAccount;
 use App\Models\AccountGroup;
-use Illuminate\Database\Seeder;
-use App\Models\FinancialStatement;
 use App\Models\NormalBalance;
+use Illuminate\Database\Seeder;
+use App\Models\CashFlowCategory;
+use App\Models\FinancialStatement;
 
 class DatabaseSeeder extends Seeder
 {
@@ -107,6 +112,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'edit_tax_rate')), 'route' => 'tax_rate.edit'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_tax_rate')), 'route' => 'tax_rate.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_tax_rate')), 'route' => 'tax_rate.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_journal')), 'route' => 'journal.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_journal')), 'route' => 'journal.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_journal')), 'route' => 'journal.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_journal')), 'route' => 'journal.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_journal')), 'route' => 'journal.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_journal')), 'route' => 'journal.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_journal')), 'route' => 'journal.destroy'],
         ];
         Feature::insert($features);
 
@@ -116,6 +128,12 @@ class DatabaseSeeder extends Seeder
                 "role_id" => 1,
             ]);
         }
+
+        CashFlowCategory::insert([
+            ["name" => "Aktifitas Operasi"],
+            ["name" => "Aktifitas Investasi"],
+            ["name" => "Aktifitas Pendanaan"],
+        ]);
 
         FinancialStatement::insert([
             ["id" => "B", "name" => "Balance Sheet"],
@@ -139,6 +157,49 @@ class DatabaseSeeder extends Seeder
             ["id" => "60", "financial_statement_id" => "I", "name" => "Beban Operasional"],
             ["id" => "70", "financial_statement_id" => "I", "name" => "Pendapatan Lain-lain"],
             ["id" => "80", "financial_statement_id" => "I", "name" => "Beban Lain-lain"],
+        ]);
+
+        MainAccount::insert([
+            ["id" => "101", "account_group_id" => "10", "name" => "Kas"],
+            ["id" => "102", "account_group_id" => "10", "name" => "Piutang Dagang"],
+            ["id" => "103", "account_group_id" => "11", "name" => "Tanah"],
+            ["id" => "104", "account_group_id" => "11", "name" => "Bangunan"],
+            ["id" => "201", "account_group_id" => "20", "name" => "Hutang Usaha"],
+            ["id" => "301", "account_group_id" => "30", "name" => "Modal Disetor"],
+            ["id" => "401", "account_group_id" => "40", "name" => "Penjualan"],
+            ["id" => "501", "account_group_id" => "50", "name" => "Harga Pokok Penjualan"],
+            ["id" => "601", "account_group_id" => "60", "name" => "Beban Gaji"],
+        ]);
+
+        SubAccount::insert([
+            ["id" => "1011", "main_account_id" => "101", "name" => "Kas di Bank"],
+            ["id" => "1012", "main_account_id" => "101", "name" => "Kas di Tangan"],
+            ["id" => "1021", "main_account_id" => "102", "name" => "Piutang Dagang Lokal"],
+            ["id" => "1022", "main_account_id" => "102", "name" => "Piutang Dagang Ekspor"],
+            ["id" => "1031", "main_account_id" => "103", "name" => "Tanah Perusahaan"],
+            ["id" => "1041", "main_account_id" => "104", "name" => "Bangunan Pabrik"],
+            ["id" => "2011", "main_account_id" => "201", "name" => "Hutang Usaha Lokal"],
+            ["id" => "3011", "main_account_id" => "301", "name" => "Modal Disetor Pemilik"],
+            ["id" => "4011", "main_account_id" => "401", "name" => "Penjualan Produk A"],
+        ]);
+
+        Account::insert([
+            ["id" => "10111", "sub_account_id" => "1011", "cash_flow_category_id" => null, "name" => "Kas di Bank Mandiri", "normal_balance_id" => "D", "initial_balance" => 10000000],
+            ["id" => "10112", "sub_account_id" => "1012", "cash_flow_category_id" => null, "name" => "Kas di Tangan", "normal_balance_id" => "D", "initial_balance" => 5000000],
+            ["id" => "10211", "sub_account_id" => "1021", "cash_flow_category_id" => null, "name" => "Piutang Dagang Lokal", "normal_balance_id" => "D", "initial_balance" => 3000000],
+            ["id" => "10311", "sub_account_id" => "1031", "cash_flow_category_id" => null, "name" => "Tanah Perusahaan", "normal_balance_id" => "D", "initial_balance" => 20000000],
+            ["id" => "10411", "sub_account_id" => "1041", "cash_flow_category_id" => null, "name" => "Bangunan Pabrik", "normal_balance_id" => "D", "initial_balance" => 15000000],
+            ["id" => "20111", "sub_account_id" => "2011", "cash_flow_category_id" => null, "name" => "Hutang Usaha Lokal", "normal_balance_id" => "C", "initial_balance" => 1000000],
+            ["id" => "30111", "sub_account_id" => "3011", "cash_flow_category_id" => null, "name" => "Modal Disetor Pemilik", "normal_balance_id" => "C", "initial_balance" => 50000000],
+            ["id" => "40111", "sub_account_id" => "4011", "cash_flow_category_id" => 1, "name" => "Penjualan Produk A", "normal_balance_id" => "C", "initial_balance" => 25000000],
+        ]);
+
+        TaxRate::insert([
+            ["name" => "PPN 10%", "rate" => 10.0],
+            ["name" => "PPH 21", "rate" => 5.0],
+            ["name" => "PPH 23", "rate" => 2.0],
+            ["name" => "PPH Badan", "rate" => 25.0],
+            ["name" => "Bebas Pajak", "rate" => 0.0],
         ]);
 
     }

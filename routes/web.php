@@ -5,16 +5,17 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SetupController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\JournalController;
+use App\Http\Controllers\TaxRateController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SubAccountController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\MainAccountController;
+use App\Http\Controllers\AccountGroupController;
+use App\Http\Controllers\NormalBalanceController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\FinancialStatementController;
-use App\Http\Controllers\MainAccountController;
-use App\Http\Controllers\NormalBalanceController;
-use App\Http\Controllers\SubAccountController;
-use App\Http\Controllers\TaxRateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::get('/setup', [SetupController::class, 'index'])->name('setup.index')->mi
 Route::put('/setup/{id}', [SetupController::class, 'update'])->name('setup.update')->middleware(['auth', 'check.permission']);
 Route::resource('/role', RoleController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/user', UserController::class)->middleware(['auth', 'check.permission']);
+Route::get('/activity_log', ActivityLogController::class)->name('activity_log')->middleware(['auth', 'check.permission']);
 Route::resource('/cash_flow_category', CashFlowCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/financial_statement', FinancialStatementController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/normal_balance', NormalBalanceController::class)->middleware(['auth', 'check.permission']);
@@ -43,6 +45,6 @@ Route::resource('/main_account', MainAccountController::class)->middleware(['aut
 Route::resource('/sub_account', SubAccountController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/account', AccountController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/tax_rate', TaxRateController::class)->middleware(['auth', 'check.permission']);
-Route::get('/activity_log', ActivityLogController::class)->name('activity_log')->middleware(['auth', 'check.permission']);
+Route::resource('/journal', JournalController::class)->middleware(['auth', 'check.permission']);
 
 

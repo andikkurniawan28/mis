@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('journals', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->constrained();
+            $table->double('debit');
+            $table->double('credit');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

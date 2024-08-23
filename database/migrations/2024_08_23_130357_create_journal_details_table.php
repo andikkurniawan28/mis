@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('journal_details', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('journal_id');
+            $table->foreign('journal_id')->references('id')->on('journals');
+            $table->string('account_id');
+            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->text('description');
+            $table->integer('item_order');
+            $table->double('debit');
+            $table->double('credit');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

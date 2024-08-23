@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('sub_account_id');
             $table->foreign('sub_account_id')->references('id')->on('sub_accounts');
-            $table->foreignId('cash_flow_category_id')->constrained();
+            $table->foreignId('cash_flow_category_id')->nullable()->constrained();
             $table->string('name')->unique();
             $table->string('normal_balance_id');
             $table->foreign('normal_balance_id')->references('id')->on('normal_balances');

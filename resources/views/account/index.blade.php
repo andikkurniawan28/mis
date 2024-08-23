@@ -37,7 +37,7 @@
                                     <td>{{ $account->id }}</td>
                                     <td>{{ $account->name }}</td>
                                     <td>{{ $account->sub_account->name }}</td>
-                                    <td>{{ $account->cash_flow_category->name }}</td>
+                                    <td>{{ $account->cash_flow_category->name ?? "-" }}</td>
                                     <td>{{ $account->normal_balance->name }}</td>
                                     <td>{{ $account->initial_balance }}</td>
                                     <td>

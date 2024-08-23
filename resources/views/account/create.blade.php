@@ -46,6 +46,20 @@
                             </div>
 
                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="cash_flow_category">
+                                    {{ ucwords(str_replace('_', ' ', 'cash_flow_category')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select class="form-control select2" id="cash_flow_category" name="cash_flow_category_id" width="100%">
+                                        <option value="" selected>None</option> <!-- Menambahkan opsi untuk 'null' -->
+                                        @foreach($cash_flow_categories as $cash_flow_category)
+                                            <option value="{{ $cash_flow_category->id }}">{{ $cash_flow_category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="sub_account">
                                     {{ ucwords(str_replace('_', ' ', 'sub_account')) }}
                                 </label>
@@ -98,6 +112,11 @@
 @section('additional_script')
 <script type="text/javascript">
     $(document).ready(function() {
+        $('#cash_flow_category').select2({
+            theme: 'bootstrap',
+            placeholder: "Select a cash_flow_category",
+            allowClear: true // Mengaktifkan opsi clearable
+        }),
         $('#sub_account').select2({
             theme: 'bootstrap',
             placeholder: "Select a sub_account"

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setup;
 use App\Models\Account;
 use App\Models\SubAccount;
-use App\Models\NormalBalance;
-use App\Models\Setup;
 use Illuminate\Http\Request;
+use App\Models\NormalBalance;
+use App\Models\CashFlowCategory;
 
 class AccountController extends Controller
 {
@@ -28,7 +29,8 @@ class AccountController extends Controller
         $setup = Setup::init();
         $sub_accounts = SubAccount::all();
         $normal_balances = NormalBalance::all();
-        return view('account.create', compact('setup', 'sub_accounts', 'normal_balances'));
+        $cash_flow_categories = CashFlowCategory::all();
+        return view('account.create', compact('setup', 'sub_accounts', 'normal_balances', 'cash_flow_categories'));
     }
 
     /**
@@ -42,6 +44,7 @@ class AccountController extends Controller
             "sub_account_id" => "required",
             "normal_balance_id" => "required",
             "initial_balance" => "required",
+            "cash_flow_category_id" => "nullable",
         ]);
         $account = Account::create($validated);
         return redirect()->back()->with("success", "Account has been created");
@@ -64,7 +67,8 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
         $sub_accounts = SubAccount::all();
         $normal_balances = NormalBalance::all();
-        return view('account.edit', compact('setup', 'account', 'sub_accounts', 'normal_balances'));
+        $cash_flow_categories = CashFlowCategory::all();
+        return view('account.edit', compact('setup', 'account', 'sub_accounts', 'normal_balances', 'cash_flow_categories'));
     }
 
     /**
@@ -79,6 +83,7 @@ class AccountController extends Controller
             "sub_account_id" => "required",
             "normal_balance_id" => "required",
             "initial_balance" => "required",
+            "cash_flow_category_id" => "nullable",
         ]);
         $account->update($validated);
         return redirect()->route('account.index')->with("success", "Account has been updated");
