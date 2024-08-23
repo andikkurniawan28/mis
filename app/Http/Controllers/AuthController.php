@@ -24,6 +24,12 @@ class AuthController extends Controller
         ]);
         if ($attempt){
             $request->session()->regenerate();
+
+            $from_datetime = Carbon::today()->addHours(6);
+            $to_datetime = $from_datetime->copy()->addHours(24);
+            $request->session()->put('from_datetime', $from_datetime);
+            $request->session()->put('to_datetime', $to_datetime);
+
             ActivityLog::insert(["user_id" => Auth::id(), "description" => "Logged in."]);
             return redirect()->intended();
         }
@@ -39,6 +45,13 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('login');
+    }
+
+    public static function changeDatetime(Request $request)
+    {
+        $request->session()->put('from_datetime', $request->input('from_datetime'));
+        $request->session()->put('to_datetime', $request->input('to_datetime'));
+        return redirect()->back()->with("success", "Timeframe has been updated");
     }
 
 }

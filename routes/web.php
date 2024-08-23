@@ -16,6 +16,7 @@ use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\NormalBalanceController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\FinancialStatementController;
+use App\Http\Controllers\LedgerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ use App\Http\Controllers\FinancialStatementController;
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'loginProcess'])->name('loginProcess');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/change_datetime', [AuthController::class, 'changeDatetime'])->name('change_datetime');
 Route::get('/', DashboardController::class)->name('dashboard')->middleware(['auth']);
 Route::get('/setup', [SetupController::class, 'index'])->name('setup.index')->middleware(['auth', 'check.permission']);
 Route::put('/setup/{id}', [SetupController::class, 'update'])->name('setup.update')->middleware(['auth', 'check.permission']);
@@ -46,5 +48,7 @@ Route::resource('/sub_account', SubAccountController::class)->middleware(['auth'
 Route::resource('/account', AccountController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/tax_rate', TaxRateController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/journal', JournalController::class)->middleware(['auth', 'check.permission']);
+Route::get('/ledger', [LedgerController::class, 'index'])->name('ledger.index')->middleware(['auth', 'check.permission']);
+Route::get('/ledger/data/{account_id}/{start_date}/{end_date}', [LedgerController::class, 'data'])->name('ledger.data');
 
 

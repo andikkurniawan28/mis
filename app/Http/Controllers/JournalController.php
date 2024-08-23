@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setup;
+use App\Models\Ledger;
 use App\Models\Account;
 use App\Models\Journal;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\JournalDetail;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class JournalController extends Controller
 {
@@ -73,6 +74,13 @@ class JournalController extends Controller
                     'debit' => $detail['debit'] ?? 0,
                     'credit' => $detail['credit'] ?? 0,
                 ]);
+                Ledger::create([
+                    'journal_id' => $journalId,
+                    'account_id' => $detail['account_id'],
+                    'description' => "Jurnal Umum {$detail['description']} {$journalId}",
+                    'debit' => $detail['debit'] ?? 0,
+                    'credit' => $detail['credit'] ?? 0,
+                ]);
             }
         });
 
@@ -118,6 +126,7 @@ class JournalController extends Controller
             ]);
 
             $journal->journal_detail()->delete();
+            Ledger::where('journal_id', $id)->delete();
 
             foreach ($request->details as $key => $detail) {
                 JournalDetail::create([
@@ -125,6 +134,13 @@ class JournalController extends Controller
                     'account_id' => $detail['account_id'],
                     'description' => $detail['description'],
                     'item_order' => $key + 1,
+                    'debit' => $detail['debit'] ?? 0,
+                    'credit' => $detail['credit'] ?? 0,
+                ]);
+                Ledger::create([
+                    'journal_id' => $journal->id,
+                    'account_id' => $detail['account_id'],
+                    'description' => "Jurnal Umum {$detail['description']} {$journal->id}",
                     'debit' => $detail['debit'] ?? 0,
                     'credit' => $detail['credit'] ?? 0,
                 ]);
@@ -140,6 +156,7 @@ class JournalController extends Controller
         DB::transaction(function () use ($id) {
             $journal = Journal::findOrFail($id);
             $journal->journal_detail()->delete();
+            Ledger::where('journal_id', $id)->delete();
             $journal->delete();
         });
 

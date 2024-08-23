@@ -91,7 +91,8 @@
             in_array('sub_account.index', $permissions) ||
             in_array('account.index', $permissions) ||
             in_array('tax_rate.index', $permissions) ||
-            in_array('journal.index', $permissions)
+            in_array('journal.index', $permissions) ||
+            in_array('ledger.index', $permissions)
             )
             <li
                 class="menu-item
@@ -103,7 +104,8 @@
                 @yield('sub_account-active')
                 @yield('account-active')
                 @yield('tax_rate-active')
-                @yield('tax_rate-active')
+                @yield('journal-active')
+                @yield('ledger-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-wallet-alt"></i>
@@ -178,6 +180,14 @@
                         <li class="menu-item @yield('journal-active')">
                             <a href="{{ route('journal.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'journal')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('ledger.index', $permissions))
+                        <li class="menu-item @yield('ledger-active')">
+                            <a href="{{ route('ledger.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'ledger')) }}
                                 </div>
                             </a>
                         </li>
