@@ -83,6 +83,7 @@
         @endif
 
         @if (
+            in_array('cash_flow_category.index', $permissions) ||
             in_array('financial_statement.index', $permissions) ||
             in_array('normal_balance.index', $permissions) ||
             in_array('account_group.index', $permissions) ||
@@ -93,6 +94,7 @@
             )
             <li
                 class="menu-item
+                @yield('cash_flow_category-active')
                 @yield('financial_statement-active')
                 @yield('normal_balance-active')
                 @yield('account_group-active')
@@ -106,6 +108,14 @@
                     <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'finance')) }}</div>
                 </a>
                 <ul class="menu-sub">
+                    @if (in_array('cash_flow_category.index', $permissions))
+                    <li class="menu-item @yield('cash_flow_category-active')">
+                        <a href="{{ route('cash_flow_category.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'cash_flow_category')) }}
+                            </div>
+                        </a>
+                    </li>
+                    @endif
                     @if (in_array('financial_statement.index', $permissions))
                         <li class="menu-item @yield('financial_statement-active')">
                             <a href="{{ route('financial_statement.index') }}" class="menu-link">

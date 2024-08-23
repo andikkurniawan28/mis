@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'account')) }}
+    {{ ucwords(str_replace('_', ' ', 'cash_flow_category')) }}
 @endsection
 
-@section('account-active')
+@section('cash_flow_category-active')
     {{ 'active' }}
 @endsection
 
@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('account.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('cash_flow_category.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
@@ -24,26 +24,18 @@
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'sub_account')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'cash_flow_category')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'initial_balance')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($accounts as $account)
+                            @foreach ($cash_flow_categories as $cash_flow_category)
                                 <tr>
-                                    <td>{{ $account->id }}</td>
-                                    <td>{{ $account->name }}</td>
-                                    <td>{{ $account->sub_account->name }}</td>
-                                    <td>{{ $account->cash_flow_category->name }}</td>
-                                    <td>{{ $account->normal_balance->name }}</td>
-                                    <td>{{ $account->initial_balance }}</td>
+                                    <td>{{ $cash_flow_category->id }}</td>
+                                    <td>{{ $cash_flow_category->name }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('account.edit', $account->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $account->id }}" data-name="{{ $account->name }}">Delete</button>
+                                            <a href="{{ route('cash_flow_category.edit', $cash_flow_category->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $cash_flow_category->id }}" data-name="{{ $cash_flow_category->name }}">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -61,8 +53,8 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    const account_id = this.getAttribute('data-id');
-                    const account_name = this.getAttribute('data-name');
+                    const cash_flow_category_id = this.getAttribute('data-id');
+                    const cash_flow_category_name = this.getAttribute('data-name');
                     Swal.fire({
                         title: 'Are you sure?',
                         text: 'You won\'t be able to revert this!',
@@ -76,8 +68,8 @@
                             const form = document.createElement('form');
                             form.setAttribute('method', 'POST');
                             form.setAttribute('action',
-                                `{{ route('account.destroy', ':id') }}`.replace(
-                                    ':id', account_id));
+                                `{{ route('cash_flow_category.destroy', ':id') }}`.replace(
+                                    ':id', cash_flow_category_id));
                             const csrfToken = document.getElementsByName("_token")[0].value;
 
                             const hiddenMethod = document.createElement('input');
@@ -88,7 +80,7 @@
                             const name = document.createElement('input');
                             name.setAttribute('type', 'hidden');
                             name.setAttribute('name', 'name');
-                            name.setAttribute('value', account_name);
+                            name.setAttribute('value', cash_flow_category_name);
 
                             const csrfTokenInput = document.createElement('input');
                             csrfTokenInput.setAttribute('type', 'hidden');

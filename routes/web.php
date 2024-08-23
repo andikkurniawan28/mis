@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\FinancialStatementController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\NormalBalanceController;
@@ -34,6 +35,7 @@ Route::get('/setup', [SetupController::class, 'index'])->name('setup.index')->mi
 Route::put('/setup/{id}', [SetupController::class, 'update'])->name('setup.update')->middleware(['auth', 'check.permission']);
 Route::resource('/role', RoleController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/user', UserController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/cash_flow_category', CashFlowCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/financial_statement', FinancialStatementController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/normal_balance', NormalBalanceController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/account_group', AccountGroupController::class)->middleware(['auth', 'check.permission']);
