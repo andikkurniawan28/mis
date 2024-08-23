@@ -42,14 +42,15 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hovered" id="ledger_table" width="100%">
+                    <table class="table table-hovered" id="ledger_table" width="100%">
                         <thead>
                             <tr>
-                                <th>{{ ucwords(str_replace('_', ' ', 'timestamp')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'time')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'description')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'debit')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'balance')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'user')) }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -110,6 +111,10 @@
                     {
                         data: 'balance',
                         name: 'balance'
+                    },
+                    {
+                        data: 'user.name',
+                        name: 'user.name'
                     },
                 ],
                 "bPaginate": false, // Menonaktifkan pagination

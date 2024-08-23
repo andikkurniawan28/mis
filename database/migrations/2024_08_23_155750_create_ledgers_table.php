@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('journal_id')->references('id')->on('journals');
             $table->string('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
+            $table->foreignId('user_id')->constrained();
             $table->text('description');
             $table->double('debit');
             $table->double('credit');

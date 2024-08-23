@@ -80,6 +80,7 @@ class JournalController extends Controller
                     'description' => "Jurnal Umum {$detail['description']} {$journalId}",
                     'debit' => $detail['debit'] ?? 0,
                     'credit' => $detail['credit'] ?? 0,
+                    'user_id' => auth()->id(),
                 ]);
             }
         });
@@ -143,6 +144,7 @@ class JournalController extends Controller
                     'description' => "Jurnal Umum {$detail['description']} {$journal->id}",
                     'debit' => $detail['debit'] ?? 0,
                     'credit' => $detail['credit'] ?? 0,
+                    'user_id' => auth()->id(),
                 ]);
             }
         });

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\TaxRateController;
@@ -13,10 +14,10 @@ use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\AccountGroupController;
+use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\NormalBalanceController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\FinancialStatementController;
-use App\Http\Controllers\LedgerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,5 +51,8 @@ Route::resource('/tax_rate', TaxRateController::class)->middleware(['auth', 'che
 Route::resource('/journal', JournalController::class)->middleware(['auth', 'check.permission']);
 Route::get('/ledger', [LedgerController::class, 'index'])->name('ledger.index')->middleware(['auth', 'check.permission']);
 Route::get('/ledger/data/{account_id}/{start_date}/{end_date}', [LedgerController::class, 'data'])->name('ledger.data');
+Route::get('/balance_sheet', [BalanceSheetController::class, 'index'])->name('balance_sheet.index');
+Route::get('/balance_sheet/data/{year}/{month}', [BalanceSheetController::class, 'data'])->name('balance_sheet.data');
+
 
 

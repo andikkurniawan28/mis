@@ -35,7 +35,7 @@ class LedgerController extends Controller
         $totalCreditBefore = $initialBalanceQuery->sum('credit');
 
         // Ambil data Ledger dalam periode yang diminta
-        $data = Ledger::with('account')
+        $data = Ledger::with('account', 'user')
             ->where('account_id', $accountId)
             ->whereBetween('created_at', [$fromDatetime, $toDatetime])
             ->orderBy('created_at', 'asc')
@@ -63,6 +63,7 @@ class LedgerController extends Controller
             'debit' => $totalDebitBefore,
             'credit' => $totalCreditBefore,
             'balance' => $initialBalance,
+            'user' => (object) ['name' => '']
         ];
 
         // Variabel untuk menyimpan total debit dan credit selama periode
@@ -87,6 +88,7 @@ class LedgerController extends Controller
                 'debit' => $debit,
                 'credit' => $credit,
                 'balance' => $runningBalance,
+                'user' => $row->user,
             ];
 
             // Update total debit dan credit selama periode
@@ -111,6 +113,7 @@ class LedgerController extends Controller
             'debit' => $totalDebitDuring,
             'credit' => $totalCreditDuring,
             'balance' => $finalBalance,
+            'user' => (object) ['name' => '']
         ];
 
         return Datatables::of(collect($results))

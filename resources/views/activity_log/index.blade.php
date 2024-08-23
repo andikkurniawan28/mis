@@ -34,6 +34,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#activity_log_table').DataTable({
+                layout: {
+                    bottomStart: {
+                        buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
+                    },
+                },
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('activity_log') }}",
