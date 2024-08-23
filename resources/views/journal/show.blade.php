@@ -34,13 +34,15 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Date</th>
-                                            <th>User</th>
+                                            <th>Timestamp</th>
+                                            <th>Admin</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>{{ $journal->id }}</td>
                                             <td>{{ $journal->created_at->format('d M Y') }}</td>
+                                            <td>{{ $journal->created_at }}</td>
                                             <td>{{ $journal->user->name }}</td>
                                         </tr>
                                     </tbody>
