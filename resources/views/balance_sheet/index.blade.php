@@ -32,14 +32,18 @@
                 <!-- Form untuk Tahun dan Bulan -->
                 <div class="row mb-3">
                     <div class="col-md-4">
+                        <label>Year</label>
                         <input type="number" id="year" class="form-control" placeholder="Year" value="{{ date('Y') }}">
                     </div>
                     <div class="col-md-4">
+                        <label>Month</label>
                         <input type="number" id="month" class="form-control" placeholder="Month (1-12)"
                             value="{{ date('m') }}" min="1" max="12">
                     </div>
                     <div class="col-md-4">
+                        <br>
                         <button id="submit_button" class="btn btn-primary">Generate Report</button>
+                        <button id="print_pdf_button" class="btn btn-secondary">Print PDF</button>
                     </div>
                 </div>
 
@@ -58,6 +62,8 @@
                                     <!-- Data akan diisi oleh JavaScript -->
                                 </tbody>
                             </table>
+
+                            <br>
                         </div>
                         <div class="col-md-6">
 
@@ -87,6 +93,20 @@
                                 </tbody>
                             </table>
 
+                            <br>
+
+                            <table class="table table-bordered table-sm" id="comparison_table">
+                                <thead>
+                                    <tr>
+                                        <td class="text-primary"><strong>Comparison</strong></td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data akan diisi oleh JavaScript -->
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                 </div>
@@ -96,6 +116,10 @@
 @endsection
 
 @section("additional_script")
+    <!-- Tambahkan link ke jsPDF dan html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('#submit_button').click(function() {
@@ -115,6 +139,7 @@
                         $('#assets_table tbody').empty();
                         $('#liabilities_table tbody').empty();
                         $('#equity_table tbody').empty();
+                        $('#comparison_table tbody').empty();
 
                         // Inisialisasi total
                         var total_assets = 0;
@@ -130,7 +155,7 @@
                                 assets_html += `
                                     <tr>
                                         <td><div class="account_group text-dark"><strong>${account_group.name}</strong></div></td>
-                                        <td>${number_format(group_total)}</td>
+                                        <td><div class="text-dark"><strong>${number_format(group_total)}</strong></div></td>
                                     </tr>`;
 
                                 total_assets += group_total;
@@ -144,8 +169,6 @@
                                             <td>${number_format(main_total)}</td>
                                         </tr>`;
 
-                                    total_assets += main_total;
-
                                     $.each(main_account.sub_account, function(index, sub_account) {
                                         var sub_total = sub_account.balance_sheet;
 
@@ -155,8 +178,6 @@
                                                 <td>${number_format(sub_total)}</td>
                                             </tr>`;
 
-                                        total_assets += sub_total;
-
                                         $.each(sub_account.account, function(index, account) {
                                             var account_total = account.balance_sheet;
 
@@ -165,8 +186,6 @@
                                                     <td><div class="account text-dark">${account.name}</div></td>
                                                     <td>${number_format(account_total)}</td>
                                                 </tr>`;
-
-                                            total_assets += account_total;
                                         });
                                     });
                                 });
@@ -189,7 +208,7 @@
                                 liabilities_html += `
                                     <tr>
                                         <td><div class="account_group text-dark"><strong>${account_group.name}</strong></div></td>
-                                        <td>${number_format(group_total)}</td>
+                                        <td><div class="text-dark"><strong>${number_format(group_total)}</strong></div></td>
                                     </tr>`;
 
                                 total_liabilities += group_total;
@@ -203,8 +222,6 @@
                                             <td>${number_format(main_total)}</td>
                                         </tr>`;
 
-                                    total_liabilities += main_total;
-
                                     $.each(main_account.sub_account, function(index, sub_account) {
                                         var sub_total = sub_account.balance_sheet;
 
@@ -214,8 +231,6 @@
                                                 <td>${number_format(sub_total)}</td>
                                             </tr>`;
 
-                                        total_liabilities += sub_total;
-
                                         $.each(sub_account.account, function(index, account) {
                                             var account_total = account.balance_sheet;
 
@@ -224,8 +239,6 @@
                                                     <td><div class="account text-dark">${account.name}</div></td>
                                                     <td>${number_format(account_total)}</td>
                                                 </tr>`;
-
-                                            total_liabilities += account_total;
                                         });
                                     });
                                 });
@@ -248,7 +261,7 @@
                                 equity_html += `
                                     <tr>
                                         <td><div class="account_group text-dark"><strong>${account_group.name}</strong></div></td>
-                                        <td>${number_format(group_total)}</td>
+                                        <td><div class="text-dark"><strong>${number_format(group_total)}</strong></div></td>
                                     </tr>`;
 
                                 total_equity += group_total;
@@ -262,8 +275,6 @@
                                             <td>${number_format(main_total)}</td>
                                         </tr>`;
 
-                                    total_equity += main_total;
-
                                     $.each(main_account.sub_account, function(index, sub_account) {
                                         var sub_total = sub_account.balance_sheet;
 
@@ -273,8 +284,6 @@
                                                 <td>${number_format(sub_total)}</td>
                                             </tr>`;
 
-                                        total_equity += sub_total;
-
                                         $.each(sub_account.account, function(index, account) {
                                             var account_total = account.balance_sheet;
 
@@ -283,8 +292,6 @@
                                                     <td><div class="account text-dark">${account.name}</div></td>
                                                     <td>${number_format(account_total)}</td>
                                                 </tr>`;
-
-                                            total_equity += account_total;
                                         });
                                     });
                                 });
@@ -297,7 +304,47 @@
                                 <td><strong>${number_format(total_equity)}</strong></td>
                             </tr>
                         `);
+
+                        // Tampilkan tabel perbandingan
+                        $('#comparison_table tbody').append(`
+                            <tr>
+                                <td><strong>Total Liabilities + Equity</strong></td>
+                                <td><strong>${number_format(total_liabilities + total_equity)}</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Assets</strong></td>
+                                <td><strong>${number_format(total_assets)}</strong></td>
+                            </tr>
+                        `);
                     }
+                });
+            });
+
+            $('#print_pdf_button').click(function() {
+                html2canvas(document.querySelector("#balance_sheet_report"), {
+                    scale: 2 // Skala untuk meningkatkan kualitas gambar
+                }).then(canvas => {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = pdf.internal.pageSize.getWidth();
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    let heightLeft = imgHeight;
+                    let position = 0;
+
+                    // Menambahkan halaman pertama
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pdf.internal.pageSize.height;
+
+                    // Menambahkan halaman-halaman berikutnya jika diperlukan
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pdf.internal.pageSize.height;
+                    }
+
+                    pdf.save('balance_sheet.pdf');
                 });
             });
         });
@@ -310,5 +357,3 @@
         }
     </script>
 @endsection
-
-
