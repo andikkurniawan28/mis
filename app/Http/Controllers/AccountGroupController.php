@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setup;
 use App\Models\AccountGroup;
 use Illuminate\Http\Request;
+use App\Models\NormalBalance;
 use App\Models\FinancialStatement;
 
 class AccountGroupController extends Controller
@@ -26,7 +27,8 @@ class AccountGroupController extends Controller
     {
         $setup = Setup::init();
         $financial_statements = FinancialStatement::all();
-        return view('account_group.create', compact('setup', 'financial_statements'));
+        $normal_balances = NormalBalance::all();
+        return view('account_group.create', compact('setup', 'financial_statements', 'normal_balances'));
     }
 
     /**
@@ -38,6 +40,7 @@ class AccountGroupController extends Controller
             "id" => "required|unique:account_groups",
             "name" => "required|unique:account_groups",
             "financial_statement_id" => "required",
+            "normal_balance_id" => "required",
         ]);
         $account_group = AccountGroup::create($validated);
         return redirect()->back()->with("success", "Account Group has been created");
@@ -59,7 +62,8 @@ class AccountGroupController extends Controller
         $setup = Setup::init();
         $account_group = AccountGroup::findOrFail($id);
         $financial_statements = FinancialStatement::all();
-        return view('account_group.edit', compact('setup', 'account_group', 'financial_statements'));
+        $normal_balances = NormalBalance::all();
+        return view('account_group.edit', compact('setup', 'account_group', 'financial_statements', 'normal_balances'));
     }
 
     /**
@@ -72,6 +76,7 @@ class AccountGroupController extends Controller
             'id' => 'required|unique:account_groups,id,' . $account_group->id,
             'name' => 'required|unique:account_groups,name,' . $account_group->id,
             "financial_statement_id" => "required",
+            "normal_balance_id" => "required",
         ]);
         $account_group->update($validated);
         return redirect()->route('account_group.index')->with("success", "Account Group has been updated");

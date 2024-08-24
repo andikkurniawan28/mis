@@ -9,10 +9,19 @@
 @endsection
 
 @section('content')
+    <style>
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    </style>
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card">
             <div class="card-body">
-                <h4>List of <strong>@yield('title')</strong></h4>
+                <h4><strong>@yield('title')</strong></h4>
 
                 <!-- Form untuk Select2 dan Tanggal -->
                 <div class="row mb-3">
@@ -25,7 +34,8 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <input type="date" id="start_date" class="form-control" placeholder="Start Date" value="{{ date('Y-m-d') }}">
+                        <input type="date" id="start_date" class="form-control" placeholder="Start Date"
+                            value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="col-md-3">
                         <?php
@@ -34,7 +44,8 @@
                         // Menambahkan satu hari
                         $nextDay = $today->modify('+1 day')->format('Y-m-d');
                         ?>
-                        <input type="date" id="end_date" class="form-control" placeholder="End Date" value="{{ $nextDay }}">
+                        <input type="date" id="end_date" class="form-control" placeholder="End Date"
+                            value="{{ $nextDay }}">
                     </div>
                     <div class="col-md-2">
                         <button id="filter_button" class="btn btn-primary">Filter</button>
@@ -42,15 +53,15 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hovered" id="ledger_table" width="100%">
+                    <table class="table table-bordered" id="ledger_table" width="100%">
                         <thead>
                             <tr>
-                                <th>{{ ucwords(str_replace('_', ' ', 'time')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'description')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'debit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'balance')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'user')) }}</th>
+                                <th class="text-left">{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
+                                <th class="text-left">{{ ucwords(str_replace('_', ' ', 'description')) }}</th>
+                                <th class="text-right">{{ ucwords(str_replace('_', ' ', 'debit')) }}</th>
+                                <th class="text-right">{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
+                                <th class="text-right">{{ ucwords(str_replace('_', ' ', 'balance')) }}</th>
+                                <th class="text-left">{{ ucwords(str_replace('_', ' ', 'user')) }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -71,7 +82,7 @@
                 allowClear: true // Mengaktifkan opsi clearable
             });
 
-            // Inisialisasi DataTable kosong
+            // Inisialisasi DataTable
             var table = $('#ledger_table').DataTable({
                 layout: {
                     bottomStart: {
@@ -94,29 +105,64 @@
                 ],
                 columns: [{
                         data: 'created_at',
-                        name: 'created_at'
+                        name: 'created_at',
+                        class: 'text-left'
                     },
                     {
                         data: 'description',
-                        name: 'description'
+                        name: 'description',
+                        class: 'text-left'
                     },
                     {
                         data: 'debit',
-                        name: 'debit'
+                        name: 'debit',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
                     },
                     {
                         data: 'credit',
-                        name: 'credit'
+                        name: 'credit',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
                     },
                     {
                         data: 'balance',
-                        name: 'balance'
+                        name: 'balance',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
                     },
                     {
                         data: 'user.name',
-                        name: 'user.name'
+                        name: 'user.name',
+                        class: 'text-left'
                     },
                 ],
+                headerCallback: function(thead, data, start, end, display) {
+                    $(thead).find('th').each(function() {
+                        var className = $(this).attr('class');
+                        $(this).addClass(
+                        className); // Ensure the header cells have correct alignment
+                    });
+                },
+                createdRow: function(row, data, dataIndex) {
+                    $(row).find('td').each(function() {
+                        var className = $(this).attr('class');
+                        $(this).addClass(
+                        className); // Ensure the data cells have correct alignment
+                    });
+                },
                 "bPaginate": false, // Menonaktifkan pagination
                 "bFilter": false, // Menonaktifkan pencarian
                 "bInfo": false, // Menonaktifkan informasi jumlah data

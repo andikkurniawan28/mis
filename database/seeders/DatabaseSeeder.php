@@ -120,6 +120,7 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'update_journal')), 'route' => 'journal.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_journal')), 'route' => 'journal.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_ledger')), 'route' => 'ledger.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'balance_sheet')), 'route' => 'balance_sheet.index'],
         ];
         Feature::insert($features);
 
@@ -131,7 +132,7 @@ class DatabaseSeeder extends Seeder
         }
 
         CashFlowCategory::insert([
-            ["name" => "Aktifitas Operasi"],
+            ["name" => "Aktifitas Operasional"],
             ["name" => "Aktifitas Investasi"],
             ["name" => "Aktifitas Pendanaan"],
         ]);
@@ -146,32 +147,46 @@ class DatabaseSeeder extends Seeder
             ["id" => "C", "name" => "Credit"],
         ]);
 
+        // Menambahkan Account Groups
         AccountGroup::insert([
-            ["id" => "10", "financial_statement_id" => "B", "name" => "Aktiva Lancar"],
-            ["id" => "11", "financial_statement_id" => "B", "name" => "Aktiva Tetap"],
-            ["id" => "12", "financial_statement_id" => "B", "name" => "Aktiva Lain-lain"],
-            ["id" => "20", "financial_statement_id" => "B", "name" => "Kewajiban Lancar"],
-            ["id" => "21", "financial_statement_id" => "B", "name" => "Kewajiban Jangka Panjang"],
-            ["id" => "30", "financial_statement_id" => "B", "name" => "Modal"],
-            ["id" => "40", "financial_statement_id" => "I", "name" => "Pendapatan Penjualan"],
-            ["id" => "50", "financial_statement_id" => "I", "name" => "Harga Pokok Penjualan"],
-            ["id" => "60", "financial_statement_id" => "I", "name" => "Beban Operasional"],
-            ["id" => "70", "financial_statement_id" => "I", "name" => "Pendapatan Lain-lain"],
-            ["id" => "80", "financial_statement_id" => "I", "name" => "Beban Lain-lain"],
+            ["id" => "10", "financial_statement_id" => "B", "name" => "Aktiva Lancar", "normal_balance_id" => "D"],
+            ["id" => "11", "financial_statement_id" => "B", "name" => "Aktiva Tetap", "normal_balance_id" => "D"],
+            ["id" => "12", "financial_statement_id" => "B", "name" => "Aktiva Lain-lain", "normal_balance_id" => "D"],
+            ["id" => "20", "financial_statement_id" => "B", "name" => "Kewajiban Lancar", "normal_balance_id" => "C"],
+            ["id" => "21", "financial_statement_id" => "B", "name" => "Kewajiban Jangka Panjang", "normal_balance_id" => "C"],
+            ["id" => "30", "financial_statement_id" => "B", "name" => "Modal", "normal_balance_id" => "C"],
+            ["id" => "40", "financial_statement_id" => "I", "name" => "Pendapatan Penjualan", "normal_balance_id" => "C"],
+            ["id" => "50", "financial_statement_id" => "I", "name" => "Harga Pokok Penjualan", "normal_balance_id" => "C"],
+            ["id" => "60", "financial_statement_id" => "I", "name" => "Beban Operasional", "normal_balance_id" => "C"],
+            ["id" => "70", "financial_statement_id" => "I", "name" => "Pendapatan Lain-lain", "normal_balance_id" => "C"],
+            ["id" => "80", "financial_statement_id" => "I", "name" => "Beban Lain-lain", "normal_balance_id" => "C"],
         ]);
 
+        // Menambahkan Main Accounts
         MainAccount::insert([
             ["id" => "101", "account_group_id" => "10", "name" => "Kas"],
             ["id" => "102", "account_group_id" => "10", "name" => "Piutang Dagang"],
             ["id" => "103", "account_group_id" => "11", "name" => "Tanah"],
             ["id" => "104", "account_group_id" => "11", "name" => "Bangunan"],
+            ["id" => "105", "account_group_id" => "11", "name" => "Peralatan"],
+            ["id" => "106", "account_group_id" => "12", "name" => "Inventaris Lainnya"],
             ["id" => "201", "account_group_id" => "20", "name" => "Hutang Usaha"],
+            ["id" => "202", "account_group_id" => "20", "name" => "Hutang Bank"],
             ["id" => "301", "account_group_id" => "30", "name" => "Modal Disetor"],
+            ["id" => "302", "account_group_id" => "30", "name" => "Laba Ditahan"],
             ["id" => "401", "account_group_id" => "40", "name" => "Penjualan"],
+            ["id" => "402", "account_group_id" => "40", "name" => "Pendapatan Jasa"],
             ["id" => "501", "account_group_id" => "50", "name" => "Harga Pokok Penjualan"],
+            ["id" => "502", "account_group_id" => "50", "name" => "Beban Bahan Baku"],
             ["id" => "601", "account_group_id" => "60", "name" => "Beban Gaji"],
+            ["id" => "602", "account_group_id" => "60", "name" => "Beban Sewa"],
+            ["id" => "701", "account_group_id" => "70", "name" => "Pendapatan Bunga"],
+            ["id" => "702", "account_group_id" => "70", "name" => "Pendapatan Dividen"],
+            ["id" => "801", "account_group_id" => "80", "name" => "Beban Listrik"],
+            ["id" => "802", "account_group_id" => "80", "name" => "Beban Telepon"],
         ]);
 
+        // Menambahkan Sub Accounts
         SubAccount::insert([
             ["id" => "1011", "main_account_id" => "101", "name" => "Kas di Bank"],
             ["id" => "1012", "main_account_id" => "101", "name" => "Kas di Tangan"],
@@ -179,20 +194,56 @@ class DatabaseSeeder extends Seeder
             ["id" => "1022", "main_account_id" => "102", "name" => "Piutang Dagang Ekspor"],
             ["id" => "1031", "main_account_id" => "103", "name" => "Tanah Perusahaan"],
             ["id" => "1041", "main_account_id" => "104", "name" => "Bangunan Pabrik"],
+            ["id" => "1051", "main_account_id" => "105", "name" => "Peralatan Produksi"],
+            ["id" => "1061", "main_account_id" => "106", "name" => "Inventaris Kantor"],
             ["id" => "2011", "main_account_id" => "201", "name" => "Hutang Usaha Lokal"],
+            ["id" => "2021", "main_account_id" => "202", "name" => "Hutang Bank Jangka Pendek"],
             ["id" => "3011", "main_account_id" => "301", "name" => "Modal Disetor Pemilik"],
+            ["id" => "3021", "main_account_id" => "302", "name" => "Laba Ditahan Tahun Berjalan"],
             ["id" => "4011", "main_account_id" => "401", "name" => "Penjualan Produk A"],
+            ["id" => "4021", "main_account_id" => "402", "name" => "Pendapatan Jasa Konsultasi"],
+            ["id" => "5011", "main_account_id" => "501", "name" => "Beban Bahan Baku Utama"],
+            ["id" => "5021", "main_account_id" => "502", "name" => "Beban Bahan Baku Sekunder"],
+            ["id" => "6011", "main_account_id" => "601", "name" => "Beban Gaji Karyawan"],
+            ["id" => "6021", "main_account_id" => "602", "name" => "Beban Sewa Gedung"],
+            ["id" => "7011", "main_account_id" => "701", "name" => "Pendapatan Bunga Bank"],
+            ["id" => "7021", "main_account_id" => "702", "name" => "Pendapatan Dividen Saham"],
+            ["id" => "8011", "main_account_id" => "801", "name" => "Beban Listrik Kantor"],
+            ["id" => "8021", "main_account_id" => "802", "name" => "Beban Telepon Kantor"],
         ]);
 
+        // Menambahkan Accounts
         Account::insert([
-            ["id" => "10111", "sub_account_id" => "1011", "cash_flow_category_id" => null, "name" => "Kas di Bank Mandiri", "normal_balance_id" => "D", "initial_balance" => 10000000],
-            ["id" => "10112", "sub_account_id" => "1012", "cash_flow_category_id" => null, "name" => "Kas di Tangan", "normal_balance_id" => "D", "initial_balance" => 5000000],
-            ["id" => "10211", "sub_account_id" => "1021", "cash_flow_category_id" => null, "name" => "Piutang Dagang Lokal", "normal_balance_id" => "D", "initial_balance" => 3000000],
-            ["id" => "10311", "sub_account_id" => "1031", "cash_flow_category_id" => null, "name" => "Tanah Perusahaan", "normal_balance_id" => "D", "initial_balance" => 20000000],
-            ["id" => "10411", "sub_account_id" => "1041", "cash_flow_category_id" => null, "name" => "Bangunan Pabrik", "normal_balance_id" => "D", "initial_balance" => 15000000],
-            ["id" => "20111", "sub_account_id" => "2011", "cash_flow_category_id" => null, "name" => "Hutang Usaha Lokal", "normal_balance_id" => "C", "initial_balance" => 1000000],
-            ["id" => "30111", "sub_account_id" => "3011", "cash_flow_category_id" => null, "name" => "Modal Disetor Pemilik", "normal_balance_id" => "C", "initial_balance" => 50000000],
-            ["id" => "40111", "sub_account_id" => "4011", "cash_flow_category_id" => 1, "name" => "Penjualan Produk A", "normal_balance_id" => "C", "initial_balance" => 25000000],
+            // Aset
+            ["id" => "10111", "sub_account_id" => "1011", "cash_flow_category_id" => 1, "name" => "Kas di Bank Mandiri", "initial_balance" => 10000000],
+            ["id" => "10112", "sub_account_id" => "1012", "cash_flow_category_id" => 1, "name" => "Kas di Tangan", "initial_balance" => 5000000],
+            ["id" => "10211", "sub_account_id" => "1021", "cash_flow_category_id" => 1, "name" => "Piutang Dagang Lokal", "initial_balance" => 3000000],
+            ["id" => "10311", "sub_account_id" => "1031", "cash_flow_category_id" => 2, "name" => "Tanah Perusahaan", "initial_balance" => 20000000],
+            ["id" => "10411", "sub_account_id" => "1041", "cash_flow_category_id" => 2, "name" => "Bangunan Pabrik", "initial_balance" => 15000000],
+            ["id" => "10511", "sub_account_id" => "1051", "cash_flow_category_id" => 2, "name" => "Peralatan Produksi", "initial_balance" => 5000000],
+            ["id" => "10611", "sub_account_id" => "1061", "cash_flow_category_id" => 2, "name" => "Inventaris Kantor", "initial_balance" => 2000000],
+
+            // Kewajiban
+            ["id" => "20111", "sub_account_id" => "2011", "cash_flow_category_id" => 1, "name" => "Hutang Usaha Lokal", "initial_balance" => 1000000],
+            ["id" => "20211", "sub_account_id" => "2021", "cash_flow_category_id" => 1, "name" => "Hutang Bank Jangka Pendek", "initial_balance" => 2000000],
+
+            // Modal
+            ["id" => "30111", "sub_account_id" => "3011", "cash_flow_category_id" => null, "name" => "Modal Disetor Pemilik", "initial_balance" => 50000000],
+            ["id" => "30211", "sub_account_id" => "3021", "cash_flow_category_id" => null, "name" => "Laba Ditahan Tahun Berjalan", "initial_balance" => 10000000],
+
+            // Pendapatan
+            ["id" => "40111", "sub_account_id" => "4011", "cash_flow_category_id" => 1, "name" => "Penjualan Produk A", "initial_balance" => 25000000],
+            ["id" => "40211", "sub_account_id" => "4021", "cash_flow_category_id" => 1, "name" => "Pendapatan Jasa Konsultasi", "initial_balance" => 8000000],
+
+            // Beban
+            ["id" => "50111", "sub_account_id" => "5011", "cash_flow_category_id" => 1, "name" => "Beban Bahan Baku Utama", "initial_balance" => 15000000],
+            ["id" => "50211", "sub_account_id" => "5021", "cash_flow_category_id" => 1, "name" => "Beban Bahan Baku Sekunder", "initial_balance" => 5000000],
+            ["id" => "60111", "sub_account_id" => "6011", "cash_flow_category_id" => 1, "name" => "Beban Gaji Karyawan", "initial_balance" => 10000000],
+            ["id" => "60211", "sub_account_id" => "6021", "cash_flow_category_id" => 1, "name" => "Beban Sewa Gedung", "initial_balance" => 3000000],
+            ["id" => "70111", "sub_account_id" => "7011", "cash_flow_category_id" => 1, "name" => "Pendapatan Bunga Bank", "initial_balance" => 500000],
+            ["id" => "70211", "sub_account_id" => "7021", "cash_flow_category_id" => 1, "name" => "Pendapatan Dividen Saham", "initial_balance" => 2000000],
+            ["id" => "80111", "sub_account_id" => "8011", "cash_flow_category_id" => 1, "name" => "Beban Listrik Kantor", "initial_balance" => 1200000],
+            ["id" => "80211", "sub_account_id" => "8021", "cash_flow_category_id" => 1, "name" => "Beban Telepon Kantor", "initial_balance" => 600000],
         ]);
 
         TaxRate::insert([

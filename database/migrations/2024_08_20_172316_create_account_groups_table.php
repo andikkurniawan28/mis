@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('financial_statement_id');
             $table->foreign('financial_statement_id')->references('id')->on('financial_statements');
+            $table->string('normal_balance_id');
+            $table->foreign('normal_balance_id')->references('id')->on('normal_balances');
             $table->string('name')->unique();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

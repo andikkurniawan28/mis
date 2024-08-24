@@ -44,4 +44,12 @@ class AccountGroup extends Model
     public function financial_statement(){
         return $this->belongsTo(FinancialStatement::class);
     }
+
+    public function normal_balance(){
+        return $this->belongsTo(NormalBalance::class);
+    }
+
+    public function main_account(){
+        return $this->hasMany(MainAccount::class);
+    }
 }

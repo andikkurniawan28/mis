@@ -26,7 +26,7 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'sub_account')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'cash_flow_category')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}</th>
+                                {{-- <th>{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}</th> --}}
                                 <th>{{ ucwords(str_replace('_', ' ', 'initial_balance')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
@@ -38,8 +38,8 @@
                                     <td>{{ $account->name }}</td>
                                     <td>{{ $account->sub_account->name }}</td>
                                     <td>{{ $account->cash_flow_category->name ?? "-" }}</td>
-                                    <td>{{ $account->normal_balance->name }}</td>
-                                    <td>{{ $account->initial_balance }}</td>
+                                    {{-- <td>{{ $account->normal_balance->name }}</td> --}}
+                                    <td>{{ number_format($account->initial_balance) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
                                             <a href="{{ route('account.edit', $account->id) }}" class="btn btn-secondary btn-sm">Edit</a>

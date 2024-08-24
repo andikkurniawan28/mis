@@ -74,20 +74,6 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="normal_balance">
-                                    {{ ucwords(str_replace('_', ' ', 'normal_balance')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <select class="form-control select2" id="normal_balance" name="normal_balance_id" width="100%" required autofocus>
-                                        <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'normal_balance')) }} :</option>
-                                        @foreach($normal_balances as $normal_balance)
-                                            <option value="{{ $normal_balance->id }}">{{ $normal_balance->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="initial_balance">
                                     {{ ucwords(str_replace('_', ' ', 'initial_balance')) }}
                                 </label>

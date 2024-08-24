@@ -67,11 +67,23 @@
                     },
                     {
                         data: 'debit',
-                        name: 'debit'
+                        name: 'debit',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
                     },
                     {
                         data: 'credit',
-                        name: 'credit'
+                        name: 'credit',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
                     },
                     {
                         data: null,

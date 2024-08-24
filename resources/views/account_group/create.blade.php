@@ -59,6 +59,20 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="normal_balance">
+                                    {{ ucwords(str_replace('_', ' ', 'normal_balance')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select class="form-control select2" id="normal_balance" name="normal_balance_id" width="100%" required autofocus>
+                                        <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'normal_balance')) }} :</option>
+                                        @foreach($normal_balances as $normal_balance)
+                                            <option value="{{ $normal_balance->id }}">{{ $normal_balance->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Send</button>
@@ -76,6 +90,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#financial_statement').select2({
+            theme: 'bootstrap',
+            placeholder: "Select a financial_statement"
+        }),
+        $('#normal_balance').select2({
             theme: 'bootstrap',
             placeholder: "Select a financial_statement"
         })

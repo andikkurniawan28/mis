@@ -42,7 +42,7 @@ class AccountController extends Controller
             "id" => "required|unique:accounts",
             "name" => "required|unique:accounts",
             "sub_account_id" => "required",
-            "normal_balance_id" => "required",
+            // "normal_balance_id" => "required",
             "initial_balance" => "required",
             "cash_flow_category_id" => "nullable",
         ]);
@@ -81,7 +81,7 @@ class AccountController extends Controller
             'id' => 'required|unique:accounts,id,' . $account->id,
             'name' => 'required|unique:accounts,name,' . $account->id,
             "sub_account_id" => "required",
-            "normal_balance_id" => "required",
+            // "normal_balance_id" => "required",
             "initial_balance" => "required",
             "cash_flow_category_id" => "nullable",
         ]);

@@ -25,6 +25,7 @@
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'financial_statement')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
@@ -34,6 +35,7 @@
                                     <td>{{ $account_group->id }}</td>
                                     <td>{{ $account_group->name }}</td>
                                     <td>{{ $account_group->financial_statement->name }}</td>
+                                    <td>{{ $account_group->normal_balance->name }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
                                             <a href="{{ route('account_group.edit', $account_group->id) }}" class="btn btn-secondary btn-sm">Edit</a>

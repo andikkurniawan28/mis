@@ -46,10 +46,10 @@ class LedgerController extends Controller
         $account = $data->first()->account ?? null; // Dapatkan akun terkait
 
         if ($account) {
-            if ($account->normal_balance_id == 'D') {
-                $initialBalance = $totalDebitBefore - $totalCreditBefore;
-            } elseif ($account->normal_balance_id == 'C') {
-                $initialBalance = $totalCreditBefore - $totalDebitBefore;
+            if ($account->sub_account->main_account->account_group->normal_balance_id == 'D') {
+                $initialBalance = ($totalDebitBefore - $totalCreditBefore) + $account->initial_balance;
+            } elseif ($account->sub_account->main_account->account_group->normal_balance_id == 'C') {
+                $initialBalance = ($totalCreditBefore - $totalDebitBefore) + $account->initial_balance;
             }
         }
 
@@ -72,9 +72,9 @@ class LedgerController extends Controller
 
         foreach ($data as $row) {
             if ($row->account) {
-                if ($row->account->normal_balance_id == 'D') {
+                if ($row->account->sub_account->main_account->account_group->normal_balance_id == 'D') {
                     $runningBalance += ($row->debit - $row->credit);
-                } elseif ($row->account->normal_balance_id == 'C') {
+                } elseif ($row->account->sub_account->main_account->account_group->normal_balance_id == 'C') {
                     $runningBalance += ($row->credit - $row->debit);
                 }
             }
@@ -99,9 +99,9 @@ class LedgerController extends Controller
         // Hitung saldo akhir berdasarkan normal_balance_id dari akun
         $finalBalance = $initialBalance;
         if ($account) {
-            if ($account->normal_balance_id == 'D') {
+            if ($account->sub_account->main_account->account_group->normal_balance_id == 'D') {
                 $finalBalance = $runningBalance;
-            } elseif ($account->normal_balance_id == 'C') {
+            } elseif ($account->sub_account->main_account->account_group->normal_balance_id == 'C') {
                 $finalBalance = $runningBalance;
             }
         }

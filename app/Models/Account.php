@@ -45,11 +45,15 @@ class Account extends Model
         return $this->belongsTo(SubAccount::class);
     }
 
-    public function normal_balance(){
-        return $this->belongsTo(NormalBalance::class);
-    }
+    // public function normal_balance(){
+    //     return $this->belongsTo(NormalBalance::class);
+    // }
 
     public function cash_flow_category(){
         return $this->belongsTo(CashFlowCategory::class);
+    }
+
+    public function ledger(){
+        return $this->hasMany(Ledger::class);
     }
 }

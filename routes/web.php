@@ -51,7 +51,7 @@ Route::resource('/tax_rate', TaxRateController::class)->middleware(['auth', 'che
 Route::resource('/journal', JournalController::class)->middleware(['auth', 'check.permission']);
 Route::get('/ledger', [LedgerController::class, 'index'])->name('ledger.index')->middleware(['auth', 'check.permission']);
 Route::get('/ledger/data/{account_id}/{start_date}/{end_date}', [LedgerController::class, 'data'])->name('ledger.data');
-Route::get('/balance_sheet', [BalanceSheetController::class, 'index'])->name('balance_sheet.index');
+Route::get('/balance_sheet', [BalanceSheetController::class, 'index'])->name('balance_sheet.index')->middleware(['auth', 'check.permission']);
 Route::get('/balance_sheet/data/{year}/{month}', [BalanceSheetController::class, 'data'])->name('balance_sheet.data');
 
 
