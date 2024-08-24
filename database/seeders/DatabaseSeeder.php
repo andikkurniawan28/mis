@@ -121,6 +121,7 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'delete_journal')), 'route' => 'journal.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_ledger')), 'route' => 'ledger.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'balance_sheet')), 'route' => 'balance_sheet.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'income_statement')), 'route' => 'income_statement.index'],
         ];
         Feature::insert($features);
 

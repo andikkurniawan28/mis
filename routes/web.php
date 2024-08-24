@@ -15,7 +15,9 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\BalanceSheetController;
+use App\Http\Controllers\ClosingEntryController;
 use App\Http\Controllers\NormalBalanceController;
+use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\FinancialStatementController;
 
@@ -53,6 +55,9 @@ Route::get('/ledger', [LedgerController::class, 'index'])->name('ledger.index')-
 Route::get('/ledger/data/{account_id}/{start_date}/{end_date}', [LedgerController::class, 'data'])->name('ledger.data');
 Route::get('/balance_sheet', [BalanceSheetController::class, 'index'])->name('balance_sheet.index')->middleware(['auth', 'check.permission']);
 Route::get('/balance_sheet/data/{year}/{month}', [BalanceSheetController::class, 'data'])->name('balance_sheet.data');
+Route::get('/income_statement', [IncomeStatementController::class, 'index'])->name('income_statement.index')->middleware(['auth', 'check.permission']);
+Route::get('/income_statement/data/{year}/{month}', [IncomeStatementController::class, 'data'])->name('income_statement.data');
+Route::get('/closing_entry', ClosingEntryController::class)->name('closing_entry');
 
 
 

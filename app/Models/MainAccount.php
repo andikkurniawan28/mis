@@ -69,4 +69,33 @@ class MainAccount extends Model
         }
         return $total_balance;
     }
+
+    public static function incomeStatement($year, $month, $id, $normal_balance_id)
+    {
+        $sub_account_id = SubAccount::where('main_account_id', $id)->select('id')->get();
+        $accounts = Account::whereIn('sub_account_id', $sub_account_id)->get();
+        $total_balance = 0;
+
+        foreach($accounts as $account)
+        {
+            $initial_balance = $account->initial_balance;
+            $running_balance = Ledger::where('account_id', $account->id)
+                                    ->where('is_closing_entry', 0)
+                                    ->whereYear('created_at', $year)
+                                    ->whereMonth('created_at', $month);
+
+            if($normal_balance_id == "D"){
+                // Untuk pendapatan (Income) biasanya ditambahkan pada debit
+                $account->balance = $initial_balance + ($running_balance->sum('debit') - $running_balance->sum('credit'));
+            } else {
+                // Untuk beban (Expense) biasanya ditambahkan pada kredit
+                $account->balance = $initial_balance + ($running_balance->sum('credit') - $running_balance->sum('debit'));
+            }
+
+            $total_balance += $account->balance;
+        }
+
+        return $total_balance;
+    }
+
 }
