@@ -27,57 +27,26 @@ class BalanceSheetController extends Controller
         $month = (int)$month;
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
 
-        $account_groups = AccountGroup::where('financial_statement_id', 'B')->get();
+        $account_groups = AccountGroup::with('main_account.sub_account.account')
+            ->where('financial_statement_id', 'B')
+            ->get();
 
         foreach($account_groups as $account_group)
         {
-            $account_group->initial_balance = DB::table('accounts')
-                ->join('sub_accounts', 'accounts.sub_account_id', '=', 'sub_accounts.id')
-                ->join('main_accounts', 'sub_accounts.main_account_id', '=', 'main_accounts.id')
-                ->where('main_accounts.account_group_id', $account_group->id)
-                ->select(
-                    DB::raw('COALESCE(SUM(accounts.initial_balance), 0) AS initial_balance')
-                )
-                ->pluck('initial_balance')
-                ->first();
-
-            $account_group->running_balance = DB::table('accounts')
-                ->join('sub_accounts', 'accounts.sub_account_id', '=', 'sub_accounts.id')
-                ->join('main_accounts', 'sub_accounts.main_account_id', '=', 'main_accounts.id')
-                ->join('account_groups', 'main_accounts.account_group_id', '=', 'account_groups.id')
-                ->join('ledgers', 'accounts.id', '=', 'ledgers.account_id')
-                ->where('main_accounts.account_group_id', $account_group->id)
-                ->whereYear('ledgers.created_at', $year)
-                ->whereMonth('ledgers.created_at', $month)
-                ->select(
-                    DB::raw('COALESCE(SUM(CASE WHEN account_groups.normal_balance_id = "D" THEN (ledgers.debit - ledgers.credit) ELSE (ledgers.credit - ledgers.debit) END), 0) AS running_balance')
-                )
-                ->pluck('running_balance')
-                ->first();
-
-            $account_group->before_balance = DB::table('accounts')
-                ->join('sub_accounts', 'accounts.sub_account_id', '=', 'sub_accounts.id')
-                ->join('main_accounts', 'sub_accounts.main_account_id', '=', 'main_accounts.id')
-                ->join('account_groups', 'main_accounts.account_group_id', '=', 'account_groups.id')
-                ->join('ledgers', 'accounts.id', '=', 'ledgers.account_id')
-                ->where('main_accounts.account_group_id', $account_group->id)
-                ->where('ledgers.created_at', '<', $startDate)
-                ->select(
-                    DB::raw('COALESCE(
-                        SUM(CASE
-                            WHEN account_groups.normal_balance_id = "D"
-                            THEN (ledgers.debit - ledgers.credit)
-                            ELSE (ledgers.credit - ledgers.debit)
-                        END),
-                        0
-                    ) AS before_balance')
-                )
-                ->pluck('before_balance')
-                ->first();
-
-            $account_group->actual_balance = $account_group->initial_balance + $account_group->running_balance - $account_group->before_balance;
+            $account_group->balance_sheet = AccountGroup::balanceSheet($year, $month, $account_group->id, $account_group->normal_balance_id);
+            foreach($account_group->main_account as $main_account){
+                $main_account->balance_sheet = MainAccount::balanceSheet($year, $month, $main_account->id, $account_group->normal_balance_id);
+                foreach($main_account->sub_account as $sub_account){
+                    $sub_account->balance_sheet = SubAccount::balanceSheet($year, $month, $sub_account->id, $account_group->normal_balance_id);
+                    foreach($sub_account->account as $account){
+                        $account->balance_sheet = Account::balanceSheet($year, $month, $account->id, $account_group->normal_balance_id);
+                    }
+                }
+            }
         }
 
         return response()->json(['data' => $account_groups]);
     }
+
+
 }

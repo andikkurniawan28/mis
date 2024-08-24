@@ -45,15 +45,31 @@ class Account extends Model
         return $this->belongsTo(SubAccount::class);
     }
 
-    // public function normal_balance(){
-    //     return $this->belongsTo(NormalBalance::class);
-    // }
-
     public function cash_flow_category(){
         return $this->belongsTo(CashFlowCategory::class);
     }
 
     public function ledger(){
         return $this->hasMany(Ledger::class);
+    }
+
+    public static function balanceSheet($year, $month, $id, $normal_balance_id){
+        $accounts = Account::where('id', $id)->get();
+        $total_balance = 0;
+        foreach($accounts as $account)
+        {
+            $initial_balance = $account->initial_balance;
+            $running_balance = Ledger::where('account_id', $id)
+                                ->whereYear('created_at', $year)
+                                ->whereMonth('created_at', $month);
+
+            if($normal_balance_id == "D"){
+                $account->balance = $initial_balance + ($running_balance->sum('debit') - $running_balance->sum('credit'));
+            } else {
+                $account->balance = $initial_balance + ($running_balance->sum('credit') - $running_balance->sum('debit'));
+            }
+            $total_balance += $account->balance;
+        }
+        return $total_balance;
     }
 }

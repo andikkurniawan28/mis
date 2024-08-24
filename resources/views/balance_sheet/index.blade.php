@@ -12,7 +12,7 @@
         }
 
         .main_account {
-            padding-left: 20;
+            padding-left: 20px;
         }
 
         .sub_account {
@@ -47,124 +47,43 @@
                 <div id="balance_sheet_report">
                     <div class="row">
                         <div class="col-md-6">
-                            <table class="table table-bordered table-sm">
+                            <table class="table table-bordered table-sm" id="assets_table">
                                 <thead>
                                     <tr>
                                         <td class="text-primary"><strong>Assets</strong></td>
-                                        <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Level: account_group -->
-                                    @foreach($account_groups->whereIn('name', ['Aktiva Lancar', 'Aktiva Tetap', 'Aktiva Lain-lain']) as $account_group)
-                                        <tr>
-                                            <td><div class="account_group text-dark"><strong>{{ $account_group->name }}</strong></div></td>
-                                            <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                        </tr>
-                                        <!-- Level: main_account -->
-                                        @foreach($account_group->main_account as $main_account)
-                                            <tr>
-                                                <td><div class="main_account text-dark">{{ $main_account->name }}</div></td>
-                                                <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                            </tr>
-                                            <!-- Level: sub_account -->
-                                            @foreach($main_account->sub_account as $sub_account)
-                                                <tr>
-                                                    <td><div class="sub_account text-dark">{{ $sub_account->name }}</div></td>
-                                                    <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                                </tr>
-                                                <!-- Level: account -->
-                                                @foreach($sub_account->account as $account)
-                                                    <tr>
-                                                        <td><div class="account text-dark">{{ $account->name }}</div></td>
-                                                        <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
-                                    @endforeach
+                                    <!-- Data akan diisi oleh JavaScript -->
                                 </tbody>
                             </table>
                         </div>
                         <div class="col-md-6">
 
-                            <table class="table table-bordered table-sm">
+                            <table class="table table-bordered table-sm" id="liabilities_table">
                                 <thead>
                                     <tr>
                                         <td class="text-primary"><strong>Liabilities</strong></td>
-                                        <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Level: account_group -->
-                                    @foreach($account_groups->whereIn('name', ['Kewajiban Lancar', 'Kewajiban Jangka Panjang']) as $account_group)
-                                        <tr>
-                                            <td><div class="account_group text-dark"><strong>{{ $account_group->name }}</strong></div></td>
-                                            <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                        </tr>
-                                        <!-- Level: main_account -->
-                                        @foreach($account_group->main_account as $main_account)
-                                            <tr>
-                                                <td><div class="main_account text-dark">{{ $main_account->name }}</div></td>
-                                                <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                            </tr>
-                                            <!-- Level: sub_account -->
-                                            @foreach($main_account->sub_account as $sub_account)
-                                                <tr>
-                                                    <td><div class="sub_account text-dark">{{ $sub_account->name }}</div></td>
-                                                    <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                                </tr>
-                                                <!-- Level: account -->
-                                                @foreach($sub_account->account as $account)
-                                                    <tr>
-                                                        <td><div class="account text-dark">{{ $account->name }}</div></td>
-                                                        <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
-                                    @endforeach
+                                    <!-- Data akan diisi oleh JavaScript -->
                                 </tbody>
                             </table>
 
                             <br>
 
-                            <table class="table table-bordered table-sm">
+                            <table class="table table-bordered table-sm" id="equity_table">
                                 <thead>
                                     <tr>
                                         <td class="text-primary"><strong>Equity</strong></td>
-                                        <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Level: account_group -->
-                                    @foreach($account_groups->whereIn('name', ['Modal']) as $account_group)
-                                        <tr>
-                                            <td><div class="account_group text-dark"><strong>{{ $account_group->name }}</strong></div></td>
-                                            <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                        </tr>
-                                        <!-- Level: main_account -->
-                                        @foreach($account_group->main_account as $main_account)
-                                            <tr>
-                                                <td><div class="main_account text-dark">{{ $main_account->name }}</div></td>
-                                                <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                            </tr>
-                                            <!-- Level: sub_account -->
-                                            @foreach($main_account->sub_account as $sub_account)
-                                                <tr>
-                                                    <td><div class="sub_account text-dark">{{ $sub_account->name }}</div></td>
-                                                    <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                                </tr>
-                                                <!-- Level: account -->
-                                                @foreach($sub_account->account as $account)
-                                                    <tr>
-                                                        <td><div class="account text-dark">{{ $account->name }}</div></td>
-                                                        <td>{{ number_format(rand(1000000000,2000000000)) }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
-                                    @endforeach
+                                    <!-- Data akan diisi oleh JavaScript -->
                                 </tbody>
                             </table>
 
@@ -176,81 +95,220 @@
     </div>
 @endsection
 
-@section('additional_script')
-    <script type="text/javascript">
+@section("additional_script")
+    <script>
         $(document).ready(function() {
-            $('#submit_button').on('click', function() {
+            $('#submit_button').click(function() {
                 var year = $('#year').val();
                 var month = $('#month').val();
+                var url = "{{ url('balance_sheet/data') }}/" + year + "/" + month;  // Bangun URL dengan parameter
 
-                if (year && month >= 1 && month <= 12) {
-                    $.ajax({
-                        url: "{{ route('balance_sheet.data', ['year' => ':year', 'month' => ':month']) }}"
-                            .replace(':year', year).replace(':month', month),
-                        type: "GET",
-                        success: function(response) {
-                            var aktivaPasivaContent = '';
-                            var modalContent = '';
-                            var aktivaTotal = 0;
-                            var pasivaTotal = 0;
-                            var modalTotal = 0;
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: {
+                        year: year,
+                        month: month
+                    },
+                    success: function(response) {
+                        // Bersihkan tabel sebelum mengisi data
+                        $('#assets_table tbody').empty();
+                        $('#liabilities_table tbody').empty();
+                        $('#equity_table tbody').empty();
 
-                            $.each(response.data, function(index, item) {
-                                // Check if it's an Asset or Liability
-                                if (item.type === 'Aktiva' || item.type === 'Pasiva') {
-                                    aktivaPasivaContent += '<tr>';
-                                    aktivaPasivaContent += '<td>' + item
-                                        .account_group_name + '</td>';
-                                    aktivaPasivaContent += '<td>' + item.account_name +
-                                        '</td>';
-                                    aktivaPasivaContent += '<td>' + item.final_balance
-                                        .toFixed(2) + '</td>';
-                                    aktivaPasivaContent += '</tr>';
+                        // Inisialisasi total
+                        var total_assets = 0;
+                        var total_liabilities = 0;
+                        var total_equity = 0;
 
-                                    if (item.type === 'Aktiva') {
-                                        aktivaTotal += item.final_balance;
-                                    } else if (item.type === 'Pasiva') {
-                                        pasivaTotal += item.final_balance;
-                                    }
-                                } else if (item.type === 'Modal') {
-                                    modalContent += '<tr>';
-                                    modalContent += '<td>' + item.account_group_name +
-                                        '</td>';
-                                    modalContent += '<td>' + item.account_name +
-                                    '</td>';
-                                    modalContent += '<td>' + item.final_balance.toFixed(
-                                        2) + '</td>';
-                                    modalContent += '</tr>';
-                                    modalTotal += item.final_balance;
-                                }
-                            });
+                        // Render kolom Assets
+                        var assets_html = '';
+                        $.each(response.data, function(index, account_group) {
+                            if (['Aktiva Lancar', 'Aktiva Tetap', 'Aktiva Lain-lain'].includes(account_group.name)) {
+                                var group_total = account_group.balance_sheet;
 
-                            // Add totals
-                            aktivaPasivaContent +=
-                                '<tr><td><strong>Total Aktiva</strong></td><td></td><td>' +
-                                aktivaTotal.toFixed(2) + '</td></tr>';
-                            aktivaPasivaContent +=
-                                '<tr><td><strong>Total Pasiva</strong></td><td></td><td>' +
-                                pasivaTotal.toFixed(2) + '</td></tr>';
+                                assets_html += `
+                                    <tr>
+                                        <td><div class="account_group text-dark"><strong>${account_group.name}</strong></div></td>
+                                        <td>${number_format(group_total)}</td>
+                                    </tr>`;
 
-                            modalContent +=
-                                '<tr><td><strong>Total Modal</strong></td><td></td><td>' +
-                                modalTotal.toFixed(2) + '</td></tr>';
+                                total_assets += group_total;
 
-                            $('#aktiva_pasiva_content').html(
-                                '<table class="table table-bordered">' +
-                                aktivaPasivaContent + '</table>');
-                            $('#modal_content').html('<table class="table table-bordered">' +
-                                modalContent + '</table>');
-                        },
-                        error: function() {
-                            alert('Error retrieving report data.');
-                        }
-                    });
-                } else {
-                    alert('Please enter a valid year and month (1-12).');
-                }
+                                $.each(account_group.main_account, function(index, main_account) {
+                                    var main_total = main_account.balance_sheet;
+
+                                    assets_html += `
+                                        <tr>
+                                            <td><div class="main_account text-dark">${main_account.name}</div></td>
+                                            <td>${number_format(main_total)}</td>
+                                        </tr>`;
+
+                                    total_assets += main_total;
+
+                                    $.each(main_account.sub_account, function(index, sub_account) {
+                                        var sub_total = sub_account.balance_sheet;
+
+                                        assets_html += `
+                                            <tr>
+                                                <td><div class="sub_account text-dark">${sub_account.name}</div></td>
+                                                <td>${number_format(sub_total)}</td>
+                                            </tr>`;
+
+                                        total_assets += sub_total;
+
+                                        $.each(sub_account.account, function(index, account) {
+                                            var account_total = account.balance_sheet;
+
+                                            assets_html += `
+                                                <tr>
+                                                    <td><div class="account text-dark">${account.name}</div></td>
+                                                    <td>${number_format(account_total)}</td>
+                                                </tr>`;
+
+                                            total_assets += account_total;
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                        $('#assets_table tbody').append(assets_html);
+                        $('#assets_table tbody').append(`
+                            <tr>
+                                <td><strong>Total Assets</strong></td>
+                                <td><strong>${number_format(total_assets)}</strong></td>
+                            </tr>
+                        `);
+
+                        // Render kolom Liabilities
+                        var liabilities_html = '';
+                        $.each(response.data, function(index, account_group) {
+                            if (['Kewajiban Lancar', 'Kewajiban Jangka Panjang'].includes(account_group.name)) {
+                                var group_total = account_group.balance_sheet;
+
+                                liabilities_html += `
+                                    <tr>
+                                        <td><div class="account_group text-dark"><strong>${account_group.name}</strong></div></td>
+                                        <td>${number_format(group_total)}</td>
+                                    </tr>`;
+
+                                total_liabilities += group_total;
+
+                                $.each(account_group.main_account, function(index, main_account) {
+                                    var main_total = main_account.balance_sheet;
+
+                                    liabilities_html += `
+                                        <tr>
+                                            <td><div class="main_account text-dark">${main_account.name}</div></td>
+                                            <td>${number_format(main_total)}</td>
+                                        </tr>`;
+
+                                    total_liabilities += main_total;
+
+                                    $.each(main_account.sub_account, function(index, sub_account) {
+                                        var sub_total = sub_account.balance_sheet;
+
+                                        liabilities_html += `
+                                            <tr>
+                                                <td><div class="sub_account text-dark">${sub_account.name}</div></td>
+                                                <td>${number_format(sub_total)}</td>
+                                            </tr>`;
+
+                                        total_liabilities += sub_total;
+
+                                        $.each(sub_account.account, function(index, account) {
+                                            var account_total = account.balance_sheet;
+
+                                            liabilities_html += `
+                                                <tr>
+                                                    <td><div class="account text-dark">${account.name}</div></td>
+                                                    <td>${number_format(account_total)}</td>
+                                                </tr>`;
+
+                                            total_liabilities += account_total;
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                        $('#liabilities_table tbody').append(liabilities_html);
+                        $('#liabilities_table tbody').append(`
+                            <tr>
+                                <td><strong>Total Liabilities</strong></td>
+                                <td><strong>${number_format(total_liabilities)}</strong></td>
+                            </tr>
+                        `);
+
+                        // Render kolom Equity
+                        var equity_html = '';
+                        $.each(response.data, function(index, account_group) {
+                            if (account_group.name === 'Modal') {
+                                var group_total = account_group.balance_sheet;
+
+                                equity_html += `
+                                    <tr>
+                                        <td><div class="account_group text-dark"><strong>${account_group.name}</strong></div></td>
+                                        <td>${number_format(group_total)}</td>
+                                    </tr>`;
+
+                                total_equity += group_total;
+
+                                $.each(account_group.main_account, function(index, main_account) {
+                                    var main_total = main_account.balance_sheet;
+
+                                    equity_html += `
+                                        <tr>
+                                            <td><div class="main_account text-dark">${main_account.name}</div></td>
+                                            <td>${number_format(main_total)}</td>
+                                        </tr>`;
+
+                                    total_equity += main_total;
+
+                                    $.each(main_account.sub_account, function(index, sub_account) {
+                                        var sub_total = sub_account.balance_sheet;
+
+                                        equity_html += `
+                                            <tr>
+                                                <td><div class="sub_account text-dark">${sub_account.name}</div></td>
+                                                <td>${number_format(sub_total)}</td>
+                                            </tr>`;
+
+                                        total_equity += sub_total;
+
+                                        $.each(sub_account.account, function(index, account) {
+                                            var account_total = account.balance_sheet;
+
+                                            equity_html += `
+                                                <tr>
+                                                    <td><div class="account text-dark">${account.name}</div></td>
+                                                    <td>${number_format(account_total)}</td>
+                                                </tr>`;
+
+                                            total_equity += account_total;
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                        $('#equity_table tbody').append(equity_html);
+                        $('#equity_table tbody').append(`
+                            <tr>
+                                <td><strong>Total Equity</strong></td>
+                                <td><strong>${number_format(total_equity)}</strong></td>
+                            </tr>
+                        `);
+                    }
+                });
             });
         });
+
+        function number_format(number) {
+            if (number < 0) {
+                return `(${Math.abs(number).toLocaleString('en-US')})`;
+            }
+            return number.toLocaleString('en-US');
+        }
     </script>
 @endsection
+
+
