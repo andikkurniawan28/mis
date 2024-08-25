@@ -29,7 +29,8 @@
                         <h4>Invoice Details</h4>
                         <div class="row mb-3">
                             <div class="col-sm-12">
-                                <table class="table table-bordered">
+                                <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -47,10 +48,12 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                </div>
                                 <br>
 
                                 <h5>Journal Details</h5>
-                                <table class="table table-bordered">
+                                <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
                                     <thead>
                                         <tr>
                                             <th>Account ID</th>
@@ -79,6 +82,7 @@
                                         </tr>
                                     </tfoot>
                                 </table>
+                                </div>
                                 <br>
                                 <button class="btn btn-primary" onclick="window.print()">Print Invoice</button>
                             </div>
