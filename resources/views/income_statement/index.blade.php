@@ -142,7 +142,7 @@
 
                                 data_html += `
                                     <tr>
-                                        <td style="padding-left: 0px;"><strong>${account_group.name}</strong></td>
+                                        <td style="padding-left: 10px;"><strong>${account_group.name}</strong></td>
                                         <td>${number_format(group_total)}</td>
                                     </tr>`;
 
@@ -170,7 +170,7 @@
 
                                 data_html += `
                                     <tr>
-                                        <td style="padding-left: 0px;"><strong>${account_group.name}</strong></td>
+                                        <td style="padding-left: 10px;"><strong>${account_group.name}</strong></td>
                                         <td>${number_format(group_total)}</td>
                                     </tr>`;
 

@@ -77,7 +77,7 @@ class JournalController extends Controller
                 Ledger::create([
                     'journal_id' => $journalId,
                     'account_id' => $detail['account_id'],
-                    'description' => "Jurnal Umum {$detail['description']} {$journalId}",
+                    'description' => "{$journalId} - {$detail['description']}",
                     'debit' => $detail['debit'] ?? 0,
                     'credit' => $detail['credit'] ?? 0,
                     'user_id' => auth()->id(),
@@ -141,7 +141,7 @@ class JournalController extends Controller
                 Ledger::create([
                     'journal_id' => $journal->id,
                     'account_id' => $detail['account_id'],
-                    'description' => "Jurnal Umum {$detail['description']} {$journal->id}",
+                    'description' => "{$journal->id} - {$detail['description']}",
                     'debit' => $detail['debit'] ?? 0,
                     'credit' => $detail['credit'] ?? 0,
                     'user_id' => auth()->id(),

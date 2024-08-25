@@ -26,7 +26,7 @@
                         <a href="{{ route('journal.index') }}" class="btn btn-primary">Back to List</a>
                     </div>
                     <div class="card-body">
-                        <h4>Invoice Details</h4>
+                        <h6>Invoice Details</h6>
                         <div class="row mb-3">
                             <div class="col-sm-12">
                                 <div class="table-responsive">
@@ -51,7 +51,7 @@
                                 </div>
                                 <br>
 
-                                <h5>Journal Details</h5>
+                                <h6>Journal Details</h6>
                                 <div class="table-responsive">
                                 <table class="table table-bordered table-sm">
                                     <thead>
