@@ -57,8 +57,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             @foreach($cash_flow_categories as $category)
-                                <h3>{{ $category->name }}</h3>
-                                <table class="table table-bordered">
+                                <h6>{{ $category->name }}</h6>
+                                <table class="table table-bordered table-sm">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -118,8 +118,8 @@
 
                         $.each(response.data, function(index, category) {
                             var category_html = `
-                                <h3>${category.name}</h3>
-                                <table class="table table-bordered">
+                                <h6>${category.name}</h6>
+                                <table class="table table-bordered table-sm">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -186,10 +186,10 @@
             });
 
             function number_format(number) {
-                if (isNaN(number)) {
-                    return '0';
+                if (number < 0) {
+                    return `(${Math.abs(number).toLocaleString('en-US')})`;
                 }
-                return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2 }).format(number);
+                return number.toLocaleString('en-US');
             }
         });
     </script>

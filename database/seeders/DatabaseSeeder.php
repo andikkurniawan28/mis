@@ -158,10 +158,10 @@ class DatabaseSeeder extends Seeder
             ["id" => "21", "financial_statement_id" => "B", "name" => "Kewajiban Jangka Panjang", "normal_balance_id" => "C"],
             ["id" => "30", "financial_statement_id" => "B", "name" => "Modal", "normal_balance_id" => "C"],
             ["id" => "40", "financial_statement_id" => "I", "name" => "Pendapatan Penjualan", "normal_balance_id" => "C"],
-            ["id" => "50", "financial_statement_id" => "I", "name" => "Harga Pokok Penjualan", "normal_balance_id" => "C"],
-            ["id" => "60", "financial_statement_id" => "I", "name" => "Beban Operasional", "normal_balance_id" => "C"],
+            ["id" => "50", "financial_statement_id" => "I", "name" => "Harga Pokok Penjualan", "normal_balance_id" => "D"],
+            ["id" => "60", "financial_statement_id" => "I", "name" => "Beban Operasional", "normal_balance_id" => "D"],
             ["id" => "70", "financial_statement_id" => "I", "name" => "Pendapatan Lain-lain", "normal_balance_id" => "C"],
-            ["id" => "80", "financial_statement_id" => "I", "name" => "Beban Lain-lain", "normal_balance_id" => "C"],
+            ["id" => "80", "financial_statement_id" => "I", "name" => "Beban Lain-lain", "normal_balance_id" => "D"],
         ]);
 
         // Menambahkan Main Accounts

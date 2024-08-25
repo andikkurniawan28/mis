@@ -227,10 +227,10 @@
             });
 
             function number_format(number) {
-                if (isNaN(number)) {
-                    return '0';
+                if (number < 0) {
+                    return `(${Math.abs(number).toLocaleString('en-US')})`;
                 }
-                return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 0 }).format(number);
+                return number.toLocaleString('en-US');
             }
         });
     </script>

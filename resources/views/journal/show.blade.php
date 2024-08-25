@@ -66,16 +66,16 @@
                                                 <td>{{ $detail->account->id }}</td>
                                                 <td>{{ $detail->account->name }}</td>
                                                 <td>{{ $detail->description }}</td>
-                                                <td>{{ number_format($detail->debit, 2) }}</td>
-                                                <td>{{ number_format($detail->credit, 2) }}</td>
+                                                <td>{{ number_format($detail->debit) }}</td>
+                                                <td>{{ number_format($detail->credit) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th colspan="3">Total</th>
-                                            <th>{{ number_format($journal->journal_detail->sum('debit'), 2) }}</th>
-                                            <th>{{ number_format($journal->journal_detail->sum('credit'), 2) }}</th>
+                                            <th>{{ number_format($journal->journal_detail->sum('debit')) }}</th>
+                                            <th>{{ number_format($journal->journal_detail->sum('credit')) }}</th>
                                         </tr>
                                     </tfoot>
                                 </table>
