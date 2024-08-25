@@ -11,6 +11,7 @@ class ClosingEntryController extends Controller
      */
     public function __invoke(Request $request)
     {
+        return $request;
         return redirect()->back()->with('success', 'Report has been closed');
     }
 }

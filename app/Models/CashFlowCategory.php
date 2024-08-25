@@ -36,4 +36,8 @@ class CashFlowCategory extends Model
             ]);
         });
     }
+
+    public function account(){
+        return $this->hasMany(Account::class);
+    }
 }

@@ -35,23 +35,26 @@
                 <h4><strong>@yield('title')</strong></h4>
 
                 <!-- Form untuk Tahun dan Bulan -->
+                <form action="{{ route('closing_entry') }}" method="POST">
                 <div class="row mb-3">
+                    @csrf @method("POST")
                     <div class="col-md-3">
                         <label>Year</label>
-                        <input type="number" id="year" class="form-control" placeholder="Year" value="{{ date('Y') }}">
+                        <input type="number" id="year" name="year" class="form-control" placeholder="Year" value="{{ date('Y') }}">
                     </div>
                     <div class="col-md-3">
                         <label>Month</label>
-                        <input type="number" id="month" class="form-control" placeholder="Month (1-12)"
+                        <input type="number" id="month" name="month" class="form-control" placeholder="Month (1-12)"
                             value="{{ date('m') }}" min="1" max="12">
                     </div>
                     <div class="col-md-6">
                         <br>
-                        <button id="submit_button" class="btn btn-primary">Generate Report</button>
-                        <button id="print_pdf_button" class="btn btn-secondary">Print PDF</button>
-                        <a href="{{ route('closing_entry') }}" class="btn btn-dark">Closing Entry</a>
+                        <a id="submit_button" class="btn btn-primary text-white">Generate Report</a>
+                        <a id="print_pdf_button" class="btn btn-secondary text-white">Print PDF</a>
+                        <button type href="{{ route('closing_entry') }}" class="btn btn-dark">Closing Entry</button>
                     </div>
                 </div>
+                </form>
 
                 <!-- Laporan Income Statement -->
                 <div id="income_statement_report">

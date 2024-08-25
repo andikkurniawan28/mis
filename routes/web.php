@@ -9,6 +9,7 @@ use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\TaxRateController;
+use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
@@ -57,7 +58,9 @@ Route::get('/balance_sheet', [BalanceSheetController::class, 'index'])->name('ba
 Route::get('/balance_sheet/data/{year}/{month}', [BalanceSheetController::class, 'data'])->name('balance_sheet.data');
 Route::get('/income_statement', [IncomeStatementController::class, 'index'])->name('income_statement.index')->middleware(['auth', 'check.permission']);
 Route::get('/income_statement/data/{year}/{month}', [IncomeStatementController::class, 'data'])->name('income_statement.data');
-Route::get('/closing_entry', ClosingEntryController::class)->name('closing_entry');
+Route::get('/cash_flow', [CashFlowController::class, 'index'])->name('cash_flow.index')->middleware(['auth', 'check.permission']);
+Route::get('/cash_flow/data/{year}/{month}', [CashFlowController::class, 'data'])->name('cash_flow.data');
+Route::post('/closing_entry', ClosingEntryController::class)->name('closing_entry');
 
 
 
