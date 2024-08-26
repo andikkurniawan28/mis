@@ -37,11 +37,11 @@
                 <!-- Form untuk Tahun dan Bulan -->
                 <div class="row mb-3">
                     <div class="col-md-3">
-                        <label>Tahun</label>
+                        <label>Year</label>
                         <input type="number" id="year" class="form-control" placeholder="Tahun" value="{{ date('Y') }}">
                     </div>
                     <div class="col-md-3">
-                        <label>Bulan</label>
+                        <label>Month</label>
                         <input type="number" id="month" class="form-control" placeholder="Bulan (1-12)"
                             value="{{ date('m') }}" min="1" max="12">
                     </div>

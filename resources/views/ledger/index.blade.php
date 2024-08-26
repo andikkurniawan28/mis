@@ -24,8 +24,11 @@
                 <h4><strong>@yield('title')</strong></h4>
 
                 <!-- Form untuk Select2 dan Tanggal -->
+                <form action="{{ route('posting') }}" method="POST">
+                @csrf @method("POST")
                 <div class="row mb-3">
                     <div class="col-md-4">
+                        <label>Account</label>
                         <select id="account_select" class="form-control select2" name="account_id">
                             <option value="">Select Account</option>
                             @foreach ($accounts as $account)
@@ -34,23 +37,30 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <input type="date" id="start_date" class="form-control" placeholder="Start Date"
+                        <label>From</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control" placeholder="Start Date"
                             value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="col-md-3">
+                        <label>To</label>
                         <?php
                         // Mengatur tanggal hari ini
                         $today = new DateTime();
                         // Menambahkan satu hari
                         $nextDay = $today->modify('+1 day')->format('Y-m-d');
                         ?>
-                        <input type="date" id="end_date" class="form-control" placeholder="End Date"
+                        <input type="date" id="end_date" name="end_date" class="form-control" placeholder="End Date"
                             value="{{ $nextDay }}">
                     </div>
                     <div class="col-md-2">
-                        <button id="filter_button" class="btn btn-primary">Filter</button>
+                        <br>
+                        <div class="btn-group" role="group" aria-label="Button group">
+                            <a id="filter_button" class="btn btn-primary text-white">Filter</a>
+                            <button type="submit" class="btn btn-secondary text-white">Posting</button>
+                        </div>
                     </div>
                 </div>
+                </form>
 
                 <div class="table-responsive">
                     <table class="table table-bordered" id="ledger_table" width="100%">
@@ -62,6 +72,7 @@
                                 <th class="text-right">{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
                                 <th class="text-right">{{ ucwords(str_replace('_', ' ', 'balance')) }}</th>
                                 <th class="text-left">{{ ucwords(str_replace('_', ' ', 'user')) }}</th>
+                                <th class="text-right">{{ ucwords(str_replace('_', ' ', 'closing')) }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -146,6 +157,11 @@
                     {
                         data: 'user.name',
                         name: 'user.name',
+                        class: 'text-left'
+                    },
+                    {
+                        data: 'is_closing_entry',
+                        name: 'is_closing_entry',
                         class: 'text-left'
                     },
                 ],

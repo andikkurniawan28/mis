@@ -9,6 +9,7 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\PostingController;
 use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\DashboardController;
@@ -65,6 +66,7 @@ Route::get('/income_statement/data/{year}/{month}', [IncomeStatementController::
 Route::get('/cash_flow', [CashFlowController::class, 'index'])->name('cash_flow.index')->middleware(['auth', 'check.permission']);
 Route::get('/cash_flow/data/{year}/{month}', [CashFlowController::class, 'data'])->name('cash_flow.data');
 Route::post('/closing_entry', ClosingEntryController::class)->name('closing_entry');
+Route::post('/posting', PostingController::class)->name('posting');
 
 
 

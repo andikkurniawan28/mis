@@ -63,7 +63,8 @@ class LedgerController extends Controller
             'debit' => $totalDebitBefore,
             'credit' => $totalCreditBefore,
             'balance' => $initialBalance,
-            'user' => (object) ['name' => '']
+            'user' => (object) ['name' => ''],
+            'is_closing_entry' => '-',
         ];
 
         // Variabel untuk menyimpan total debit dan credit selama periode
@@ -89,6 +90,7 @@ class LedgerController extends Controller
                 'credit' => $credit,
                 'balance' => $runningBalance,
                 'user' => $row->user,
+                'is_closing_entry' => $row->is_closing_entry,
             ];
 
             // Update total debit dan credit selama periode
@@ -113,7 +115,8 @@ class LedgerController extends Controller
             'debit' => $totalDebitDuring,
             'credit' => $totalCreditDuring,
             'balance' => $finalBalance,
-            'user' => (object) ['name' => '']
+            'user' => (object) ['name' => ''],
+            'is_closing_entry' => '-',
         ];
 
         return Datatables::of(collect($results))
