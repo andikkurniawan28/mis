@@ -1,8 +1,8 @@
 @extends('template.sneat.master')
 
-@section('title', ucwords(str_replace('_', ' ', 'cash_flow_report')))
+@section('title', ucwords(str_replace('_', ' ', 'cash_flow')))
 
-@section('cash_flow_report-active', 'active')
+@section('cash_flow-active', 'active')
 
 @section('content')
 
@@ -53,7 +53,7 @@
                 </div>
 
                 <!-- Laporan Arus Kas -->
-                <div id="cash_flow_report">
+                <div id="cash_flow">
                     <div class="row">
                         <div class="col-md-12">
                             @foreach($cash_flow_categories as $category)
@@ -114,7 +114,7 @@
                     success: function(response) {
                         console.log('API Response:', response); // Debug API response
 
-                        $('#cash_flow_report').empty();
+                        $('#cash_flow').empty();
 
                         $.each(response.data, function(index, category) {
                             var category_html = `
@@ -153,14 +153,14 @@
                                 </table>
                                 <br>`;
 
-                            $('#cash_flow_report').append(category_html);
+                            $('#cash_flow').append(category_html);
                         });
                     }
                 });
             });
 
             $('#print_pdf_button').click(function() {
-                html2canvas(document.querySelector("#cash_flow_report"), {
+                html2canvas(document.querySelector("#cash_flow"), {
                     scale: 2
                 }).then(canvas => {
                     const { jsPDF } = window.jspdf;
@@ -181,7 +181,7 @@
                         heightLeft -= pdf.internal.pageSize.height;
                     }
 
-                    pdf.save('cash_flow_report.pdf');
+                    pdf.save('cash_flow.pdf');
                 });
             });
 

@@ -11,6 +11,11 @@
     <meta name="description" content="" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('template.sneat.style')
+    @php
+        $permissions = collect($setup->permission)
+            ->pluck('feature.route')
+            ->toArray();
+    @endphp
 </head>
 <body>
     <!-- Layout wrapper -->

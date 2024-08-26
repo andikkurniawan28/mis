@@ -56,6 +56,14 @@
                         <li>
                             <div class="dropdown-divider"></div>
                         </li>
+                        @if (in_array('setup.index', $permissions))
+                        <li>
+                            <a href="{{ route('setup.index') }}" class="dropdown-item">
+                                <i class="menu-icon tf-icons bx bx-cog"></i>
+                                <span class="align-middle">{{ ucwords(str_replace('_', ' ', 'setup')) }}</span>
+                            </a>
+                        </li>
+                        @endif
                         <li>
                             <a class="dropdown-item" href="{{ route('logout') }}">
                                 <i class="bx bx-power-off me-2"></i>

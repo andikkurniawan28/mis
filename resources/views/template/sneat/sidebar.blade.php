@@ -16,12 +16,6 @@
 
     <div class="menu-inner-shadow"></div>
 
-    @php
-        $permissions = collect($setup->permission)
-            ->pluck('feature.route')
-            ->toArray();
-    @endphp
-
     <ul class="menu-inner py-1">
 
         <li class="menu-item @yield('dashboard-active')">
@@ -31,27 +25,34 @@
             </a>
         </li>
 
-        @if (in_array('setup.index', $permissions))
-            <li class="menu-item @yield('setup-active')">
-                <a href="{{ route('setup.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-cog"></i>
-                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'setup')) }}</div>
-                </a>
-            </li>
-        @endif
-
-        @if (in_array('role.index', $permissions) ||
+        @if (
+                in_array('role.index', $permissions) ||
                 in_array('user.index', $permissions) ||
-                in_array('activity_log', $permissions))
+                in_array('cash_flow_category.index', $permissions) ||
+                in_array('financial_statement.index', $permissions) ||
+                in_array('normal_balance.index', $permissions) ||
+                in_array('account_group.index', $permissions) ||
+                in_array('main_account.index', $permissions) ||
+                in_array('sub_account.index', $permissions) ||
+                in_array('account.index', $permissions) ||
+                in_array('tax_rate.index', $permissions)
+            )
             <li
                 class="menu-item
                 @yield('role-active')
                 @yield('user-active')
-                @yield('activity_log-active')
+                @yield('cash_flow_category-active')
+                @yield('financial_statement-active')
+                @yield('normal_balance-active')
+                @yield('account_group-active')
+                @yield('main_account-active')
+                @yield('sub_account-active')
+                @yield('account-active')
+                @yield('tax_rate-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-door-open"></i>
-                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'access')) }}</div>
+                    <i class="menu-icon tf-icons bx bx-data"></i>
+                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'master')) }}</div>
                 </a>
                 <ul class="menu-sub">
                     @if (in_array('role.index', $permissions))
@@ -70,54 +71,6 @@
                             </a>
                         </li>
                     @endif
-                    @if (in_array('activity_log', $permissions))
-                        <li class="menu-item @yield('activity_log-active')">
-                            <a href="{{ route('activity_log') }}" class="menu-link">
-                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'activity_log')) }}
-                                </div>
-                            </a>
-                        </li>
-                    @endif
-                </ul>
-            </li>
-        @endif
-
-        @if (
-            in_array('cash_flow_category.index', $permissions) ||
-            in_array('financial_statement.index', $permissions) ||
-            in_array('normal_balance.index', $permissions) ||
-            in_array('account_group.index', $permissions) ||
-            in_array('main_account.index', $permissions) ||
-            in_array('sub_account.index', $permissions) ||
-            in_array('account.index', $permissions) ||
-            in_array('tax_rate.index', $permissions) ||
-            in_array('journal.index', $permissions) ||
-            in_array('ledger.index', $permissions) ||
-            in_array('balance_sheet.index', $permissions) ||
-            in_array('income_statement.index', $permissions) ||
-            in_array('cash_flow.index', $permissions)
-            )
-            <li
-                class="menu-item
-                @yield('cash_flow_category-active')
-                @yield('financial_statement-active')
-                @yield('normal_balance-active')
-                @yield('account_group-active')
-                @yield('main_account-active')
-                @yield('sub_account-active')
-                @yield('account-active')
-                @yield('tax_rate-active')
-                @yield('journal-active')
-                @yield('ledger-active')
-                @yield('balance_sheet-active')
-                @yield('income_statement-active')
-                @yield('cash_flow-active')
-            ">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-wallet-alt"></i>
-                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'finance')) }}</div>
-                </a>
-                <ul class="menu-sub">
                     @if (in_array('cash_flow_category.index', $permissions))
                     <li class="menu-item @yield('cash_flow_category-active')">
                         <a href="{{ route('cash_flow_category.index') }}" class="menu-link">
@@ -127,20 +80,20 @@
                     </li>
                     @endif
                     @if (in_array('financial_statement.index', $permissions))
-                        <li class="menu-item @yield('financial_statement-active')">
-                            <a href="{{ route('financial_statement.index') }}" class="menu-link">
-                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'financial_statement')) }}
-                                </div>
-                            </a>
-                        </li>
+                    <li class="menu-item @yield('financial_statement-active')">
+                        <a href="{{ route('financial_statement.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'financial_statement')) }}
+                            </div>
+                        </a>
+                    </li>
                     @endif
                     @if (in_array('normal_balance.index', $permissions))
-                        <li class="menu-item @yield('normal_balance-active')">
-                            <a href="{{ route('normal_balance.index') }}" class="menu-link">
-                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}
-                                </div>
-                            </a>
-                        </li>
+                    <li class="menu-item @yield('normal_balance-active')">
+                        <a href="{{ route('normal_balance.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}
+                            </div>
+                        </a>
+                    </li>
                     @endif
                     @if (in_array('account_group.index', $permissions))
                         <li class="menu-item @yield('account_group-active')">
@@ -182,6 +135,34 @@
                             </a>
                         </li>
                     @endif
+                </ul>
+            </li>
+        @endif
+
+        @if (
+                in_array('activity_log', $permissions) ||
+                in_array('journal.index', $permissions) ||
+                in_array('budget.index', $permissions)
+            )
+            <li
+                class="menu-item
+                @yield('activity_log-active')
+                @yield('journal-active')
+                @yield('budget-active')
+            ">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
+                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</div>
+                </a>
+                <ul class="menu-sub">
+                    @if (in_array('activity_log', $permissions))
+                        <li class="menu-item @yield('activity_log-active')">
+                            <a href="{{ route('activity_log') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'activity_log')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
                     @if (in_array('journal.index', $permissions))
                         <li class="menu-item @yield('journal-active')">
                             <a href="{{ route('journal.index') }}" class="menu-link">
@@ -190,6 +171,37 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('budget.index', $permissions))
+                        <li class="menu-item @yield('budget-active')">
+                            <a href="{{ route('budget.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'budget')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
+        @if (
+                in_array('balance_sheet.index', $permissions) ||
+                in_array('income_statement.index', $permissions) ||
+                in_array('cash_flow.index', $permissions) ||
+                in_array('ledger.index', $permissions)
+            )
+            <li
+                class="menu-item
+                @yield('balance_sheet-active')
+                @yield('income_statement-active')
+                @yield('cash_flow-active')
+                @yield('ledger-active')
+            ">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-bar-chart"></i>
+                    {{-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAKVJREFUSEvllQsOQDAQRJ+bcBM3w0lcxU24CdlExae6/RDCJk2T6s6rSdPJuLmym/WxAUqgAmR2VQ002gFtgB7Itcb5uwqxAUYPcRGWIeWExAKkT2xUISkAOb0KSQWokCsAe8hGMxbgugdBALPZ52YZ6M8BPpYlWfQ9gO2PLrXo/QCPl/uwRbUoJHD26gNQrBfPIrMNSDWj180RKvNSj4R+jO+nPRPGLzQZA0u51gAAAABJRU5ErkJggg=="/> --}}
+                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'report')) }}</div>
+                </a>
+                <ul class="menu-sub">
                     @if (in_array('ledger.index', $permissions))
                         <li class="menu-item @yield('ledger-active')">
                             <a href="{{ route('ledger.index') }}" class="menu-link">
