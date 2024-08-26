@@ -62,7 +62,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Nama Akun</th>
+                                            <th>Account</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
@@ -123,7 +123,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Nama Akun</th>
+                                            <th>Account</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
