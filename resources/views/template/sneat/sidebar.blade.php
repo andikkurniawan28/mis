@@ -207,18 +207,18 @@
                     <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</div>
                 </a>
                 <ul class="menu-sub">
-                    @if (in_array('journal.index', $permissions))
-                        <li class="menu-item @yield('journal-active')">
-                            <a href="{{ route('journal.index') }}" class="menu-link">
-                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'journal')) }}
-                                </div>
-                            </a>
-                        </li>
-                    @endif
                     @if (in_array('budget.index', $permissions))
                         <li class="menu-item @yield('budget-active')">
                             <a href="{{ route('budget.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'budget')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('journal.index', $permissions))
+                        <li class="menu-item @yield('journal-active')">
+                            <a href="{{ route('journal.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'journal')) }}
                                 </div>
                             </a>
                         </li>
@@ -283,7 +283,7 @@
         @endif
 
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Logistic</span>
+            <span class="menu-header-text">Supply Chain</span>
         </li>
 
         @if (
