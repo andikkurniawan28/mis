@@ -118,7 +118,6 @@
                             return `
                                 <div class="btn-group" role="group" aria-label="manage">
                                     <a href="{{ url('budget') }}/${row.id}/edit" class="btn btn-secondary btn-sm">Edit</a>
-                                    <a href="{{ url('budget') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
                                     <a href="{{ url('budget_refresh') }}/${row.id}" class="btn btn-success btn-sm">Refresh</a>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
                                 </div>

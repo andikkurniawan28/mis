@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setup;
+use App\Models\Account;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class SetupController extends Controller
     {
         $setup = Setup::init();
         $setups = Setup::get()->last();
-        return view("setup.index", compact("setup", "setups"));
+        $accounts = Account::all();
+        return view("setup.index", compact("setup", "setups", "accounts"));
     }
 
     public function update(Request $request, $id)
@@ -23,7 +25,8 @@ class SetupController extends Controller
         $validated = $request->validate([
             'app_name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
-            'company_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048' // max file size 2MB
+            'company_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // max file size 2MB
+            'retained_earning_id' => 'required',
         ]);
 
         $setup = Setup::findOrFail($id);

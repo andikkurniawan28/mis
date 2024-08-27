@@ -73,7 +73,7 @@
                                         </option>
                                         @foreach($sub_accounts as $sub_account)
                                             <option value="{{ $sub_account->id }}"
-                                                {{ $account->cash_flow_category == $sub_account->id ? 'selected' : '' }}>
+                                                {{ $account->sub_account == $sub_account->id ? 'selected' : '' }}>
                                                 {{ $sub_account->name }}
                                             </option>
                                         @endforeach

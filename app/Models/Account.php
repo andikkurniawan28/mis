@@ -60,7 +60,6 @@ class Account extends Model
         {
             $initial_balance = $account->initial_balance;
             $running_balance = Ledger::where('account_id', $id)
-                                ->where('is_closing_entry', 0)
                                 ->whereYear('created_at', $year)
                                 ->whereMonth('created_at', $month);
 
@@ -83,6 +82,7 @@ class Account extends Model
         {
             $initial_balance = $account->initial_balance;
             $running_balance = Ledger::where('account_id', $id)
+                                    ->where('is_closing_entry', 0)
                                     ->whereYear('created_at', $year)
                                     ->whereMonth('created_at', $month);
 

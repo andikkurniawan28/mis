@@ -21,7 +21,6 @@ class BalanceSheetController extends Controller
     public function data($year, $month)
     {
         $month = (int)$month;
-        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
 
         $account_groups = AccountGroup::with('main_account.sub_account.account')
             ->where('financial_statement_id', 'B')

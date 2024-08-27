@@ -55,6 +55,24 @@
                                     <input type="file" class="form-control" id="company_logo" name="company_logo" accept=".jpg, .jpeg, .png">
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="retained_earning_id">
+                                    {{ ucwords(str_replace('_', ' ', 'retained_earning_account')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select class="form-control select2" id="account" name="retained_earning_id" width="100%" required autofocus>
+                                        <option disabled {{ is_null($setup->retained_earning_id) ? 'selected' : '' }}>
+                                            Select a {{ ucwords(str_replace('_', ' ', 'account')) }} :
+                                        </option>
+                                        @foreach($accounts as $account)
+                                            <option value="{{ $account->id }}"
+                                                {{ $setup->retained_earning_id == $account->id ? 'selected' : '' }}>
+                                                {{ $account->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Update</button>
@@ -66,4 +84,15 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('additional_script')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#account').select2({
+            theme: 'bootstrap',
+            placeholder: "Select a sub_account"
+        });
+    });
+</script>
 @endsection

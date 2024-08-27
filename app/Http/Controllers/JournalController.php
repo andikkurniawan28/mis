@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setup;
+use App\Models\Budget;
 use App\Models\Ledger;
 use App\Models\Account;
 use App\Models\Journal;
@@ -82,6 +83,20 @@ class JournalController extends Controller
                     'credit' => $detail['credit'] ?? 0,
                     'user_id' => auth()->id(),
                 ]);
+
+                // Refresh Budget
+                $budget = Budget::where('account_id', $detail['account_id'])
+                    ->where('is_active', 1)
+                    ->get()
+                    ->first() ?? null;
+                if($budget != null){
+                    $spent = Budget::countSpent($budget->id, $budget->start_date, $budget->end_date);
+                    $remaining = $budget->amount - $spent;
+                    Budget::whereId($budget->id)->update([
+                        "spent" => $spent,
+                        "remaining" => $remaining,
+                    ]);
+                }
             }
         });
 

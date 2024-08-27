@@ -7,15 +7,19 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\PostingController;
 use App\Http\Controllers\TaxRateController;
+use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\MainAccountController;
+use App\Http\Controllers\PaymentTermController;
 use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\ClosingEntryController;
@@ -23,7 +27,9 @@ use App\Http\Controllers\BudgetRefreshController;
 use App\Http\Controllers\NormalBalanceController;
 use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\CashFlowCategoryController;
+use App\Http\Controllers\MaterialCategoryController;
 use App\Http\Controllers\FinancialStatementController;
+use App\Http\Controllers\MaterialSubCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +73,12 @@ Route::get('/cash_flow', [CashFlowController::class, 'index'])->name('cash_flow.
 Route::get('/cash_flow/data/{year}/{month}', [CashFlowController::class, 'data'])->name('cash_flow.data');
 Route::post('/closing_entry', ClosingEntryController::class)->name('closing_entry');
 Route::post('/posting', PostingController::class)->name('posting');
+Route::resource('/warehouse', WarehouseController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/material_category', MaterialCategoryController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/material_sub_category', MaterialSubCategoryController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/payment_term', PaymentTermController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/region', RegionController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);
 
 
 

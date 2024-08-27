@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setup;
 use App\Models\Ledger;
 use App\Models\Account;
 use App\Models\Journal;
@@ -20,6 +21,7 @@ class ClosingEntryController extends Controller
     {
         $year = $request->year;
         $month = (int)$request->month;
+        $setup = Setup::init();
 
         // Buat jurnal Penutupan, debit dan credit diisi diakhir karena belum dapat angkanya
         $total_debit = 0;
@@ -94,7 +96,7 @@ class ClosingEntryController extends Controller
         // Hitung net_income
         // $net_income = $total_credit - $total_debit;
         $net_income = $total_debit - $total_credit;
-        $akun_laba_ditahan = "30211";
+        $akun_laba_ditahan = $setup->retained_earning_id;
 
         // Tambahkan net_income ke Journal Detail supaya Jurnalnya balance
         JournalDetail::create([

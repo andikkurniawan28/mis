@@ -38,8 +38,8 @@
                     </div>
                     <div class="col-md-3">
                         <label>From</label>
-                        <input type="date" id="start_date" name="start_date" class="form-control" placeholder="Start Date"
-                            value="{{ date('Y-m-d') }}">
+                        <input type="date" id="start_date" name="start_date" class="form-control"
+                               value="{{ \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d') }}">
                     </div>
                     <div class="col-md-3">
                         <label>To</label>

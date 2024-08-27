@@ -17,4 +17,8 @@ class Setup extends Model
         $setup->permission = Permission::where("role_id", Auth()->user()->role_id)->with('feature')->get();
         return $setup;
     }
+
+    public function retained_earning(){
+        return $this->belongsTo(Account::class, 'retained_earning_id');
+    }
 }

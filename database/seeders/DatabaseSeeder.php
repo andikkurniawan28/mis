@@ -9,14 +9,18 @@ use App\Models\Setup;
 use App\Models\Account;
 use App\Models\Feature;
 use App\Models\TaxRate;
+use App\Models\Warehouse;
 use App\Models\Permission;
 use App\Models\SubAccount;
 use App\Models\MainAccount;
+use App\Models\PaymentTerm;
 use App\Models\AccountGroup;
 use App\Models\NormalBalance;
 use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
+use App\Models\MaterialCategory;
 use App\Models\FinancialStatement;
+use App\Models\MaterialSubCategory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,13 +29,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $setup = [
-            'app_name' => ucwords(str_replace('_', ' ', 'MIS')),
-            'company_name' => ucwords(str_replace('_', ' ', 'PG Kebon Agung')),
-            'company_logo' => 'setups/1718631326.png',
-        ];
-        Setup::insert($setup);
-
         $roles = [
             ['name' => ucwords(str_replace('_', ' ', 'CEO'))],
         ];
@@ -131,6 +128,48 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'balance_sheet')), 'route' => 'balance_sheet.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'income_statement')), 'route' => 'income_statement.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'cash_flow')), 'route' => 'cash_flow.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_warehouse')), 'route' => 'warehouse.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_warehouse')), 'route' => 'warehouse.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_warehouse')), 'route' => 'warehouse.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_warehouse')), 'route' => 'warehouse.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_warehouse')), 'route' => 'warehouse.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_warehouse')), 'route' => 'warehouse.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_warehouse')), 'route' => 'warehouse.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_material_category')), 'route' => 'material_category.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_material_category')), 'route' => 'material_category.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_material_category')), 'route' => 'material_category.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_material_category')), 'route' => 'material_category.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_material_category')), 'route' => 'material_category.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_material_category')), 'route' => 'material_category.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_material_category')), 'route' => 'material_category.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_material_sub_category')), 'route' => 'material_sub_category.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_material_sub_category')), 'route' => 'material_sub_category.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_material_sub_category')), 'route' => 'material_sub_category.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_material_sub_category')), 'route' => 'material_sub_category.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_material_sub_category')), 'route' => 'material_sub_category.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_material_sub_category')), 'route' => 'material_sub_category.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_material_sub_category')), 'route' => 'material_sub_category.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_payment_term')), 'route' => 'payment_term.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_payment_term')), 'route' => 'payment_term.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_payment_term')), 'route' => 'payment_term.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_payment_term')), 'route' => 'payment_term.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_payment_term')), 'route' => 'payment_term.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_payment_term')), 'route' => 'payment_term.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_payment_term')), 'route' => 'payment_term.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_region')), 'route' => 'region.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_region')), 'route' => 'region.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_region')), 'route' => 'region.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_region')), 'route' => 'region.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_region')), 'route' => 'region.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_region')), 'route' => 'region.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_region')), 'route' => 'region.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_business')), 'route' => 'business.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_business')), 'route' => 'business.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_business')), 'route' => 'business.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_business')), 'route' => 'business.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_business')), 'route' => 'business.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_business')), 'route' => 'business.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_business')), 'route' => 'business.destroy'],
         ];
         Feature::insert($features);
 
@@ -262,6 +301,39 @@ class DatabaseSeeder extends Seeder
             ["name" => "PPH 23", "rate" => 2.0],
             ["name" => "PPH Badan", "rate" => 25.0],
             ["name" => "Bebas Pajak", "rate" => 0.0],
+        ]);
+
+        $setup = [
+            'app_name' => ucwords(str_replace('_', ' ', 'MIS')),
+            'company_name' => ucwords(str_replace('_', ' ', 'PG Kebon Agung')),
+            'company_logo' => 'setups/1718631326.png',
+            'retained_earning_id' => "30211",
+        ];
+        Setup::insert($setup);
+
+        Warehouse::insert([
+            ["name" => "Gudang A"],
+            ["name" => "Gudang B"],
+            ["name" => "Gudang C"],
+        ]);
+
+        MaterialCategory::insert([
+            ["name" => "Produk"],
+            ["name" => "Bahan Baku"],
+        ]);
+
+        MaterialSubCategory::insert([
+            ["material_category_id" => 1, "name" => "Gula"],
+            ["material_category_id" => 1, "name" => "Tetes"],
+            ["material_category_id" => 1, "name" => "Ampas"],
+            ["material_category_id" => 1, "name" => "Blotong"],
+        ]);
+
+        PaymentTerm::insert([
+            ["day" => 0, "name" => "Tunai"],
+            ["day" => 3, "name" => "3 Hari"],
+            ["day" => 7, "name" => "7 Hari"],
+            ["day" => 14, "name" => "14 Hari"],
         ]);
 
     }

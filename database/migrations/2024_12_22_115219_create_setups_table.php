@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('app_name');
             $table->string('company_name');
             $table->string('company_logo')->nullable();
+            $table->string('retained_earning_id');
+            $table->foreign('retained_earning_id')->references('id')->on('accounts');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
