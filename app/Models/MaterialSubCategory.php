@@ -13,6 +13,10 @@ class MaterialSubCategory extends Model
 
     protected $guarded = [];
 
+    public function material_category(){
+        return $this->belongsTo(MaterialCategory::class);
+    }
+
     protected static function booted()
     {
         static::created(function ($material_sub_category) {

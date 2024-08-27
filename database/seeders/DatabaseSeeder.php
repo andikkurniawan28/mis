@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Role;
+use App\Models\Unit;
 use App\Models\User;
 use App\Models\Setup;
 use App\Models\Account;
@@ -135,6 +136,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_warehouse')), 'route' => 'warehouse.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_warehouse')), 'route' => 'warehouse.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_warehouse')), 'route' => 'warehouse.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_unit')), 'route' => 'unit.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_unit')), 'route' => 'unit.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_unit')), 'route' => 'unit.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_unit')), 'route' => 'unit.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_unit')), 'route' => 'unit.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_unit')), 'route' => 'unit.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_unit')), 'route' => 'unit.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_material_category')), 'route' => 'material_category.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_material_category')), 'route' => 'material_category.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_material_category')), 'route' => 'material_category.store'],
@@ -149,6 +157,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_material_sub_category')), 'route' => 'material_sub_category.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_material_sub_category')), 'route' => 'material_sub_category.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_material_sub_category')), 'route' => 'material_sub_category.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_material')), 'route' => 'material.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_material')), 'route' => 'material.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_material')), 'route' => 'material.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_material')), 'route' => 'material.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_material')), 'route' => 'material.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_material')), 'route' => 'material.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_material')), 'route' => 'material.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_payment_term')), 'route' => 'payment_term.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_payment_term')), 'route' => 'payment_term.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_payment_term')), 'route' => 'payment_term.store'],
@@ -334,6 +349,16 @@ class DatabaseSeeder extends Seeder
             ["day" => 3, "name" => "3 Hari"],
             ["day" => 7, "name" => "7 Hari"],
             ["day" => 14, "name" => "14 Hari"],
+        ]);
+
+        Unit::insert([
+            ["symbol" => "Kg", "name" => "Kilogram"],
+            ["symbol" => "Ku", "name" => "Kuintal"],
+            ["symbol" => "Ton", "name" => "Ton"],
+            ["symbol" => "Box", "name" => "Box"],
+            ["symbol" => "Pck", "name" => "Pack"],
+            ["symbol" => "Pcs", "name" => "Pieces"],
+            ["symbol" => "Sak", "name" => "Sak"],
         ]);
 
     }

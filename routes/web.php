@@ -29,7 +29,9 @@ use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\MaterialCategoryController;
 use App\Http\Controllers\FinancialStatementController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialSubCategoryController;
+use App\Http\Controllers\UnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,8 +76,10 @@ Route::get('/cash_flow/data/{year}/{month}', [CashFlowController::class, 'data']
 Route::post('/closing_entry', ClosingEntryController::class)->name('closing_entry');
 Route::post('/posting', PostingController::class)->name('posting');
 Route::resource('/warehouse', WarehouseController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/unit', UnitController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/material_category', MaterialCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/material_sub_category', MaterialSubCategoryController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/material', MaterialController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/payment_term', PaymentTermController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/region', RegionController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);

@@ -194,13 +194,11 @@
         @endif
 
         @if (
-                in_array('activity_log', $permissions) ||
                 in_array('journal.index', $permissions) ||
                 in_array('budget.index', $permissions)
             )
             <li
                 class="menu-item
-                @yield('activity_log-active')
                 @yield('journal-active')
                 @yield('budget-active')
             ">
@@ -290,6 +288,7 @@
 
         @if (
                 in_array('warehouse.index', $permissions) ||
+                in_array('unit.index', $permissions) ||
                 in_array('material_category.index', $permissions) ||
                 in_array('material_sub_category.index', $permissions) ||
                 in_array('material.index', $permissions)
@@ -297,6 +296,7 @@
             <li
                 class="menu-item
                 @yield('warehouse-active')
+                @yield('unit-active')
                 @yield('material_category-active')
                 @yield('material_sub_category-active')
                 @yield('material-active')
@@ -310,6 +310,14 @@
                         <li class="menu-item @yield('warehouse-active')">
                             <a href="{{ route('warehouse.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'warehouse')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('unit.index', $permissions))
+                        <li class="menu-item @yield('unit-active')">
+                            <a href="{{ route('unit.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'unit')) }}
                                 </div>
                             </a>
                         </li>
