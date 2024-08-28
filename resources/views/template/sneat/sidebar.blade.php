@@ -25,9 +25,15 @@
             </a>
         </li>
 
+        @if (
+                in_array('role.index', $permissions) ||
+                in_array('user.index', $permissions) ||
+                in_array('activity_log', $permissions)
+            )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Access</span>
         </li>
+        @endif
 
         @if (
                 in_array('role.index', $permissions) ||
@@ -85,9 +91,29 @@
             </ul>
         @endif
 
+        @if (
+                in_array('cash_flow_category.index', $permissions) ||
+                in_array('financial_statement.index', $permissions) ||
+                in_array('normal_balance.index', $permissions) ||
+                in_array('account_group.index', $permissions) ||
+                in_array('main_account.index', $permissions) ||
+                in_array('sub_account.index', $permissions) ||
+                in_array('account.index', $permissions) ||
+                in_array('tax_rate.index', $permissions) ||
+                in_array('payment_term.index', $permissions) ||
+                in_array('payment_term.index', $permissions) ||
+                in_array('budget.index', $permissions) ||
+                in_array('journal.index', $permissions) ||
+                in_array('balance_sheet.index', $permissions) ||
+                in_array('income_statement.index', $permissions) ||
+                in_array('cash_flow.index', $permissions) ||
+                in_array('cash_flow.index', $permissions) ||
+                in_array('ledger.index', $permissions)
+            )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Accounting</span>
         </li>
+        @endif
 
         @if (
                 in_array('cash_flow_category.index', $permissions) ||
@@ -282,16 +308,26 @@
             </li>
         @endif
 
+        @if (
+                in_array('warehouse.index', $permissions) ||
+                in_array('unit.index', $permissions) ||
+                in_array('material_category.index', $permissions) ||
+                in_array('material_sub_category.index', $permissions) ||
+                in_array('material.index', $permissions) ||
+                in_array('supplier.index', $permissions)
+            )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Supply Chain</span>
         </li>
+        @endif
 
         @if (
                 in_array('warehouse.index', $permissions) ||
                 in_array('unit.index', $permissions) ||
                 in_array('material_category.index', $permissions) ||
                 in_array('material_sub_category.index', $permissions) ||
-                in_array('material.index', $permissions)
+                in_array('material.index', $permissions) ||
+                in_array('supplier.index', $permissions)
             )
             <li
                 class="menu-item
@@ -300,6 +336,7 @@
                 @yield('material_category-active')
                 @yield('material_sub_category-active')
                 @yield('material-active')
+                @yield('supplier-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -346,13 +383,26 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('supplier.index', $permissions))
+                        <li class="menu-item @yield('supplier-active')">
+                            <a href="{{ route('supplier.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'supplier')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
 
+        @if (
+                in_array('region.index', $permissions) ||
+                in_array('business.index', $permissions)
+            )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Customer Relationship</span>
         </li>
+        @endif
 
         @if (
                 in_array('region.index', $permissions) ||

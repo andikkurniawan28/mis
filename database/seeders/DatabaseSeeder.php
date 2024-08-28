@@ -10,6 +10,7 @@ use App\Models\Setup;
 use App\Models\Account;
 use App\Models\Feature;
 use App\Models\TaxRate;
+use App\Models\Business;
 use App\Models\Warehouse;
 use App\Models\Permission;
 use App\Models\SubAccount;
@@ -21,6 +22,7 @@ use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
 use App\Models\MaterialCategory;
 use App\Models\FinancialStatement;
+use Illuminate\Support\Facades\DB;
 use App\Models\MaterialSubCategory;
 
 class DatabaseSeeder extends Seeder
@@ -185,6 +187,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_business')), 'route' => 'business.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_business')), 'route' => 'business.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_business')), 'route' => 'business.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_supplier')), 'route' => 'supplier.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_supplier')), 'route' => 'supplier.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_supplier')), 'route' => 'supplier.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_supplier')), 'route' => 'supplier.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_supplier')), 'route' => 'supplier.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_supplier')), 'route' => 'supplier.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_supplier')), 'route' => 'supplier.destroy'],
         ];
         Feature::insert($features);
 
@@ -359,6 +368,25 @@ class DatabaseSeeder extends Seeder
             ["symbol" => "Pck", "name" => "Pack"],
             ["symbol" => "Pcs", "name" => "Pieces"],
             ["symbol" => "Sak", "name" => "Sak"],
+        ]);
+
+        $warehouses = Warehouse::all();
+        foreach ($warehouses as $warehouse) {
+            $column_name = str_replace(' ', '_', $warehouse->name);
+            $queries = [
+                "ALTER TABLE materials ADD COLUMN `{$column_name}` FLOAT NULL",
+            ];
+
+            foreach ($queries as $query) {
+                DB::statement($query);
+            }
+        }
+
+        Business::insert([
+            ["name" => "Pabrik"],
+            ["name" => "Toko"],
+            ["name" => "Petani"],
+            ["name" => "Koperasi Unit Daerah"],
         ]);
 
     }

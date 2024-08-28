@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MaterialSubCategory;
 use App\Models\Setup;
 use Illuminate\Http\Request;
+use App\Models\MaterialCategory;
+use App\Models\MaterialSubCategory;
 
 class MaterialSubCategoryController extends Controller
 {
@@ -24,7 +25,8 @@ class MaterialSubCategoryController extends Controller
     public function create()
     {
         $setup = Setup::init();
-        return view('material_sub_category.create', compact('setup'));
+        $material_categories = MaterialCategory::all();
+        return view('material_sub_category.create', compact('setup', 'material_categories'));
     }
 
     /**
@@ -34,6 +36,7 @@ class MaterialSubCategoryController extends Controller
     {
         $validated = $request->validate([
             "name" => "required|unique:material_sub_categories",
+            "material_category_id" => "required",
         ]);
         $material_sub_category = MaterialSubCategory::create($validated);
         return redirect()->back()->with("success", "MaterialSubCategory has been created");
@@ -54,7 +57,8 @@ class MaterialSubCategoryController extends Controller
     {
         $setup = Setup::init();
         $material_sub_category = MaterialSubCategory::findOrFail($id);
-        return view('material_sub_category.edit', compact('setup', 'material_sub_category'));
+        $material_categories = MaterialCategory::all();
+        return view('material_sub_category.edit', compact('setup', 'material_sub_category', 'material_categories'));
     }
 
     /**
@@ -65,6 +69,7 @@ class MaterialSubCategoryController extends Controller
         $material_sub_category = MaterialSubCategory::findOrFail($id);
         $validated = $request->validate([
             'name' => 'required|unique:material_sub_categories,name,' . $material_sub_category->id,
+            "material_category_id" => "required",
         ]);
         $material_sub_category->update($validated);
         return redirect()->route('material_sub_category.index')->with("success", "MaterialSubCategory has been updated");

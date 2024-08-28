@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
 use App\Models\Setup;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WarehouseController extends Controller
 {
@@ -66,6 +67,7 @@ class WarehouseController extends Controller
         $validated = $request->validate([
             'name' => 'required|unique:warehouses,name,' . $warehouse->id,
         ]);
+        self::updateColumn($warehouse, $request);
         $warehouse->update($validated);
         return redirect()->route('warehouse.index')->with("success", "Warehouse has been updated");
     }
@@ -77,5 +79,17 @@ class WarehouseController extends Controller
     {
         Warehouse::findOrFail($id)->delete();
         return redirect()->back()->with("success", "Warehouse has been deleted");
+    }
+
+    public static function updateColumn($warehouse, $request)
+    {
+        $old_column_name = str_replace(' ', '_', $warehouse->name);
+        $new_column_name = str_replace(' ', '_', $request->name);
+        $queries = [
+            "ALTER TABLE materials CHANGE COLUMN `{$old_column_name}` `{$new_column_name}` FLOAT NULL",
+        ];
+        foreach ($queries as $query) {
+            DB::statement($query);
+        }
     }
 }

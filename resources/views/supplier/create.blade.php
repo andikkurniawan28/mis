@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'create_material_sub_category')) }}
+    {{ ucwords(str_replace('_', ' ', 'create_supplier')) }}
 @endsection
 
-@section('material_sub_category-active')
+@section('supplier-active')
     {{ 'active' }}
 @endsection
 
@@ -13,7 +13,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route("material_sub_category.index") }}">{{ ucwords(str_replace('_', ' ', 'material_sub_category')) }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route("supplier.index") }}">{{ ucwords(str_replace('_', ' ', 'supplier')) }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">@yield("title")</li>
             </ol>
         </nav>
@@ -24,18 +24,18 @@
                         <h5 class="mb-0">@yield('title')</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route("material_sub_category.store") }}" method="POST">
+                        <form action="{{ route("supplier.store") }}" method="POST">
                             @csrf @method("POST")
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="material_category">
-                                    {{ ucwords(str_replace('_', ' ', 'material_category')) }}
+                                <label class="col-sm-2 col-form-label" for="business">
+                                    {{ ucwords(str_replace('_', ' ', 'business')) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <select class="form-control select2" id="material_category" name="material_category_id" width="100%" required>
-                                        <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'material_category')) }} :</option>
-                                        @foreach ($material_categories as $material_category)
-                                            <option value="{{ $material_category->id }}">{{ $material_category->name }}</option>
+                                    <select class="form-control select2" id="business" name="business_id" width="100%" required>
+                                        <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'business')) }} :</option>
+                                        @foreach ($businesses as $business)
+                                            <option value="{{ $business->id }}">{{ $business->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -47,6 +47,24 @@
                                 </label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="name" name="name" value="{{ old("name") }}" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="phone_number">
+                                    {{ ucwords(str_replace('_', ' ', 'phone_number')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ old("phone_number") }}" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="address">
+                                    {{ ucwords(str_replace('_', ' ', 'address')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" name="address" required autofocus>{{ old('address') }}</textarea>
                                 </div>
                             </div>
 
@@ -66,9 +84,9 @@
 @section('additional_script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#material_category').select2({
+        $('#business').select2({
             theme: 'bootstrap',
-            placeholder: "Select a material_category"
+            placeholder: "Select a business"
         });
     });
 </script>

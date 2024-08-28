@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\BudgetController;
@@ -14,6 +15,8 @@ use App\Http\Controllers\PostingController;
 use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
+use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\SubAccountController;
@@ -29,9 +32,7 @@ use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\MaterialCategoryController;
 use App\Http\Controllers\FinancialStatementController;
-use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialSubCategoryController;
-use App\Http\Controllers\UnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,7 @@ Route::resource('/material', MaterialController::class)->middleware(['auth', 'ch
 Route::resource('/payment_term', PaymentTermController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/region', RegionController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/supplier', SupplierController::class)->middleware(['auth', 'check.permission']);
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,13 @@ class Warehouse extends Model
                 'user_id' => Auth::id(),
                 'description' => "Warehouse '{$warehouse->name}' was created.",
             ]);
+            $column_name = str_replace(' ', '_', $warehouse->name);
+            $queries = [
+                "ALTER TABLE materials ADD COLUMN `{$column_name}` FLOAT NULL",
+            ];
+            foreach ($queries as $query) {
+                DB::statement($query);
+            }
         });
 
         static::updated(function ($warehouse) {
@@ -34,6 +42,13 @@ class Warehouse extends Model
                 'user_id' => Auth::id(),
                 'description' => "Warehouse '{$warehouse->name}' was deleted.",
             ]);
+            $column_name = str_replace(' ', '_', $warehouse->name);
+            $queries = [
+                "ALTER TABLE materials DROP COLUMN `{$column_name}`",
+            ];
+            foreach ($queries as $query) {
+                DB::statement($query);
+            }
         });
     }
 }

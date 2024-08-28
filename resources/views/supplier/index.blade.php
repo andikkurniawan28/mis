@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'material_sub_category')) }}
+    {{ ucwords(str_replace('_', ' ', 'supplier')) }}
 @endsection
 
-@section('material_sub_category-active')
+@section('supplier-active')
     {{ 'active' }}
 @endsection
 
@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('material_sub_category.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('supplier.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
@@ -23,21 +23,23 @@
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'business')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'phone_number')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($material_sub_categories as $material_sub_category)
+                            @foreach ($suppliers as $supplier)
                                 <tr>
-                                    <td>{{ $material_sub_category->id }}</td>
-                                    <td>{{ $material_sub_category->material_category->name }}</td>
-                                    <td>{{ $material_sub_category->name }}</td>
+                                    <td>{{ $supplier->id }}</td>
+                                    <td>{{ $supplier->business->name }}</td>
+                                    <td>{{ $supplier->name }}</td>
+                                    <td>{{ $supplier->phone_number }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('material_sub_category.edit', $material_sub_category->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $material_sub_category->id }}" data-name="{{ $material_sub_category->name }}">Delete</button>
+                                            <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $supplier->id }}" data-name="{{ $supplier->name }}">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -55,8 +57,8 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    const material_sub_category_id = this.getAttribute('data-id');
-                    const material_sub_category_name = this.getAttribute('data-name');
+                    const supplier_id = this.getAttribute('data-id');
+                    const supplier_name = this.getAttribute('data-name');
                     Swal.fire({
                         title: 'Are you sure?',
                         text: 'You won\'t be able to revert this!',
@@ -70,8 +72,8 @@
                             const form = document.createElement('form');
                             form.setAttribute('method', 'POST');
                             form.setAttribute('action',
-                                `{{ route('material_sub_category.destroy', ':id') }}`.replace(
-                                    ':id', material_sub_category_id));
+                                `{{ route('supplier.destroy', ':id') }}`.replace(
+                                    ':id', supplier_id));
                             const csrfToken = document.getElementsByName("_token")[0].value;
 
                             const hiddenMethod = document.createElement('input');
@@ -82,7 +84,7 @@
                             const name = document.createElement('input');
                             name.setAttribute('type', 'hidden');
                             name.setAttribute('name', 'name');
-                            name.setAttribute('value', material_sub_category_name);
+                            name.setAttribute('value', supplier_name);
 
                             const csrfTokenInput = document.createElement('input');
                             csrfTokenInput.setAttribute('type', 'hidden');
