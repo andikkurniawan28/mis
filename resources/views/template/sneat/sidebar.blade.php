@@ -101,7 +101,7 @@
                 in_array('account.index', $permissions) ||
                 in_array('tax_rate.index', $permissions) ||
                 in_array('payment_term.index', $permissions) ||
-                in_array('payment_term.index', $permissions) ||
+                in_array('transaction_category.index', $permissions) ||
                 in_array('budget.index', $permissions) ||
                 in_array('journal.index', $permissions) ||
                 in_array('balance_sheet.index', $permissions) ||
@@ -124,7 +124,8 @@
                 in_array('sub_account.index', $permissions) ||
                 in_array('account.index', $permissions) ||
                 in_array('tax_rate.index', $permissions) ||
-                in_array('payment_term.index', $permissions)
+                in_array('payment_term.index', $permissions) ||
+                in_array('transaction_category.index', $permissions)
             )
             <li
                 class="menu-item
@@ -137,6 +138,7 @@
                 @yield('account-active')
                 @yield('tax_rate-active')
                 @yield('payment_term-active')
+                @yield('transaction_category-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -211,6 +213,14 @@
                         <li class="menu-item @yield('payment_term-active')">
                             <a href="{{ route('payment_term.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'payment_term')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('transaction_category.index', $permissions))
+                        <li class="menu-item @yield('transaction_category-active')">
+                            <a href="{{ route('transaction_category.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
                                 </div>
                             </a>
                         </li>

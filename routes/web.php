@@ -33,6 +33,7 @@ use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\MaterialCategoryController;
 use App\Http\Controllers\FinancialStatementController;
 use App\Http\Controllers\MaterialSubCategoryController;
+use App\Http\Controllers\TransactionCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +86,7 @@ Route::resource('/payment_term', PaymentTermController::class)->middleware(['aut
 Route::resource('/region', RegionController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/supplier', SupplierController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/transaction_category', TransactionCategoryController::class)->middleware(['auth', 'check.permission']);
 
 
 

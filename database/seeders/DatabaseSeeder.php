@@ -24,6 +24,7 @@ use App\Models\MaterialCategory;
 use App\Models\FinancialStatement;
 use Illuminate\Support\Facades\DB;
 use App\Models\MaterialSubCategory;
+use App\Models\TransactionCategory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -112,6 +113,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'edit_tax_rate')), 'route' => 'tax_rate.edit'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_tax_rate')), 'route' => 'tax_rate.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_tax_rate')), 'route' => 'tax_rate.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_transaction_category')), 'route' => 'transaction_category.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_transaction_category')), 'route' => 'transaction_category.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_transaction_category')), 'route' => 'transaction_category.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_transaction_category')), 'route' => 'transaction_category.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_transaction_category')), 'route' => 'transaction_category.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_transaction_category')), 'route' => 'transaction_category.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction_category')), 'route' => 'transaction_category.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_journal')), 'route' => 'journal.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_journal')), 'route' => 'journal.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_journal')), 'route' => 'journal.store'],
@@ -239,6 +247,7 @@ class DatabaseSeeder extends Seeder
         MainAccount::insert([
             ["id" => "101", "account_group_id" => "10", "name" => "Kas"],
             ["id" => "102", "account_group_id" => "10", "name" => "Piutang Dagang"],
+            ["id" => "107", "account_group_id" => "10", "name" => "Persediaan"],
             ["id" => "103", "account_group_id" => "11", "name" => "Tanah"],
             ["id" => "104", "account_group_id" => "11", "name" => "Bangunan"],
             ["id" => "105", "account_group_id" => "11", "name" => "Peralatan"],
@@ -251,12 +260,16 @@ class DatabaseSeeder extends Seeder
             ["id" => "402", "account_group_id" => "40", "name" => "Pendapatan Jasa"],
             ["id" => "501", "account_group_id" => "50", "name" => "Harga Pokok Penjualan"],
             ["id" => "502", "account_group_id" => "50", "name" => "Beban Bahan Baku"],
+            ["id" => "503", "account_group_id" => "50", "name" => "Beban Pengiriman"],
             ["id" => "601", "account_group_id" => "60", "name" => "Beban Gaji"],
             ["id" => "602", "account_group_id" => "60", "name" => "Beban Sewa"],
+            ["id" => "603", "account_group_id" => "60", "name" => "Beban Pajak"],
             ["id" => "701", "account_group_id" => "70", "name" => "Pendapatan Bunga"],
             ["id" => "702", "account_group_id" => "70", "name" => "Pendapatan Dividen"],
+            ["id" => "703", "account_group_id" => "70", "name" => "Pendapatan Potongan"],
             ["id" => "801", "account_group_id" => "80", "name" => "Beban Listrik"],
             ["id" => "802", "account_group_id" => "80", "name" => "Beban Telepon"],
+            ["id" => "803", "account_group_id" => "80", "name" => "Beban Lain-lain"],
         ]);
 
         // Menambahkan Sub Accounts
@@ -265,6 +278,7 @@ class DatabaseSeeder extends Seeder
             ["id" => "1012", "main_account_id" => "101", "name" => "Kas di Tangan"],
             ["id" => "1021", "main_account_id" => "102", "name" => "Piutang Dagang Lokal"],
             ["id" => "1022", "main_account_id" => "102", "name" => "Piutang Dagang Ekspor"],
+            ["id" => "1071", "main_account_id" => "102", "name" => "Persediaan Barang"],
             ["id" => "1031", "main_account_id" => "103", "name" => "Tanah Perusahaan"],
             ["id" => "1041", "main_account_id" => "104", "name" => "Bangunan Pabrik"],
             ["id" => "1051", "main_account_id" => "105", "name" => "Peralatan Produksi"],
@@ -277,12 +291,16 @@ class DatabaseSeeder extends Seeder
             ["id" => "4021", "main_account_id" => "402", "name" => "Pendapatan Jasa Konsultasi"],
             ["id" => "5011", "main_account_id" => "501", "name" => "Beban Bahan Baku Utama"],
             ["id" => "5021", "main_account_id" => "502", "name" => "Beban Bahan Baku Sekunder"],
+            ["id" => "5031", "main_account_id" => "503", "name" => "Beban Pengiriman"],
             ["id" => "6011", "main_account_id" => "601", "name" => "Beban Gaji Karyawan"],
             ["id" => "6021", "main_account_id" => "602", "name" => "Beban Sewa Gedung"],
+            ["id" => "6031", "main_account_id" => "603", "name" => "Beban Pajak"],
             ["id" => "7011", "main_account_id" => "701", "name" => "Pendapatan Bunga Bank"],
             ["id" => "7021", "main_account_id" => "702", "name" => "Pendapatan Dividen Saham"],
+            ["id" => "7031", "main_account_id" => "703", "name" => "Pendapatan Potongan"],
             ["id" => "8011", "main_account_id" => "801", "name" => "Beban Listrik Kantor"],
             ["id" => "8021", "main_account_id" => "802", "name" => "Beban Telepon Kantor"],
+            ["id" => "8031", "main_account_id" => "803", "name" => "Beban Lain-lain"],
         ]);
 
         // Menambahkan Accounts
@@ -295,6 +313,7 @@ class DatabaseSeeder extends Seeder
             ["id" => "10411", "sub_account_id" => "1041", "cash_flow_category_id" => 2, "name" => "Bangunan Pabrik", "initial_balance" => 0],
             ["id" => "10511", "sub_account_id" => "1051", "cash_flow_category_id" => 2, "name" => "Peralatan Produksi", "initial_balance" => 0],
             ["id" => "10611", "sub_account_id" => "1061", "cash_flow_category_id" => 2, "name" => "Inventaris Kantor", "initial_balance" => 0],
+            ["id" => "10711", "sub_account_id" => "1071", "cash_flow_category_id" => 1, "name" => "Persediaan Barang Dagang", "initial_balance" => 0],
 
             // Kewajiban
             ["id" => "20111", "sub_account_id" => "2011", "cash_flow_category_id" => 1, "name" => "Hutang Usaha Lokal", "initial_balance" => 0],
@@ -311,12 +330,17 @@ class DatabaseSeeder extends Seeder
             // Beban
             ["id" => "50111", "sub_account_id" => "5011", "cash_flow_category_id" => 1, "name" => "Beban Bahan Baku Utama", "initial_balance" => 0],
             ["id" => "50211", "sub_account_id" => "5021", "cash_flow_category_id" => 1, "name" => "Beban Bahan Baku Sekunder", "initial_balance" => 0],
+            ["id" => "50311", "sub_account_id" => "5031", "cash_flow_category_id" => 1, "name" => "Beban Pengiriman", "initial_balance" => 0],
             ["id" => "60111", "sub_account_id" => "6011", "cash_flow_category_id" => 1, "name" => "Beban Gaji Karyawan", "initial_balance" => 0],
             ["id" => "60211", "sub_account_id" => "6021", "cash_flow_category_id" => 1, "name" => "Beban Sewa Gedung", "initial_balance" => 0],
+            ["id" => "60311", "sub_account_id" => "6031", "cash_flow_category_id" => 1, "name" => "Beban Pajak Pembelian", "initial_balance" => 0],
+            ["id" => "60312", "sub_account_id" => "6031", "cash_flow_category_id" => 1, "name" => "Beban Pajak Penjualan", "initial_balance" => 0],
             ["id" => "70111", "sub_account_id" => "7011", "cash_flow_category_id" => 1, "name" => "Pendapatan Bunga Bank", "initial_balance" => 0],
             ["id" => "70211", "sub_account_id" => "7021", "cash_flow_category_id" => 1, "name" => "Pendapatan Dividen Saham", "initial_balance" => 0],
+            ["id" => "70311", "sub_account_id" => "7031", "cash_flow_category_id" => 1, "name" => "Pendapatan Potongan Pembelian", "initial_balance" => 0],
             ["id" => "80111", "sub_account_id" => "8011", "cash_flow_category_id" => 1, "name" => "Beban Listrik Kantor", "initial_balance" => 0],
             ["id" => "80211", "sub_account_id" => "8021", "cash_flow_category_id" => 1, "name" => "Beban Telepon Kantor", "initial_balance" => 0],
+            ["id" => "80311", "sub_account_id" => "8031", "cash_flow_category_id" => 1, "name" => "Beban Potongan Penjualan", "initial_balance" => 0],
         ]);
 
         TaxRate::insert([
@@ -387,6 +411,39 @@ class DatabaseSeeder extends Seeder
             ["name" => "Toko"],
             ["name" => "Petani"],
             ["name" => "Koperasi Unit Daerah"],
+        ]);
+
+        TransactionCategory::insert([
+            [
+                "id" => "PRC",
+                "name" => "Pembelian",
+                "stock_normal_balance_id" => "D",
+                "subtotal_account_id" => Account::where("name", "Persediaan Barang Dagang")->get()->last()->id,
+                "subtotal_normal_balance_id" => "D",
+                "taxes_account_id" => Account::where("name", "Beban Pajak Pembelian")->get()->last()->id,
+                "taxes_normal_balance_id" => "D",
+                "freight_account_id" => Account::where("name", "Beban Pengiriman")->get()->last()->id,
+                "freight_normal_balance_id" => "D",
+                "discount_account_id" => Account::where("name", "Pendapatan Potongan Pembelian")->get()->last()->id,
+                "discount_normal_balance_id" => "C",
+                "grand_total_account_id" => Account::where("name", "Hutang Usaha Lokal")->get()->last()->id,
+                "grand_total_normal_balance_id" => "C",
+            ],
+            [
+                "id" => "SLS",
+                "name" => "Penjualan",
+                "stock_normal_balance_id" => "C",
+                "subtotal_account_id" => Account::where("name", "Persediaan Barang Dagang")->get()->last()->id,
+                "subtotal_normal_balance_id" => "C",
+                "taxes_account_id" => Account::where("name", "Beban Pajak Penjualan")->get()->last()->id,
+                "taxes_normal_balance_id" => "D",
+                "freight_account_id" => Account::where("name", "Beban Pengiriman")->get()->last()->id,
+                "freight_normal_balance_id" => "D",
+                "discount_account_id" => Account::where("name", "Beban Potongan Penjualan")->get()->last()->id,
+                "discount_normal_balance_id" => "D",
+                "grand_total_account_id" => Account::where("name", "Piutang Dagang Lokal")->get()->last()->id,
+                "grand_total_normal_balance_id" => "D",
+            ],
         ]);
 
     }

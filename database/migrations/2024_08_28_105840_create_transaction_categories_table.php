@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('transaction_categories', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name')->unique();
+            $table->string('stock_normal_balance_id');
+            $table->foreign('stock_normal_balance_id')->references('id')->on('normal_balances');
             $table->string('subtotal_account_id');
             $table->foreign('subtotal_account_id')->references('id')->on('accounts');
             $table->string('subtotal_normal_balance_id');
@@ -30,6 +32,10 @@ return new class extends Migration
             $table->foreign('discount_account_id')->references('id')->on('accounts');
             $table->string('discount_normal_balance_id');
             $table->foreign('discount_normal_balance_id')->references('id')->on('normal_balances');
+            $table->string('grand_total_account_id');
+            $table->foreign('grand_total_account_id')->references('id')->on('accounts');
+            $table->string('grand_total_normal_balance_id');
+            $table->foreign('grand_total_normal_balance_id')->references('id')->on('normal_balances');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
