@@ -9,6 +9,43 @@
 @endsection
 
 @section('content')
+    <style>
+        #transaction-details-table {
+            width: 100%;
+        }
+
+        #transaction-details-table th,
+        #transaction-details-table td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        /* Define column widths */
+        #transaction-details-table .col-material {
+            width: 35%;
+        }
+
+        #transaction-details-table .col-qty {
+            width: 10%;
+        }
+
+        #transaction-details-table .col-price {
+            width: 20%;
+        }
+
+        #transaction-details-table .col-discount {
+            width: 15%;
+        }
+
+        #transaction-details-table .col-total {
+            width: 20%;
+        }
+
+        #transaction-details-table th:last-child,
+        #transaction-details-table td:last-child {
+            width: auto; /* For Action column */
+        }
+    </style>
     <div class="container-xxl flex-grow-1 container-p-y">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -35,12 +72,38 @@
                                             <label for="transaction_category_id">
                                                 {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
                                             </label>
-                                            <select id="transaction_category_id" name="transaction_category_id" class="form-control select2" required>
+                                            <select width="100%" id="transaction_category_id" name="transaction_category_id" class="form-control select2" required onChange="handleTransactionCategoryChange(this)">
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}</option>
                                                 @foreach($transaction_categories as $category)
                                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
+                                            <script>
+                                                function handleTransactionCategoryChange(selectElement) {
+                                                    const transactionCategoryId = selectElement.value;
+                                                    console.log('Selected Transaction Category ID:', transactionCategoryId);
+                                                    const apiUrl = `/api/generate_transaction_id/${transactionCategoryId}`;
+                                                    fetch(apiUrl)
+                                                        .then(response => {
+                                                            if (!response.ok) {
+                                                                throw new Error('Network response was not ok');
+                                                            }
+                                                            return response.json();
+                                                        })
+                                                        .then(data => {
+                                                            console.log('Data fetched from API:', data);
+
+                                                            // Asumsikan response dari API mengandung property `transaction_id`
+                                                            if (data.transaction_id) {
+                                                                // Menetapkan nilai transaction_id di input
+                                                                document.getElementById('id').value = data.transaction_id;
+                                                            }
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('There has been a problem with your fetch operation:', error);
+                                                        });
+                                                }
+                                            </script>
                                         </div>
                                         <div class="mb-3">
                                             <label for="id">
@@ -55,7 +118,7 @@
                                             <label for="tax_rate_id">
                                                 {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}
                                             </label>
-                                            <select id="tax_rate_id" name="tax_rate_id" class="form-control select2" required>
+                                            <select width="100%" id="tax_rate_id" name="tax_rate_id" class="form-control select2" required>
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}</option>
                                                 @foreach($tax_rates as $tax_rate)
                                                     <option value="{{ $tax_rate->id }}">{{ $tax_rate->name }}</option>
@@ -66,7 +129,7 @@
                                             <label for="warehouse_id">
                                                 {{ ucwords(str_replace('_', ' ', 'warehouse')) }}
                                             </label>
-                                            <select id="warehouse_id" name="warehouse_id" class="form-control select2" required>
+                                            <select width="100%" id="warehouse_id" name="warehouse_id" class="form-control select2" required>
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'warehouse')) }}</option>
                                                 @foreach($warehouses as $warehouse)
                                                     <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
@@ -80,7 +143,7 @@
                                             <label for="supplier_id">
                                                 {{ ucwords(str_replace('_', ' ', 'supplier')) }}
                                             </label>
-                                            <select id="supplier_id" name="supplier_id" class="form-control select2">
+                                            <select width="100%" id="supplier_id" name="supplier_id" class="form-control select2">
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'supplier')) }}</option>
                                                 @foreach($suppliers as $supplier)
                                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -91,7 +154,7 @@
                                             <label for="customer_id">
                                                 {{ ucwords(str_replace('_', ' ', 'customer')) }}
                                             </label>
-                                            <select id="customer_id" name="customer_id" class="form-control select2">
+                                            <select width="100%" id="customer_id" name="customer_id" class="form-control select2">
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'customer')) }}</option>
                                                 @foreach($customers as $customer)
                                                     <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -105,13 +168,42 @@
                                             <label for="payment_term_id">
                                                 {{ ucwords(str_replace('_', ' ', 'payment_term')) }}
                                             </label>
-                                            <select id="payment_term_id" name="payment_term_id" class="form-control select2" required>
+                                            <select width="100%" id="payment_term_id" name="payment_term_id" class="form-control select2" required onChange="handlePaymentTermChange(this, document.getElementById('valid_until_old').value)">
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_term')) }}</option>
                                                 @foreach($payment_terms as $payment_term)
                                                     <option value="{{ $payment_term->id }}">{{ $payment_term->name }}</option>
                                                 @endforeach
                                             </select>
+                                            <input type="hidden" id="valid_until_old" value="{{ old('valid_until', date('Y-m-d')) }}">
+                                            <script>
+                                                function handlePaymentTermChange(selectElement, validUntil) {
+                                                    const paymentTermId = selectElement.value;
+                                                    const currentDate = validUntil; // Use the validUntil value from the input field
+                                                    const apiUrl = `/api/generate_valid_until/${paymentTermId}/${currentDate}`;
+
+                                                    fetch(apiUrl)
+                                                        .then(response => {
+                                                            if (!response.ok) {
+                                                                throw new Error('Network response was not ok');
+                                                            }
+                                                            return response.json();
+                                                        })
+                                                        .then(data => {
+                                                            console.log('Data fetched from API:', data);
+
+                                                            // Asumsikan response dari API mengandung property `valid_until`
+                                                            if (data.valid_until) {
+                                                                // Menetapkan nilai valid_until di input
+                                                                document.getElementById('valid_until').value = data.valid_until;
+                                                            }
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('There has been a problem with your fetch operation:', error);
+                                                        });
+                                                }
+                                            </script>
                                         </div>
+
                                         <div class="mb-3">
                                             <label for="supplier_id">
                                                 {{ ucwords(str_replace('_', ' ', 'valid_until')) }}
@@ -128,27 +220,24 @@
                                         <table class="table table-bordered" id="transaction-details-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Material</th>
-                                                    <th>Quantity</th>
-                                                    <th>Price</th>
-                                                    <th>Discount</th>
-                                                    <th>Total</th>
+                                                    <th class="col-material">Material</th>
+                                                    <th class="col-qty">Qty</th>
+                                                    <th class="col-price">Price</th>
+                                                    <th class="col-discount">Discount</th>
+                                                    <th class="col-total">Total</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <select name="details[0][material_id]" class="form-control select2" required>
+                                                        <select width="100%" name="details[0][material_id]" class="form-control select2" required>
                                                             <option disabled selected>Select a material</option>
                                                             @foreach($materials as $material)
                                                                 <option value="{{ $material->id }}">{{ $material->name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    {{-- <td>
-                                                        <input type="number" name="details[0][item_order]" class="form-control" required>
-                                                    </td> --}}
                                                     <td>
                                                         <input type="number" name="details[0][qty]" class="form-control qty" step="0.01" required>
                                                     </td>
@@ -167,6 +256,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+
 
                                         <br>
 
@@ -218,7 +308,8 @@
                 $('.select2').select2({
                     placeholder: "Select an option",
                     theme: 'bootstrap',
-                    allowClear: true
+                    allowClear: true,
+                    width: "100%"
                 });
             }
 
@@ -226,9 +317,9 @@
 
             function updateTotals() {
                 let totalSubtotal = 0;
-                let totalTaxes = parseFloat(document.getElementById('taxes').value) || 0;
-                let totalFreight = parseFloat(document.getElementById('freight').value) || 0;
-                let totalDiscount = parseFloat(document.getElementById('discount').value) || 0;
+                let totalTaxes = parseFloat(document.getElementById('taxes')?.value) || 0;
+                let totalFreight = parseFloat(document.getElementById('freight')?.value) || 0;
+                let totalDiscount = parseFloat(document.getElementById('discount')?.value) || 0;
 
                 document.querySelectorAll('.total').forEach(function (input) {
                     totalSubtotal += parseFloat(input.value) || 0;
@@ -252,7 +343,7 @@
                 let newRow = `
                     <tr>
                         <td>
-                            <select name="details[${rowCount}][material_id]" class="form-control select2" required>
+                            <select width="100%" name="details[${rowCount}][material_id]" class="form-control select2" required>
                                 <option disabled selected>Select a material</option>
                                 @foreach($materials as $material)
                                     <option value="{{ $material->id }}">{{ $material->name }}</option>
@@ -301,11 +392,25 @@
                 }
             });
 
-            document.getElementById('taxes').addEventListener('input', updateTotals);
-            document.getElementById('freight').addEventListener('input', updateTotals);
-            document.getElementById('discount').addEventListener('input', updateTotals);
+            // Safely adding event listeners to 'taxes', 'freight', and 'discount' inputs
+            const taxesInput = document.getElementById('taxes');
+            const freightInput = document.getElementById('freight');
+            const discountInput = document.getElementById('discount');
+
+            if (taxesInput) {
+                taxesInput.addEventListener('input', updateTotals);
+            }
+
+            if (freightInput) {
+                freightInput.addEventListener('input', updateTotals);
+            }
+
+            if (discountInput) {
+                discountInput.addEventListener('input', updateTotals);
+            }
 
             updateTotals(); // Initial totals calculation
         });
+
     </script>
 @endsection
