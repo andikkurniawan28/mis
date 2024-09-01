@@ -28,115 +28,177 @@
                         <form action="{{ route('transaction.store') }}" method="POST" id="transaction-form">
                             @csrf @method('POST')
 
-                            {{-- <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="id">
-                                    {{ ucwords(str_replace('_', ' ', 'id')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="id" name="id" value="{{ $id }}" readonly>
+                            <div class="container-xxl flex-grow-1 container-p-y">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="transaction_category_id">
+                                                {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
+                                            </label>
+                                            <select id="transaction_category_id" name="transaction_category_id" class="form-control select2" required>
+                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}</option>
+                                                @foreach($transaction_categories as $category)
+                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="id">
+                                                {{ ucwords(str_replace('_', ' ', 'ID')) }}
+                                            </label>
+                                            <input type="text" class="form-control" name="id" id="id" value="" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="tax_rate_id">
+                                                {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}
+                                            </label>
+                                            <select id="tax_rate_id" name="tax_rate_id" class="form-control select2" required>
+                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}</option>
+                                                @foreach($tax_rates as $tax_rate)
+                                                    <option value="{{ $tax_rate->id }}">{{ $tax_rate->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="warehouse_id">
+                                                {{ ucwords(str_replace('_', ' ', 'warehouse')) }}
+                                            </label>
+                                            <select id="warehouse_id" name="warehouse_id" class="form-control select2" required>
+                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'warehouse')) }}</option>
+                                                @foreach($warehouses as $warehouse)
+                                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="supplier_id">
+                                                {{ ucwords(str_replace('_', ' ', 'supplier')) }}
+                                            </label>
+                                            <select id="supplier_id" name="supplier_id" class="form-control select2">
+                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'supplier')) }}</option>
+                                                @foreach($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="customer_id">
+                                                {{ ucwords(str_replace('_', ' ', 'customer')) }}
+                                            </label>
+                                            <select id="customer_id" name="customer_id" class="form-control select2">
+                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'customer')) }}</option>
+                                                @foreach($customers as $customer)
+                                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label for="payment_term_id">
+                                                {{ ucwords(str_replace('_', ' ', 'payment_term')) }}
+                                            </label>
+                                            <select id="payment_term_id" name="payment_term_id" class="form-control select2" required>
+                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_term')) }}</option>
+                                                @foreach($payment_terms as $payment_term)
+                                                    <option value="{{ $payment_term->id }}">{{ $payment_term->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="supplier_id">
+                                                {{ ucwords(str_replace('_', ' ', 'valid_until')) }}
+                                            </label>
+                                            <input type="date" class="form-control" name="valid_until" id="valid_until" value="{{ date("Y-m-d") }}" readonly>
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div> --}}
 
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="transaction_category_id">
-                                    {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <select id="transaction_category_id" name="transaction_category_id" class="form-control select2" required>
-                                        <option disabled selected>Select a transaction category</option>
-                                        @foreach($transaction_categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                                <div class="row mb-3">
+                                    <div class="col-sm-12">
+                                        <br>
+                                        <table class="table table-bordered" id="transaction-details-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Material</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Discount</th>
+                                                    <th>Total</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <select name="details[0][material_id]" class="form-control select2" required>
+                                                            <option disabled selected>Select a material</option>
+                                                            @foreach($materials as $material)
+                                                                <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    {{-- <td>
+                                                        <input type="number" name="details[0][item_order]" class="form-control" required>
+                                                    </td> --}}
+                                                    <td>
+                                                        <input type="number" name="details[0][qty]" class="form-control qty" step="0.01" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="details[0][price]" class="form-control price" step="0.01" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="details[0][discount]" class="form-control discount" step="0.01" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="details[0][total]" class="form-control total" step="0.01" readonly>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-danger remove-row">Remove</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
 
-                            <!-- Add other fields here, e.g., user_id, payment_term_id, etc. -->
+                                        <br>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="valid_until">
-                                    {{ ucwords(str_replace('_', ' ', 'valid_until')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="valid_until" name="valid_until" required>
-                                </div>
-                            </div>
+                                        <button type="button" id="add-row" class="btn btn-success">Add Row</button>
 
-                            <div class="row mb-3">
-                                <div class="col-sm-12">
-                                    <table class="table table-bordered" id="transaction-details-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Material</th>
-                                                <th>Quantity</th>
-                                                <th>Price</th>
-                                                <th>Discount</th>
-                                                <th>Total</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <select name="details[0][material_id]" class="form-control select2" required>
-                                                        <option disabled selected>Select a material</option>
-                                                        @foreach($materials as $material)
-                                                            <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                {{-- <td>
-                                                    <input type="number" name="details[0][item_order]" class="form-control" required>
-                                                </td> --}}
-                                                <td>
-                                                    <input type="number" name="details[0][qty]" class="form-control qty" step="0.01" required>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="details[0][price]" class="form-control price" step="0.01" required>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="details[0][discount]" class="form-control discount" step="0.01" required>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="details[0][total]" class="form-control total" step="0.01" readonly>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger remove-row">Remove</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                        <!-- Total Calculation -->
+                                        <table class="table table-bordered mt-4">
+                                            <thead>
+                                                <tr>
+                                                    <th>Total Subtotal</th>
+                                                    <th>Total Taxes</th>
+                                                    <th>Total Freight</th>
+                                                    <th>Total Discount</th>
+                                                    <th>Grand Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td id="total-subtotal">0.00</td>
+                                                    <td id="total-taxes">0.00</td>
+                                                    <td id="total-freight">0.00</td>
+                                                    <td id="total-discount">0.00</td>
+                                                    <td id="grand-total">0.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
 
-                                    <br>
+                                        <br>
 
-                                    <button type="button" id="add-row" class="btn btn-success">Add Row</button>
+                                        <button type="submit" class="btn btn-primary" id="submit-button" disabled>Submit</button>
 
-                                    <!-- Total Calculation -->
-                                    <table class="table table-bordered mt-4">
-                                        <thead>
-                                            <tr>
-                                                <th>Total Subtotal</th>
-                                                <th>Total Taxes</th>
-                                                <th>Total Freight</th>
-                                                <th>Total Discount</th>
-                                                <th>Grand Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td id="total-subtotal">0.00</td>
-                                                <td id="total-taxes">0.00</td>
-                                                <td id="total-freight">0.00</td>
-                                                <td id="total-discount">0.00</td>
-                                                <td id="grand-total">0.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <br>
-
-                                    <button type="submit" class="btn btn-primary" id="submit-button" disabled>Submit</button>
-
+                                    </div>
                                 </div>
                             </div>
 
