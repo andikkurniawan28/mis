@@ -24,6 +24,7 @@ use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\PaymentTermController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\ClosingEntryController;
@@ -89,6 +90,7 @@ Route::resource('/business', BusinessController::class)->middleware(['auth', 'ch
 Route::resource('/supplier', SupplierController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/customer', CustomerController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/transaction_category', TransactionCategoryController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/transaction', TransactionController::class)->middleware(['auth', 'check.permission']);
 
 
 

@@ -107,8 +107,9 @@
                 in_array('balance_sheet.index', $permissions) ||
                 in_array('income_statement.index', $permissions) ||
                 in_array('cash_flow.index', $permissions) ||
-                in_array('cash_flow.index', $permissions) ||
-                in_array('ledger.index', $permissions)
+                in_array('ledger.index', $permissions) ||
+                in_array('transaction_category.index', $permissions) ||
+                in_array('transaction.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Accounting</span>
@@ -231,12 +232,14 @@
 
         @if (
                 in_array('journal.index', $permissions) ||
-                in_array('budget.index', $permissions)
+                in_array('budget.index', $permissions) ||
+                in_array('transaction.index', $permissions)
             )
             <li
                 class="menu-item
                 @yield('journal-active')
                 @yield('budget-active')
+                @yield('transaction-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
@@ -258,6 +261,14 @@
                                 </div>
                             </a>
                         </li>
+                    @endif
+                    @if (in_array('transaction.index', $permissions))
+                    <li class="menu-item @yield('transaction-active')">
+                        <a href="{{ route('transaction.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'transaction')) }}
+                            </div>
+                        </a>
+                    </li>
                     @endif
                 </ul>
             </li>

@@ -212,6 +212,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_customer')), 'route' => 'customer.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_customer')), 'route' => 'customer.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_customer')), 'route' => 'customer.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_transaction')), 'route' => 'transaction.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_transaction')), 'route' => 'transaction.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_transaction')), 'route' => 'transaction.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_transaction')), 'route' => 'transaction.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_transaction')), 'route' => 'transaction.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_transaction')), 'route' => 'transaction.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction')), 'route' => 'transaction.destroy'],
         ];
         Feature::insert($features);
 
