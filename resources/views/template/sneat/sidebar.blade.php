@@ -407,7 +407,8 @@
 
         @if (
                 in_array('region.index', $permissions) ||
-                in_array('business.index', $permissions)
+                in_array('business.index', $permissions) ||
+                in_array('customer.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Customer Relationship</span>
@@ -416,12 +417,14 @@
 
         @if (
                 in_array('region.index', $permissions) ||
-                in_array('business.index', $permissions)
+                in_array('business.index', $permissions) ||
+                in_array('customer.index', $permissions)
             )
             <li
                 class="menu-item
                 @yield('region-active')
                 @yield('business-active')
+                @yield('customer-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -444,6 +447,14 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('customer.index', $permissions))
+                    <li class="menu-item @yield('customer-active')">
+                        <a href="{{ route('customer.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'customer')) }}
+                            </div>
+                        </a>
+                    </li>
+                @endif
                 </ul>
             </li>
         @endif

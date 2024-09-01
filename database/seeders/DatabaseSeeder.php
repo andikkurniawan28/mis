@@ -11,6 +11,9 @@ use App\Models\Account;
 use App\Models\Feature;
 use App\Models\TaxRate;
 use App\Models\Business;
+use App\Models\Customer;
+use App\Models\Material;
+use App\Models\Supplier;
 use App\Models\Warehouse;
 use App\Models\Permission;
 use App\Models\SubAccount;
@@ -202,6 +205,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_supplier')), 'route' => 'supplier.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_supplier')), 'route' => 'supplier.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_supplier')), 'route' => 'supplier.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_customer')), 'route' => 'customer.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_customer')), 'route' => 'customer.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_customer')), 'route' => 'customer.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_customer')), 'route' => 'customer.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_customer')), 'route' => 'customer.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_customer')), 'route' => 'customer.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_customer')), 'route' => 'customer.destroy'],
         ];
         Feature::insert($features);
 
@@ -375,6 +385,8 @@ class DatabaseSeeder extends Seeder
             ["material_category_id" => 1, "name" => "Tetes"],
             ["material_category_id" => 1, "name" => "Ampas"],
             ["material_category_id" => 1, "name" => "Blotong"],
+            ["material_category_id" => 2, "name" => "Raw Sugar"],
+            ["material_category_id" => 2, "name" => "Tebu"],
         ]);
 
         PaymentTerm::insert([
@@ -411,12 +423,41 @@ class DatabaseSeeder extends Seeder
             ["name" => "Toko"],
             ["name" => "Petani"],
             ["name" => "Koperasi Unit Daerah"],
+            ["name" => "Importir"],
+            ["name" => "Konsumen"],
+        ]);
+
+        Supplier::insert([
+            ["name" => "Importir", "business_id" => Business::where("name", "Importir")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
+        ]);
+
+        Customer::insert([
+            ["name" => "Konsumen 1", "business_id" => Business::where("name", "Konsumen")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
+        ]);
+
+        Material::insert([
+            [
+                "name" => "Raw Sugar Thailand",
+                "material_sub_category_id" => MaterialSubCategory::where("name", "Raw Sugar")->get()->last()->id,
+                "unit_id" => Unit::where("name", "Kuintal")->get()->last()->id,
+                "buy_price" => 960000,
+                "sell_price" => null,
+            ],
+            [
+                "name" => "Raw Sugar India",
+                "material_sub_category_id" => MaterialSubCategory::where("name", "Raw Sugar")->get()->last()->id,
+                "unit_id" => Unit::where("name", "Kuintal")->get()->last()->id,
+                "buy_price" => 930000,
+                "sell_price" => null,
+            ],
         ]);
 
         TransactionCategory::insert([
             [
                 "id" => "PRC",
                 "name" => "Pembelian",
+                "deal_with" => "suppliers",
+                "price_used" => "buy_price",
                 "stock_normal_balance_id" => "D",
                 "subtotal_account_id" => Account::where("name", "Persediaan Barang Dagang")->get()->last()->id,
                 "subtotal_normal_balance_id" => "D",
@@ -432,6 +473,8 @@ class DatabaseSeeder extends Seeder
             [
                 "id" => "SLS",
                 "name" => "Penjualan",
+                "deal_with" => "customers",
+                "price_used" => "sell_price",
                 "stock_normal_balance_id" => "C",
                 "subtotal_account_id" => Account::where("name", "Persediaan Barang Dagang")->get()->last()->id,
                 "subtotal_normal_balance_id" => "C",

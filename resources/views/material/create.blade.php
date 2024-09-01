@@ -73,6 +73,24 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="sell_price">
+                                    {{ ucwords(str_replace('_', ' ', 'sell_price')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" step="any" class="form-control" id="sell_price" name="sell_price" value="{{ old("sell_price") }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="buy_price">
+                                    {{ ucwords(str_replace('_', ' ', 'buy_price')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" step="any" class="form-control" id="buy_price" name="buy_price" value="{{ old("buy_price") }}">
+                                </div>
+                            </div>
+
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Send</button>

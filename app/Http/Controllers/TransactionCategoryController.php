@@ -37,7 +37,20 @@ class TransactionCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "name" => "required|unique:transaction_categories",
+            "id" => "required|string|unique:transaction_categories,id",
+            "name" => "required|string|unique:transaction_categories,name",
+            "deal_with" => "required|string|in:customers,suppliers",
+            "stock_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "subtotal_account_id" => "required|string|exists:accounts,id",
+            "subtotal_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "taxes_account_id" => "required|string|exists:accounts,id",
+            "taxes_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "freight_account_id" => "required|string|exists:accounts,id",
+            "freight_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "discount_account_id" => "required|string|exists:accounts,id",
+            "discount_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "grand_total_account_id" => "required|string|exists:accounts,id",
+            "grand_total_normal_balance_id" => "required|string|exists:normal_balances,id",
         ]);
         $transaction_category = TransactionCategory::create($validated);
         return redirect()->back()->with("success", "Transaction Category has been created");
@@ -70,7 +83,20 @@ class TransactionCategoryController extends Controller
     {
         $transaction_category = TransactionCategory::findOrFail($id);
         $validated = $request->validate([
+            // 'id' => 'required|unique:transaction_categories,id,' . $transaction_category->id,
             'name' => 'required|unique:transaction_categories,name,' . $transaction_category->id,
+            "deal_with" => "required|string|in:customers,suppliers",
+            "stock_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "subtotal_account_id" => "required|string|exists:accounts,id",
+            "subtotal_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "taxes_account_id" => "required|string|exists:accounts,id",
+            "taxes_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "freight_account_id" => "required|string|exists:accounts,id",
+            "freight_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "discount_account_id" => "required|string|exists:accounts,id",
+            "discount_normal_balance_id" => "required|string|exists:normal_balances,id",
+            "grand_total_account_id" => "required|string|exists:accounts,id",
+            "grand_total_normal_balance_id" => "required|string|exists:normal_balances,id",
         ]);
         $transaction_category->update($validated);
         return redirect()->route('transaction_category.index')->with("success", "Transaction Category has been updated");

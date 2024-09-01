@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'material')) }}
+    {{ ucwords(str_replace('_', ' ', 'customer')) }}
 @endsection
 
-@section('material-active')
+@section('customer-active')
     {{ 'active' }}
 @endsection
 
@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('material.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('customer.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
@@ -23,29 +23,23 @@
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'business')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'sub_category')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'unit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'sell_price')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'buy_price')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'phone_number')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($materials as $material)
+                            @foreach ($customers as $customer)
                                 <tr>
-                                    <td>{{ $material->id }}</td>
-                                    <td>{{ $material->name }}</td>
-                                    <td>{{ $material->material_sub_category->material_category->name }}</td>
-                                    <td>{{ $material->material_sub_category->name }}</td>
-                                    <td>{{ $material->unit->symbol }}</td>
-                                    <td>{{ number_format($material->sell_price) }}</td>
-                                    <td>{{ number_format($material->buy_price) }}</td>
+                                    <td>{{ $customer->id }}</td>
+                                    <td>{{ $customer->business->name }}</td>
+                                    <td>{{ $customer->name }}</td>
+                                    <td>{{ $customer->phone_number }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('material.edit', $material->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $material->id }}" data-name="{{ $material->name }}">Delete</button>
+                                            <a href="{{ route('customer.edit', $customer->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $customer->id }}" data-name="{{ $customer->name }}">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -63,8 +57,8 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    const material_id = this.getAttribute('data-id');
-                    const material_name = this.getAttribute('data-name');
+                    const customer_id = this.getAttribute('data-id');
+                    const customer_name = this.getAttribute('data-name');
                     Swal.fire({
                         title: 'Are you sure?',
                         text: 'You won\'t be able to revert this!',
@@ -78,8 +72,8 @@
                             const form = document.createElement('form');
                             form.setAttribute('method', 'POST');
                             form.setAttribute('action',
-                                `{{ route('material.destroy', ':id') }}`.replace(
-                                    ':id', material_id));
+                                `{{ route('customer.destroy', ':id') }}`.replace(
+                                    ':id', customer_id));
                             const csrfToken = document.getElementsByName("_token")[0].value;
 
                             const hiddenMethod = document.createElement('input');
@@ -90,7 +84,7 @@
                             const name = document.createElement('input');
                             name.setAttribute('type', 'hidden');
                             name.setAttribute('name', 'name');
-                            name.setAttribute('value', material_name);
+                            name.setAttribute('value', customer_name);
 
                             const csrfTokenInput = document.createElement('input');
                             csrfTokenInput.setAttribute('type', 'hidden');

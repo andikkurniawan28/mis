@@ -40,6 +40,8 @@ class MaterialController extends Controller
             "name" => "required|unique:materials",
             "material_sub_category_id" => "required",
             "unit_id" => "required",
+            "sell_price" => "nullable",
+            "buy_price" => "nullable",
         ]);
         $material = Material::create($validated);
         return redirect()->back()->with("success", "Material has been created");
@@ -75,6 +77,8 @@ class MaterialController extends Controller
             'name' => 'required|unique:materials,name,' . $material->id,
             "material_sub_category_id" => "required",
             "unit_id" => "required",
+            "sell_price" => "nullable",
+            "buy_price" => "nullable",
         ]);
         $material->update($validated);
         return redirect()->route('material.index')->with("success", "Material has been updated");

@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materials', function (Blueprint $table) {
+        Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('material_sub_category_id')->constrained();
-            $table->foreignId('unit_id')->constrained();
-            $table->string('name')->unique();
-            $table->double('sell_price')->nullable();
-            $table->double('buy_price')->nullable();
+            $table->string('transaction_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions');
+            $table->foreignId('material_id')->constrained();
+            $table->integer('item_order');
+            $table->float('qty');
+            $table->double('price');
+            $table->double('discount');
+            $table->double('total');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('materials');
+        Schema::dropIfExists('transaction_details');
     }
 };

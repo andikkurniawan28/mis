@@ -24,6 +24,8 @@
                             <tr>
                                 <th rowspan="2">{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th rowspan="2">{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
+                                <th rowspan="2">{{ ucwords(str_replace('_', ' ', 'deal_with')) }}</th>
+                                <th rowspan="2">{{ ucwords(str_replace('_', ' ', 'price_used')) }}</th>
                                 <th rowspan="2">{{ ucwords(str_replace('_', ' ', 'stock')) }}</th>
                                 <th colspan="2">{{ ucwords(str_replace('_', ' ', 'subtotal')) }}</th>
                                 <th colspan="2">{{ ucwords(str_replace('_', ' ', 'taxes')) }}</th>
@@ -50,6 +52,8 @@
                                 <tr>
                                     <td>{{ $transaction_category->id }}</td>
                                     <td>{{ $transaction_category->name }}</td>
+                                    <td>{{ $transaction_category->deal_with }}</td>
+                                    <td>{{ $transaction_category->price_used }}</td>
                                     <td>{{ $transaction_category->stock_normal_balance->name }}</td>
                                     <td>{{ $transaction_category->subtotal_account->name }}</td>
                                     <td>{{ $transaction_category->subtotal_normal_balance->name }}</td>

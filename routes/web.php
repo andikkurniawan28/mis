@@ -15,6 +15,7 @@ use App\Http\Controllers\PostingController;
 use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
@@ -86,6 +87,7 @@ Route::resource('/payment_term', PaymentTermController::class)->middleware(['aut
 Route::resource('/region', RegionController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/supplier', SupplierController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/customer', CustomerController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/transaction_category', TransactionCategoryController::class)->middleware(['auth', 'check.permission']);
 
 

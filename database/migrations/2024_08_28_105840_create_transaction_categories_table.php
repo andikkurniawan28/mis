@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('transaction_categories', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name')->unique();
+            $table->string('deal_with');
+            $table->string('price_used');
             $table->string('stock_normal_balance_id');
             $table->foreign('stock_normal_balance_id')->references('id')->on('normal_balances');
             $table->string('subtotal_account_id');
