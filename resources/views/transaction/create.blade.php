@@ -43,14 +43,141 @@
 
         #transaction-details-table th:last-child,
         #transaction-details-table td:last-child {
-            width: auto; /* For Action column */
+            width: auto;
+            /* For Action column */
         }
     </style>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let rowCount = 1;
+
+            // Initialize Select2 for dynamically added rows
+            function initializeSelect2() {
+                $('.select2').select2({
+                    placeholder: "Select an option",
+                    theme: 'bootstrap',
+                    allowClear: true,
+                    width: "100%"
+                });
+            }
+
+            initializeSelect2(); // Initialize for existing rows
+
+            function updateTotals() {
+                let totalSubtotal = 0;
+                let totalFreight = parseFloat(document.getElementById('freight')?.value) || 0;
+                let totalDiscount = parseFloat(document.getElementById('discount')?.value) || 0;
+
+                document.querySelectorAll('.total').forEach(function(input) {
+                    totalSubtotal += parseFloat(input.value) || 0;
+                });
+
+                let totalTaxes = (parseFloat(document.getElementById('rate').value) / 100) * totalSubtotal;
+
+                const grandTotal = totalSubtotal + totalTaxes + totalFreight - totalDiscount;
+                document.getElementById('total-subtotal').textContent = totalSubtotal.toFixed(2);
+                document.getElementById('total-taxes').textContent = totalTaxes.toFixed(2);
+                document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
+
+                // Enable/Disable submit button based on totals
+                const submitButton = document.getElementById('submit-button');
+                if (totalSubtotal > 0 && grandTotal >= 0) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+            }
+
+            document.getElementById('add-row').addEventListener('click', function() {
+                let tableBody = document.querySelector('#transaction-details-table tbody');
+                let newRow = `
+                    <tr>
+                        <td>
+                            <select width="100%" name="details[${rowCount}][material_id]" class="form-control select2 material-select" required onChange="fetchMaterialInfo(this)">
+                                <option disabled selected>Select a material</option>
+                                @foreach ($materials as $material)
+                                    <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="number" name="details[${rowCount}][qty]" class="form-control qty" step="0.01" required>
+
+                        </td>
+                        <td>
+                            <input type="number" name="details[${rowCount}][price]" class="form-control price" step="0.01" required>
+                        </td>
+                        <td>
+                            <input type="number" name="details[${rowCount}][discount]" class="form-control discount" step="0.01" required>
+                        </td>
+                        <td>
+                            <input type="number" name="details[${rowCount}][total]" class="form-control total" step="0.01" readonly>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger remove-row">Remove</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', newRow);
+                initializeSelect2(); // Re-initialize Select2 for new row
+                rowCount++;
+
+                // Fetch material info for the newly added select element
+                const newMaterialSelect = tableBody.querySelector(`tr:last-child .material-select`);
+                fetchMaterialInfo(newMaterialSelect);
+                updateTotals(); // Update totals after adding new row
+            });
+
+
+            document.querySelector('#transaction-details-table').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-row')) {
+                    e.target.closest('tr').remove();
+                    updateTotals(); // Update totals after removing a row
+                }
+            });
+
+            document.querySelector('#transaction-details-table').addEventListener('input', function(e) {
+                if (e.target.classList.contains('qty') || e.target.classList.contains('price') || e.target
+                    .classList
+                    .contains('discount')) {
+                    let row = e.target.closest('tr');
+                    let qty = parseFloat(row.querySelector('.qty').value) || 0;
+                    let price = parseFloat(row.querySelector('.price').value) || 0;
+                    let discount = parseFloat(row.querySelector('.discount').value) || 0;
+                    let total = (qty * price) - discount;
+                    row.querySelector('.total').value = total.toFixed(2);
+                    updateTotals(); // Update totals when values change
+                }
+            });
+
+            // Safely adding event listeners to 'taxes', 'freight', and 'discount' inputs
+            const taxesInput = document.getElementById('taxes');
+            const freightInput = document.getElementById('freight');
+            const discountInput = document.getElementById('discount');
+
+            if (taxesInput) {
+                taxesInput.addEventListener('input', updateTotals);
+            }
+
+            if (freightInput) {
+                freightInput.addEventListener('input', updateTotals);
+            }
+
+            if (discountInput) {
+                discountInput.addEventListener('input', updateTotals);
+            }
+
+            updateTotals(); // Initial totals calculation
+        });
+    </script>
     <div class="container-xxl flex-grow-1 container-p-y">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('transaction.index') }}">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</a></li>
+                <li class="breadcrumb-item"><a
+                        href="{{ route('transaction.index') }}">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">@yield('title')</li>
             </ol>
         </nav>
@@ -72,9 +199,12 @@
                                             <label for="transaction_category_id">
                                                 {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
                                             </label>
-                                            <select width="100%" id="transaction_category_id" name="transaction_category_id" class="form-control select2" required onChange="handleTransactionCategoryChange(this)">
-                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}</option>
-                                                @foreach($transaction_categories as $category)
+                                            <select width="100%" id="transaction_category_id"
+                                                name="transaction_category_id" class="form-control select2" required
+                                                onChange="handleTransactionCategoryChange(this)">
+                                                <option disabled selected>Select a
+                                                    {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}</option>
+                                                @foreach ($transaction_categories as $category)
                                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
@@ -109,7 +239,8 @@
                                             <label for="id">
                                                 {{ ucwords(str_replace('_', ' ', 'ID')) }}
                                             </label>
-                                            <input type="text" class="form-control" name="id" id="id" value="" readonly>
+                                            <input type="text" class="form-control" name="id" id="id"
+                                                value="" readonly>
                                         </div>
                                     </div>
 
@@ -118,20 +249,44 @@
                                             <label for="tax_rate_id">
                                                 {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}
                                             </label>
-                                            <select width="100%" id="tax_rate_id" name="tax_rate_id" class="form-control select2" required>
+                                            <select id="tax_rate_id" name="tax_rate_id" class="form-control select2" onchange="fetchTaxRateInfo(this)" required>
                                                 <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}</option>
-                                                @foreach($tax_rates as $tax_rate)
+                                                @foreach ($tax_rates as $tax_rate)
                                                     <option value="{{ $tax_rate->id }}">{{ $tax_rate->name }}</option>
                                                 @endforeach
                                             </select>
+                                            <input type="hidden" id="rate">
+                                            <script>
+                                                function fetchTaxRateInfo(selectElement) {
+                                                    const taxRateId = selectElement.value;
+                                                    const apiUrl = `/api/generate_tax_rate_info/${taxRateId}`;
+
+                                                    fetch(apiUrl)
+                                                        .then(response => {
+                                                            if (!response.ok) {
+                                                                throw new Error('Network response was not ok');
+                                                            }
+                                                            return response.json();
+                                                        })
+                                                        .then(data => {
+                                                            document.getElementById('rate').value = data.tax_rate.rate;
+                                                            updateTotals();
+                                                        })
+                                                        .catch(error => {
+                                                            console.error('There has been a problem with your fetch operation:', error);
+                                                        });
+                                                }
+                                            </script>
                                         </div>
                                         <div class="mb-3">
                                             <label for="warehouse_id">
                                                 {{ ucwords(str_replace('_', ' ', 'warehouse')) }}
                                             </label>
-                                            <select width="100%" id="warehouse_id" name="warehouse_id" class="form-control select2" required>
-                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'warehouse')) }}</option>
-                                                @foreach($warehouses as $warehouse)
+                                            <select width="100%" id="warehouse_id" name="warehouse_id"
+                                                class="form-control select2" required>
+                                                <option disabled selected>Select a
+                                                    {{ ucwords(str_replace('_', ' ', 'warehouse')) }}</option>
+                                                @foreach ($warehouses as $warehouse)
                                                     <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                                                 @endforeach
                                             </select>
@@ -143,9 +298,11 @@
                                             <label for="supplier_id">
                                                 {{ ucwords(str_replace('_', ' ', 'supplier')) }}
                                             </label>
-                                            <select width="100%" id="supplier_id" name="supplier_id" class="form-control select2">
-                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'supplier')) }}</option>
-                                                @foreach($suppliers as $supplier)
+                                            <select width="100%" id="supplier_id" name="supplier_id"
+                                                class="form-control select2">
+                                                <option disabled selected>Select a
+                                                    {{ ucwords(str_replace('_', ' ', 'supplier')) }}</option>
+                                                @foreach ($suppliers as $supplier)
                                                     <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                                 @endforeach
                                             </select>
@@ -154,9 +311,11 @@
                                             <label for="customer_id">
                                                 {{ ucwords(str_replace('_', ' ', 'customer')) }}
                                             </label>
-                                            <select width="100%" id="customer_id" name="customer_id" class="form-control select2">
-                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'customer')) }}</option>
-                                                @foreach($customers as $customer)
+                                            <select width="100%" id="customer_id" name="customer_id"
+                                                class="form-control select2">
+                                                <option disabled selected>Select a
+                                                    {{ ucwords(str_replace('_', ' ', 'customer')) }}</option>
+                                                @foreach ($customers as $customer)
                                                     <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                                 @endforeach
                                             </select>
@@ -168,13 +327,18 @@
                                             <label for="payment_term_id">
                                                 {{ ucwords(str_replace('_', ' ', 'payment_term')) }}
                                             </label>
-                                            <select width="100%" id="payment_term_id" name="payment_term_id" class="form-control select2" required onChange="handlePaymentTermChange(this, document.getElementById('valid_until_old').value)">
-                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_term')) }}</option>
-                                                @foreach($payment_terms as $payment_term)
-                                                    <option value="{{ $payment_term->id }}">{{ $payment_term->name }}</option>
+                                            <select width="100%" id="payment_term_id" name="payment_term_id"
+                                                class="form-control select2" required
+                                                onChange="handlePaymentTermChange(this, document.getElementById('valid_until_old').value)">
+                                                <option disabled selected>Select a
+                                                    {{ ucwords(str_replace('_', ' ', 'payment_term')) }}</option>
+                                                @foreach ($payment_terms as $payment_term)
+                                                    <option value="{{ $payment_term->id }}">{{ $payment_term->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
-                                            <input type="hidden" id="valid_until_old" value="{{ old('valid_until', date('Y-m-d')) }}">
+                                            <input type="hidden" id="valid_until_old"
+                                                value="{{ old('valid_until', date('Y-m-d')) }}">
                                             <script>
                                                 function handlePaymentTermChange(selectElement, validUntil) {
                                                     const paymentTermId = selectElement.value;
@@ -208,7 +372,8 @@
                                             <label for="supplier_id">
                                                 {{ ucwords(str_replace('_', ' ', 'valid_until')) }}
                                             </label>
-                                            <input type="date" class="form-control" name="valid_until" id="valid_until" value="{{ date("Y-m-d") }}" readonly>
+                                            <input type="date" class="form-control" name="valid_until" id="valid_until"
+                                                value="{{ date('Y-m-d') }}" readonly>
                                         </div>
                                     </div>
 
@@ -231,32 +396,82 @@
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <select width="100%" name="details[0][material_id]" class="form-control select2" required>
+                                                        <select width="100%" name="details[0][material_id]"
+                                                            class="form-control select2" required
+                                                            onchange="fetchMaterialInfo(this)">
                                                             <option disabled selected>Select a material</option>
-                                                            @foreach($materials as $material)
-                                                                <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                                            @foreach ($materials as $material)
+                                                                <option value="{{ $material->id }}">{{ $material->name }}
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="details[0][qty]" class="form-control qty" step="0.01" required>
+                                                        <input type="number" name="details[0][qty]"
+                                                            class="form-control qty" step="0.01" required>
+                                                        <span class="unit"></span>
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="details[0][price]" class="form-control price" step="0.01" required>
+                                                        <input type="number" name="details[0][price]"
+                                                            class="form-control price" step="0.01" required>
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="details[0][discount]" class="form-control discount" step="0.01" required>
+                                                        <input type="number" name="details[0][discount]"
+                                                            class="form-control discount" step="0.01" required>
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="details[0][total]" class="form-control total" step="0.01" readonly>
+                                                        <input type="number" name="details[0][total]"
+                                                            class="form-control total" step="0.01" readonly>
                                                     </td>
                                                     <td>
-                                                        <button type="button" class="btn btn-danger remove-row">Remove</button>
+                                                        <button type="button"
+                                                            class="btn btn-danger remove-row">Remove</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
 
+                                        <script>
+                                            function fetchMaterialInfo(selectElement) {
+                                                const materialId = selectElement.value;
+                                                const apiUrl = `/api/generate_material_info/${materialId}`;
+
+                                                fetch(apiUrl)
+                                                    .then(response => {
+                                                        if (!response.ok) {
+                                                            throw new Error('Network response was not ok');
+                                                        }
+                                                        return response.json();
+                                                    })
+                                                    .then(materialData => {
+                                                        // Get the selected transaction category
+                                                        const transactionCategorySelect = document.getElementById('transaction_category_id');
+                                                        const transactionCategoryId = transactionCategorySelect.value;
+
+                                                        // Fetch transaction category info
+                                                        return fetch(`/api/generate_transaction_category_info/${transactionCategoryId}`)
+                                                            .then(response => {
+                                                                if (!response.ok) {
+                                                                    throw new Error('Network response was not ok');
+                                                                }
+                                                                return response.json();
+                                                            })
+                                                            .then(transactionCategoryData => {
+                                                                // Map the price_used to the corresponding price
+                                                                const priceField = selectElement.closest('tr').querySelector('.price');
+                                                                const discountField = selectElement.closest('tr').querySelector('.discount');
+                                                                const unitField = selectElement.closest('tr').querySelector('.unit');
+                                                                const priceKey = transactionCategoryData.transaction_category.price_used;
+                                                                discountField.value = 0;
+                                                                priceField.value = materialData.material[priceKey] !== null ? materialData.material[priceKey] : 0; // Dynamically assign sell_price or buy_price
+                                                                unitField.innerHTML = materialData.material.unit.symbol; // Dynamically assign sell_price or buy_price
+                                                            });
+                                                    })
+                                                    .catch(error => {
+                                                        console.error('There has been a problem with your fetch operation:', error);
+                                                    });
+                                            }
+                                        </script>
 
                                         <br>
 
@@ -286,7 +501,8 @@
 
                                         <br>
 
-                                        <button type="submit" class="btn btn-primary" id="submit-button" disabled>Submit</button>
+                                        <button type="submit" class="btn btn-primary" id="submit-button"
+                                            disabled>Submit</button>
 
                                     </div>
                                 </div>
@@ -298,119 +514,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let rowCount = 1;
-
-            // Initialize Select2 for dynamically added rows
-            function initializeSelect2() {
-                $('.select2').select2({
-                    placeholder: "Select an option",
-                    theme: 'bootstrap',
-                    allowClear: true,
-                    width: "100%"
-                });
-            }
-
-            initializeSelect2(); // Initialize for existing rows
-
-            function updateTotals() {
-                let totalSubtotal = 0;
-                let totalTaxes = parseFloat(document.getElementById('taxes')?.value) || 0;
-                let totalFreight = parseFloat(document.getElementById('freight')?.value) || 0;
-                let totalDiscount = parseFloat(document.getElementById('discount')?.value) || 0;
-
-                document.querySelectorAll('.total').forEach(function (input) {
-                    totalSubtotal += parseFloat(input.value) || 0;
-                });
-
-                const grandTotal = totalSubtotal + totalTaxes + totalFreight - totalDiscount;
-                document.getElementById('total-subtotal').textContent = totalSubtotal.toFixed(2);
-                document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
-
-                // Enable/Disable submit button based on totals
-                const submitButton = document.getElementById('submit-button');
-                if (totalSubtotal > 0 && grandTotal >= 0) {
-                    submitButton.disabled = false;
-                } else {
-                    submitButton.disabled = true;
-                }
-            }
-
-            document.getElementById('add-row').addEventListener('click', function () {
-                let tableBody = document.querySelector('#transaction-details-table tbody');
-                let newRow = `
-                    <tr>
-                        <td>
-                            <select width="100%" name="details[${rowCount}][material_id]" class="form-control select2" required>
-                                <option disabled selected>Select a material</option>
-                                @foreach($materials as $material)
-                                    <option value="{{ $material->id }}">{{ $material->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="details[${rowCount}][qty]" class="form-control qty" step="0.01" required>
-                        </td>
-                        <td>
-                            <input type="number" name="details[${rowCount}][price]" class="form-control price" step="0.01" required>
-                        </td>
-                        <td>
-                            <input type="number" name="details[${rowCount}][discount]" class="form-control discount" step="0.01" required>
-                        </td>
-                        <td>
-                            <input type="number" name="details[${rowCount}][total]" class="form-control total" step="0.01" readonly>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger remove-row">Remove</button>
-                        </td>
-                    </tr>
-                `;
-                tableBody.insertAdjacentHTML('beforeend', newRow);
-                initializeSelect2(); // Re-initialize Select2 for new row
-                rowCount++;
-                updateTotals(); // Update totals after adding new row
-            });
-
-            document.querySelector('#transaction-details-table').addEventListener('click', function (e) {
-                if (e.target.classList.contains('remove-row')) {
-                    e.target.closest('tr').remove();
-                    updateTotals(); // Update totals after removing a row
-                }
-            });
-
-            document.querySelector('#transaction-details-table').addEventListener('input', function (e) {
-                if (e.target.classList.contains('qty') || e.target.classList.contains('price') || e.target.classList.contains('discount')) {
-                    let row = e.target.closest('tr');
-                    let qty = parseFloat(row.querySelector('.qty').value) || 0;
-                    let price = parseFloat(row.querySelector('.price').value) || 0;
-                    let discount = parseFloat(row.querySelector('.discount').value) || 0;
-                    let total = (qty * price) - discount;
-                    row.querySelector('.total').value = total.toFixed(2);
-                    updateTotals(); // Update totals when values change
-                }
-            });
-
-            // Safely adding event listeners to 'taxes', 'freight', and 'discount' inputs
-            const taxesInput = document.getElementById('taxes');
-            const freightInput = document.getElementById('freight');
-            const discountInput = document.getElementById('discount');
-
-            if (taxesInput) {
-                taxesInput.addEventListener('input', updateTotals);
-            }
-
-            if (freightInput) {
-                freightInput.addEventListener('input', updateTotals);
-            }
-
-            if (discountInput) {
-                discountInput.addEventListener('input', updateTotals);
-            }
-
-            updateTotals(); // Initial totals calculation
-        });
-
-    </script>
 @endsection
