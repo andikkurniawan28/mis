@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionDetail extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function transaction(){
+        return $this->belongsTo(Transaction::class);
+    }
+
+    public function material(){
+        return $this->belongsTo(Material::class);
+    }
 }

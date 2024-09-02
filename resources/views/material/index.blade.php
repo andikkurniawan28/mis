@@ -29,6 +29,9 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'unit')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'sell_price')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'buy_price')) }}</th>
+                                @foreach($warehouses as $warehouse)
+                                <th>{{ ucwords(str_replace('_', ' ', $warehouse->name)) }}</th>
+                                @endforeach
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
@@ -42,6 +45,14 @@
                                     <td>{{ $material->unit->symbol }}</td>
                                     <td>{{ number_format($material->sell_price) }}</td>
                                     <td>{{ number_format($material->buy_price) }}</td>
+                                    @foreach($warehouses as $warehouse)
+                                    <td>
+                                        @php $column_name = str_replace(' ', '_', $warehouse->name); @endphp
+                                        @if($material->{$column_name} != 0)
+                                            {{ $material->{$column_name} }}
+                                        @endif
+                                    </td>
+                                    @endforeach
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
                                             <a href="{{ route('material.edit', $material->id) }}" class="btn btn-secondary btn-sm">Edit</a>

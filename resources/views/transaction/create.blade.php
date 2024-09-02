@@ -22,11 +22,11 @@
 
         /* Define column widths */
         #transaction-details-table .col-material {
-            width: 35%;
+            width: 30%;
         }
 
         #transaction-details-table .col-qty {
-            width: 10%;
+            width: 15%;
         }
 
         #transaction-details-table .col-price {
@@ -50,6 +50,141 @@
 
 
     <script>
+        function fetchTaxRateInfo(selectElement) {
+            const taxRateId = selectElement.value;
+            const apiUrl = `/api/generate_tax_rate_info/${taxRateId}`;
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('rate').value = data.tax_rate.rate;
+                    updateTotals();
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+        function handlePaymentTermChange(selectElement, validUntil) {
+            const paymentTermId = selectElement.value;
+            const currentDate = validUntil; // Use the validUntil value from the input field
+            const apiUrl = `/api/generate_valid_until/${paymentTermId}/${currentDate}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Asumsikan response dari API mengandung property `valid_until`
+                    if (data.valid_until) {
+                        // Menetapkan nilai valid_until di input
+                        document.getElementById('valid_until').value = data.valid_until;
+                    }
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+        function fetchMaterialInfo(selectElement) {
+            const materialId = selectElement.value;
+            const apiUrl = `/api/generate_material_info/${materialId}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(materialData => {
+                    // Get the selected transaction category
+                    const transactionCategorySelect = document.getElementById('transaction_category_id');
+                    const transactionCategoryId = transactionCategorySelect.value;
+
+                    // Fetch transaction category info
+                    return fetch(`/api/generate_transaction_category_info/${transactionCategoryId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(transactionCategoryData => {
+                            // Map the price_used to the corresponding price
+                            const priceField = selectElement.closest('tr').querySelector('.price');
+                            const discountField = selectElement.closest('tr').querySelector('.discount');
+                            const unitField = selectElement.closest('tr').querySelector('.unit');
+                            const priceKey = transactionCategoryData.transaction_category.price_used;
+                            discountField.value = 0;
+                            priceField.value = materialData.material[priceKey] !== null ? materialData.material[
+                                priceKey] : 0; // Dynamically assign sell_price or buy_price
+                            unitField.innerHTML = materialData.material.unit
+                                .symbol; // Dynamically assign sell_price or buy_price
+                        });
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+        function handleTransactionCategoryChange(selectElement) {
+            const transactionCategoryId = selectElement.value;
+            // console.log('Selected Transaction Category ID:', transactionCategoryId);
+            const apiUrl = `/api/generate_transaction_id/${transactionCategoryId}`;
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // console.log('Data fetched from API:', data);
+
+                    // Asumsikan response dari API mengandung property `transaction_id`
+                    if (data.transaction_id) {
+                        // Menetapkan nilai transaction_id di input
+                        document.getElementById('id').value = data.transaction_id;
+                    }
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+        function updateTotals() {
+            let totalSubtotal = 0;
+            let totalFreight = parseFloat(document.getElementById('freight')?.value) || 0;
+            let totalDiscount = parseFloat(document.getElementById('discount')?.value) || 0;
+
+            document.querySelectorAll('.total').forEach(function(input) {
+                totalSubtotal += parseFloat(input.value) || 0;
+            });
+
+            let totalTaxes = (parseFloat(document.getElementById('rate').value) / 100) * totalSubtotal;
+
+            const grandTotal = totalSubtotal + totalTaxes + totalFreight - totalDiscount;
+            document.getElementById('subtotal').value = totalSubtotal.toFixed(0);
+            document.getElementById('taxes').value = totalTaxes.toFixed(0);
+            document.getElementById('grand_total').value = grandTotal.toFixed(0);
+
+            // Enable/Disable submit button based on totals
+            const submitButton = document.getElementById('submit-button');
+            if (totalSubtotal > 0 && grandTotal >= 0) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             let rowCount = 1;
 
@@ -65,31 +200,6 @@
 
             initializeSelect2(); // Initialize for existing rows
 
-            function updateTotals() {
-                let totalSubtotal = 0;
-                let totalFreight = parseFloat(document.getElementById('freight')?.value) || 0;
-                let totalDiscount = parseFloat(document.getElementById('discount')?.value) || 0;
-
-                document.querySelectorAll('.total').forEach(function(input) {
-                    totalSubtotal += parseFloat(input.value) || 0;
-                });
-
-                let totalTaxes = (parseFloat(document.getElementById('rate').value) / 100) * totalSubtotal;
-
-                const grandTotal = totalSubtotal + totalTaxes + totalFreight - totalDiscount;
-                document.getElementById('total-subtotal').textContent = totalSubtotal.toFixed(2);
-                document.getElementById('total-taxes').textContent = totalTaxes.toFixed(2);
-                document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
-
-                // Enable/Disable submit button based on totals
-                const submitButton = document.getElementById('submit-button');
-                if (totalSubtotal > 0 && grandTotal >= 0) {
-                    submitButton.disabled = false;
-                } else {
-                    submitButton.disabled = true;
-                }
-            }
-
             document.getElementById('add-row').addEventListener('click', function() {
                 let tableBody = document.querySelector('#transaction-details-table tbody');
                 let newRow = `
@@ -104,7 +214,7 @@
                         </td>
                         <td>
                             <input type="number" name="details[${rowCount}][qty]" class="form-control qty" step="0.01" required>
-
+                            <span class="unit"></span>
                         </td>
                         <td>
                             <input type="number" name="details[${rowCount}][price]" class="form-control price" step="0.01" required>
@@ -147,7 +257,7 @@
                     let price = parseFloat(row.querySelector('.price').value) || 0;
                     let discount = parseFloat(row.querySelector('.discount').value) || 0;
                     let total = (qty * price) - discount;
-                    row.querySelector('.total').value = total.toFixed(2);
+                    row.querySelector('.total').value = total.toFixed(0);
                     updateTotals(); // Update totals when values change
                 }
             });
@@ -208,32 +318,6 @@
                                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
-                                            <script>
-                                                function handleTransactionCategoryChange(selectElement) {
-                                                    const transactionCategoryId = selectElement.value;
-                                                    console.log('Selected Transaction Category ID:', transactionCategoryId);
-                                                    const apiUrl = `/api/generate_transaction_id/${transactionCategoryId}`;
-                                                    fetch(apiUrl)
-                                                        .then(response => {
-                                                            if (!response.ok) {
-                                                                throw new Error('Network response was not ok');
-                                                            }
-                                                            return response.json();
-                                                        })
-                                                        .then(data => {
-                                                            console.log('Data fetched from API:', data);
-
-                                                            // Asumsikan response dari API mengandung property `transaction_id`
-                                                            if (data.transaction_id) {
-                                                                // Menetapkan nilai transaction_id di input
-                                                                document.getElementById('id').value = data.transaction_id;
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('There has been a problem with your fetch operation:', error);
-                                                        });
-                                                }
-                                            </script>
                                         </div>
                                         <div class="mb-3">
                                             <label for="id">
@@ -249,34 +333,15 @@
                                             <label for="tax_rate_id">
                                                 {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}
                                             </label>
-                                            <select id="tax_rate_id" name="tax_rate_id" class="form-control select2" onchange="fetchTaxRateInfo(this)" required>
-                                                <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}</option>
+                                            <select id="tax_rate_id" name="tax_rate_id" class="form-control select2"
+                                                onchange="fetchTaxRateInfo(this)" required>
+                                                <option disabled selected>Select a
+                                                    {{ ucwords(str_replace('_', ' ', 'tax_rate')) }}</option>
                                                 @foreach ($tax_rates as $tax_rate)
                                                     <option value="{{ $tax_rate->id }}">{{ $tax_rate->name }}</option>
                                                 @endforeach
                                             </select>
                                             <input type="hidden" id="rate">
-                                            <script>
-                                                function fetchTaxRateInfo(selectElement) {
-                                                    const taxRateId = selectElement.value;
-                                                    const apiUrl = `/api/generate_tax_rate_info/${taxRateId}`;
-
-                                                    fetch(apiUrl)
-                                                        .then(response => {
-                                                            if (!response.ok) {
-                                                                throw new Error('Network response was not ok');
-                                                            }
-                                                            return response.json();
-                                                        })
-                                                        .then(data => {
-                                                            document.getElementById('rate').value = data.tax_rate.rate;
-                                                            updateTotals();
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('There has been a problem with your fetch operation:', error);
-                                                        });
-                                                }
-                                            </script>
                                         </div>
                                         <div class="mb-3">
                                             <label for="warehouse_id">
@@ -339,33 +404,6 @@
                                             </select>
                                             <input type="hidden" id="valid_until_old"
                                                 value="{{ old('valid_until', date('Y-m-d')) }}">
-                                            <script>
-                                                function handlePaymentTermChange(selectElement, validUntil) {
-                                                    const paymentTermId = selectElement.value;
-                                                    const currentDate = validUntil; // Use the validUntil value from the input field
-                                                    const apiUrl = `/api/generate_valid_until/${paymentTermId}/${currentDate}`;
-
-                                                    fetch(apiUrl)
-                                                        .then(response => {
-                                                            if (!response.ok) {
-                                                                throw new Error('Network response was not ok');
-                                                            }
-                                                            return response.json();
-                                                        })
-                                                        .then(data => {
-                                                            console.log('Data fetched from API:', data);
-
-                                                            // Asumsikan response dari API mengandung property `valid_until`
-                                                            if (data.valid_until) {
-                                                                // Menetapkan nilai valid_until di input
-                                                                document.getElementById('valid_until').value = data.valid_until;
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('There has been a problem with your fetch operation:', error);
-                                                        });
-                                                }
-                                            </script>
                                         </div>
 
                                         <div class="mb-3">
@@ -431,48 +469,6 @@
                                             </tbody>
                                         </table>
 
-                                        <script>
-                                            function fetchMaterialInfo(selectElement) {
-                                                const materialId = selectElement.value;
-                                                const apiUrl = `/api/generate_material_info/${materialId}`;
-
-                                                fetch(apiUrl)
-                                                    .then(response => {
-                                                        if (!response.ok) {
-                                                            throw new Error('Network response was not ok');
-                                                        }
-                                                        return response.json();
-                                                    })
-                                                    .then(materialData => {
-                                                        // Get the selected transaction category
-                                                        const transactionCategorySelect = document.getElementById('transaction_category_id');
-                                                        const transactionCategoryId = transactionCategorySelect.value;
-
-                                                        // Fetch transaction category info
-                                                        return fetch(`/api/generate_transaction_category_info/${transactionCategoryId}`)
-                                                            .then(response => {
-                                                                if (!response.ok) {
-                                                                    throw new Error('Network response was not ok');
-                                                                }
-                                                                return response.json();
-                                                            })
-                                                            .then(transactionCategoryData => {
-                                                                // Map the price_used to the corresponding price
-                                                                const priceField = selectElement.closest('tr').querySelector('.price');
-                                                                const discountField = selectElement.closest('tr').querySelector('.discount');
-                                                                const unitField = selectElement.closest('tr').querySelector('.unit');
-                                                                const priceKey = transactionCategoryData.transaction_category.price_used;
-                                                                discountField.value = 0;
-                                                                priceField.value = materialData.material[priceKey] !== null ? materialData.material[priceKey] : 0; // Dynamically assign sell_price or buy_price
-                                                                unitField.innerHTML = materialData.material.unit.symbol; // Dynamically assign sell_price or buy_price
-                                                            });
-                                                    })
-                                                    .catch(error => {
-                                                        console.error('There has been a problem with your fetch operation:', error);
-                                                    });
-                                            }
-                                        </script>
-
                                         <br>
 
                                         <button type="button" id="add-row" class="btn btn-success">Add Row</button>
@@ -481,20 +477,20 @@
                                         <table class="table table-bordered mt-4">
                                             <thead>
                                                 <tr>
-                                                    <th>Total Subtotal</th>
-                                                    <th>Total Taxes</th>
-                                                    <th>Total Freight</th>
-                                                    <th>Total Discount</th>
+                                                    <th>Subtotal</th>
+                                                    <th>Taxes</th>
+                                                    <th>Freight</th>
+                                                    <th>Discount</th>
                                                     <th>Grand Total</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td id="total-subtotal">0.00</td>
-                                                    <td id="total-taxes">0.00</td>
-                                                    <td id="total-freight">0.00</td>
-                                                    <td id="total-discount">0.00</td>
-                                                    <td id="grand-total">0.00</td>
+                                                    <td id="total-subtotal"><input type="number" name="subtotal" id="subtotal" class="form-control" required></td>
+                                                    <td id="total-taxes"><input type="number" name="taxes" id="taxes" class="form-control" required></td>
+                                                    <td id="total-freight"><input type="number" name="freight" id="freight" class="form-control" value="0" required></td>
+                                                    <td id="total-discount"><input type="number" name="discount" id="discount" class="form-control" value="0" required></td>
+                                                    <td id="grand-total"><input type="number" name="grand_total" id="grand_total" class="form-control" required></td>
                                                 </tr>
                                             </tbody>
                                         </table>

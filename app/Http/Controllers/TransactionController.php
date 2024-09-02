@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setup;
+use App\Models\Ledger;
 use App\Models\TaxRate;
 use App\Models\Customer;
 use App\Models\Material;
@@ -12,6 +13,8 @@ use App\Models\PaymentTerm;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\TransactionDetail;
+use Illuminate\Support\Facades\DB;
 use App\Models\TransactionCategory;
 
 class TransactionController extends Controller
@@ -76,8 +79,132 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Tambahkan user_id dari user yang sedang login
+        $request->request->add(['user_id' => auth()->id()]);
+
+        // Validasi data
+        $request->validate([
+            'id' => 'required|unique:transactions',
+            'transaction_category_id' => 'required|exists:transaction_categories,id',
+            'user_id' => 'required|exists:users,id',
+            'payment_term_id' => 'required|exists:payment_terms,id',
+            'tax_rate_id' => 'required|exists:tax_rates,id',
+            'warehouse_id' => 'required|exists:warehouses,id',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'customer_id' => 'nullable|exists:customers,id',
+            'valid_until' => 'required|date',
+            'subtotal' => 'required|numeric',
+            'taxes' => 'required|numeric',
+            'freight' => 'required|numeric',
+            'discount' => 'required|numeric',
+            'grand_total' => 'required|numeric',
+            'details' => 'required|array',
+            'details.*.material_id' => 'required|exists:materials,id',
+            'details.*.qty' => 'required|numeric',
+            'details.*.price' => 'required|numeric',
+            'details.*.discount' => 'required|numeric',
+            'details.*.total' => 'required|numeric',
+        ]);
+
+        try {
+            // Mulai transaksi database
+            DB::beginTransaction();
+
+            // Simpan data transaction
+            $transaction = Transaction::create([
+                'id' => $request->id,
+                'transaction_category_id' => $request->transaction_category_id,
+                'user_id' => $request->user_id,
+                'payment_term_id' => $request->payment_term_id,
+                'tax_rate_id' => $request->tax_rate_id,
+                'warehouse_id' => $request->warehouse_id,
+                'supplier_id' => $request->supplier_id,
+                'customer_id' => $request->customer_id,
+                'valid_until' => $request->valid_until,
+                'subtotal' => $request->subtotal,
+                'taxes' => $request->taxes,
+                'freight' => $request->freight,
+                'discount' => $request->discount,
+                'grand_total' => $request->grand_total,
+            ]);
+
+            // Simpan data transaction details
+            $item_order = 1;
+            $stock_normal_balance_id = TransactionCategory::whereId($request->transaction_category_id)->get()->last()->stock_normal_balance_id;
+            foreach ($request->details as $detail) {
+                TransactionDetail::create([
+                    'transaction_id' => $request->id, // Menggunakan $transaction->id yang baru disimpan
+                    'material_id' => $detail['material_id'],
+                    'item_order' => $item_order,
+                    'qty' => $detail['qty'],
+                    'price' => $detail['price'],
+                    'discount' => $detail['discount'],
+                    'total' => $detail['total'],
+                ]);
+                Material::countStock($detail['material_id'], $request->warehouse_id, $stock_normal_balance_id, $detail['qty']);
+                $item_order++;
+            }
+
+            $transaction_category = TransactionCategory::whereId($request->transaction_category_id)->get()->last();
+            Ledger::insert([
+                [
+                    "transaction_id" => $request->id,
+                    "account_id" => $transaction_category->subtotal_account_id,
+                    "user_id" => $request->user_id,
+                    "description" => "{$transaction_category->name} - {$request->id}",
+                    "debit" => $transaction_category->subtotal_normal_balance_id == "D" ? $request->subtotal : 0,
+                    "credit" => $transaction_category->subtotal_normal_balance_id == "C" ? $request->subtotal : 0,
+                ],
+                [
+                    "transaction_id" => $request->id,
+                    "account_id" => $transaction_category->taxes_account_id,
+                    "user_id" => $request->user_id,
+                    "description" => "{$transaction_category->name} - {$request->id}",
+                    "debit" => $transaction_category->taxes_normal_balance_id == "D" ? $request->taxes : 0,
+                    "credit" => $transaction_category->taxes_normal_balance_id == "C" ? $request->taxes : 0,
+                ],
+                [
+                    "transaction_id" => $request->id,
+                    "account_id" => $transaction_category->freight_account_id,
+                    "user_id" => $request->user_id,
+                    "description" => "{$transaction_category->name} - {$request->id}",
+                    "debit" => $transaction_category->freight_normal_balance_id == "D" ? $request->freight : 0,
+                    "credit" => $transaction_category->freight_normal_balance_id == "C" ? $request->freight : 0,
+                ],
+                [
+                    "transaction_id" => $request->id,
+                    "account_id" => $transaction_category->discount_account_id,
+                    "user_id" => $request->user_id,
+                    "description" => "{$transaction_category->name} - {$request->id}",
+                    "debit" => $transaction_category->discount_normal_balance_id == "D" ? $request->discount : 0,
+                    "credit" => $transaction_category->discount_normal_balance_id == "C" ? $request->discount : 0,
+                ],
+                [
+                    "transaction_id" => $request->id,
+                    "account_id" => $transaction_category->grand_total_account_id,
+                    "user_id" => $request->user_id,
+                    "description" => "{$transaction_category->name} - {$request->id}",
+                    "debit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->grand_total : 0,
+                    "credit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->grand_total : 0,
+                ],
+            ]);
+
+            // Commit transaksi database
+            DB::commit();
+
+            // Redirect ke halaman yang sesuai atau berikan respon sukses
+            return redirect()->route('transaction.index')->with('success', 'Transaction successfully created.');
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi error
+            DB::rollBack();
+
+            // Redirect dengan menampilkan pesan error spesifik
+            return redirect()->back()->withErrors(['error' => 'Failed to create transaction: ' . $e->getMessage()]);
+        }
     }
+
+
 
     /**
      * Display the specified resource.
@@ -106,8 +233,13 @@ class TransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transaction)
+    public function destroy($id)
     {
-        //
+        $transaction_details = TransactionDetail::where('transaction_id', $id)->get();
+        foreach($transaction_details as $detail){
+            Material::resetStock($detail->material_id, $detail->transaction->warehouse_id, $detail->transaction->transaction_category->stock_normal_balance_id, $detail->qty);
+        }
+        Transaction::findOrFail($id)->delete();
+        return redirect()->back()->with("success", "Transaction has been deleted");
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\Setup;
 use App\Models\Material;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\MaterialSubCategory;
 
@@ -17,7 +18,8 @@ class MaterialController extends Controller
     {
         $setup = Setup::init();
         $materials = Material::all();
-        return view('material.index', compact('setup', 'materials'));
+        $warehouses = Warehouse::all();
+        return view('material.index', compact('setup', 'materials', 'warehouses'));
     }
 
     /**

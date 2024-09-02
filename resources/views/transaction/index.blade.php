@@ -25,7 +25,8 @@
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'timestamp')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'user')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'warehouse')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'grand_total')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -65,36 +66,25 @@
                         name: 'transaction_category.name'
                     },
                     {
-                        data: 'user_id',
-                        name: 'user.name'
+                        data: 'warehouse_id',
+                        name: 'warehouse.name'
                     },
-                    // {
-                    //     data: 'debit',
-                    //     name: 'debit',
-                    //     class: 'text-right',
-                    //     render: function(data, type, row) {
-                    //         return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
-                    //             maximumFractionDigits: 0 // Menghapus angka di belakang koma
-                    //         });
-                    //     }
-                    // },
-                    // {
-                    //     data: 'credit',
-                    //     name: 'credit',
-                    //     class: 'text-right',
-                    //     render: function(data, type, row) {
-                    //         return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
-                    //             maximumFractionDigits: 0 // Menghapus angka di belakang koma
-                    //         });
-                    //     }
-                    // },
+                    {
+                        data: 'grand_total',
+                        name: 'grand_total',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
+                    },
                     {
                         data: null,
                         name: 'actions',
                         render: function(data, type, row) {
                             return `
                                 <div class="btn-group" role="group" aria-label="manage">
-                                    <a href="{{ url('transaction') }}/${row.id}/edit" class="btn btn-secondary btn-sm">Edit</a>
                                     <a href="{{ url('transaction') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
                                 </div>
