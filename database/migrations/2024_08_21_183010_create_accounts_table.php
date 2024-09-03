@@ -20,6 +20,7 @@ return new class extends Migration
             // $table->string('normal_balance_id');
             // $table->foreign('normal_balance_id')->references('id')->on('normal_balances');
             $table->double('initial_balance');
+            $table->boolean('is_payment_gateway')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

@@ -25,7 +25,8 @@
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'business')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'phone_number')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'phone')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'payable')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
@@ -36,6 +37,7 @@
                                     <td>{{ $supplier->business->name }}</td>
                                     <td>{{ $supplier->name }}</td>
                                     <td>{{ $supplier->phone_number }}</td>
+                                    <td>{{ number_format($supplier->payable) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
                                             <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-secondary btn-sm">Edit</a>

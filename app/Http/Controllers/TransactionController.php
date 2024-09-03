@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setup;
 use App\Models\Ledger;
+use App\Models\Account;
 use App\Models\TaxRate;
 use App\Models\Customer;
 use App\Models\Material;
@@ -71,7 +72,8 @@ class TransactionController extends Controller
         $suppliers = Supplier::all();
         $customers = Customer::all();
         $materials = Material::all();
-        return view('transaction.create', compact('setup', 'transaction_categories', 'payment_terms', 'tax_rates', 'warehouses', 'suppliers', 'customers', 'materials'));
+        $payment_gateways = Account::where("is_payment_gateway", 1)->get();
+        return view('transaction.create', compact('setup', 'transaction_categories', 'payment_terms', 'tax_rates', 'warehouses', 'suppliers', 'customers', 'materials', 'payment_gateways'));
     }
 
     /**
@@ -79,6 +81,9 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+
+        $transaction_category = TransactionCategory::whereId($request->transaction_category_id)->get()->last();
+
         // Tambahkan user_id dari user yang sedang login
         $request->request->add(['user_id' => auth()->id()]);
 
@@ -98,6 +103,8 @@ class TransactionController extends Controller
             'freight' => 'required|numeric',
             'discount' => 'required|numeric',
             'grand_total' => 'required|numeric',
+            'paid' => 'required|numeric',
+            'payment_gateway_id' => 'nullable|exists:accounts,id',
             'details' => 'required|array',
             'details.*.material_id' => 'required|exists:materials,id',
             'details.*.qty' => 'required|numeric',
@@ -141,12 +148,20 @@ class TransactionController extends Controller
                     'discount' => $detail['discount'],
                     'total' => $detail['total'],
                 ]);
+                // Atur Stock
                 Material::countStock($detail['material_id'], $request->warehouse_id, $stock_normal_balance_id, $detail['qty']);
                 $item_order++;
             }
 
-            $transaction_category = TransactionCategory::whereId($request->transaction_category_id)->get()->last();
-            Ledger::insert([
+            // Simpan data hutang / piutang ke Supplier / Customer
+            if($transaction_category->deal_with == "suppliers") {
+                Supplier::increasePayable($request->supplier_id, $request->grand_total);
+            } else if($transaction_category->deal_with == "customers") {
+                Customer::increaseReceivable($request->customer, $request->grand_total);
+            }
+
+            // Simpan data Transaksi ke Buku Besar
+            $data = [
                 [
                     "transaction_id" => $request->id,
                     "account_id" => $transaction_category->subtotal_account_id,
@@ -187,7 +202,43 @@ class TransactionController extends Controller
                     "debit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->grand_total : 0,
                     "credit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->grand_total : 0,
                 ],
-            ]);
+            ];
+
+            // Filter untuk menghapus array dengan nilai debit dan credit 0
+            $filteredData = array_filter($data, function($entry) {
+                return $entry['debit'] != 0 || $entry['credit'] != 0;
+            });
+
+            // Insert ke dalam database
+            Ledger::insert($filteredData);
+
+            // Simpan data pelunasan jika ada pelunasan
+            if($request->payment_gateway_id != null){
+                Ledger::insert([
+                    [
+                        "transaction_id" => $request->id,
+                        "account_id" => $transaction_category->grand_total_account_id,
+                        "user_id" => $request->user_id,
+                        "description" => "Pembayaran {$transaction_category->name} - {$request->id}",
+                        "debit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
+                        "credit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->paid : 0,
+                    ],
+                    [
+                        "transaction_id" => $request->id,
+                        "account_id" => $request->payment_gateway_id,
+                        "user_id" => $request->user_id,
+                        "description" => "Pembayaran {$transaction_category->name} - {$request->id}",
+                        "debit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->paid : 0,
+                        "credit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
+                    ],
+                ]);
+                // Simpan data hutang / piutang ke Supplier / Customer
+                if($transaction_category->deal_with == "suppliers") {
+                    Supplier::decreasePayable($request->supplier_id, $request->paid);
+                } else if($transaction_category->deal_with == "customers") {
+                    Customer::decreasePayable($request->customer, $request->paid);
+                }
+            }
 
             // Commit transaksi database
             DB::commit();
@@ -235,6 +286,7 @@ class TransactionController extends Controller
      */
     public function destroy($id)
     {
+        $transaction = Transaction::findOrFail($id);
         $transaction_details = TransactionDetail::where('transaction_id', $id)->get();
         foreach($transaction_details as $detail){
             Material::resetStock($detail->material_id, $detail->transaction->warehouse_id, $detail->transaction->transaction_category->stock_normal_balance_id, $detail->qty);

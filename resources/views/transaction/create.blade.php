@@ -153,6 +153,17 @@
                     if (data.transaction_id) {
                         // Menetapkan nilai transaction_id di input
                         document.getElementById('id').value = data.transaction_id;
+                        deal_with = data.transaction_category.deal_with;
+                        supplier_select = document.getElementById('supplier-select');
+                        customer_select = document.getElementById('customer-select');
+                        if(deal_with === "suppliers"){
+                            supplier_select.style.display = "block";
+                            customer_select.style.display = "none";
+                        }
+                        else if(deal_with === "customers"){
+                            supplier_select.style.display = "none";
+                            customer_select.style.display = "block";
+                        }
                     }
                 })
                 .catch(error => {
@@ -175,6 +186,7 @@
             document.getElementById('subtotal').value = totalSubtotal.toFixed(0);
             document.getElementById('taxes').value = totalTaxes.toFixed(0);
             document.getElementById('grand_total').value = grandTotal.toFixed(0);
+            document.getElementById('paid').value = grandTotal.toFixed(0);
 
             // Enable/Disable submit button based on totals
             const submitButton = document.getElementById('submit-button');
@@ -359,7 +371,7 @@
                                     </div>
 
                                     <div class="col-md-3">
-                                        <div class="mb-3">
+                                        <div class="mb-3" style="display: none;" id="supplier-select">
                                             <label for="supplier_id">
                                                 {{ ucwords(str_replace('_', ' ', 'supplier')) }}
                                             </label>
@@ -372,7 +384,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="mb-3">
+                                        <div class="mb-3" style="display: none;" id="customer-select">
                                             <label for="customer_id">
                                                 {{ ucwords(str_replace('_', ' ', 'customer')) }}
                                             </label>
@@ -482,15 +494,27 @@
                                                     <th>Freight</th>
                                                     <th>Discount</th>
                                                     <th>Grand Total</th>
+                                                    <th>Paid</th>
+                                                    <th>Gateway</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td id="total-subtotal"><input type="number" name="subtotal" id="subtotal" class="form-control" required></td>
-                                                    <td id="total-taxes"><input type="number" name="taxes" id="taxes" class="form-control" required></td>
+                                                    <td id="total-subtotal"><input type="number" name="subtotal" id="subtotal" class="form-control" readonly></td>
+                                                    <td id="total-taxes"><input type="number" name="taxes" id="taxes" class="form-control" readonly></td>
                                                     <td id="total-freight"><input type="number" name="freight" id="freight" class="form-control" value="0" required></td>
                                                     <td id="total-discount"><input type="number" name="discount" id="discount" class="form-control" value="0" required></td>
-                                                    <td id="grand-total"><input type="number" name="grand_total" id="grand_total" class="form-control" required></td>
+                                                    <td id="grand-total"><input type="number" name="grand_total" id="grand_total" class="form-control" readonly></td>
+                                                    <td id="total-paid"><input type="number" name="paid" id="paid" class="form-control" required></td>
+                                                    <td>
+                                                        <select width="100%" id="payment_gateway_id" name="payment_gateway_id"
+                                                            class="form-control select2">
+                                                            <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_gateway')) }}</option>
+                                                            @foreach ($payment_gateways as $payment_gateway)
+                                                                <option value="{{ $payment_gateway->id }}">{{ $payment_gateway->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>

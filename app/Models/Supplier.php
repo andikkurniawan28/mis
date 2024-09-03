@@ -40,4 +40,16 @@ class Supplier extends Model
             ]);
         });
     }
+
+    public static function increasePayable($id, $total){
+        $last = self::whereId($id)->get()->last()->payable ?? 0;
+        $current = $last + $total;
+        self::whereId($id)->update(["payable" => $current]);
+    }
+
+    public static function decreasePayable($id, $total){
+        $last = self::whereId($id)->get()->last()->payable ?? 0;
+        $current = $last - $total;
+        self::whereId($id)->update(["payable" => $current]);
+    }
 }

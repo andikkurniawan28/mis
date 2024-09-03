@@ -40,4 +40,16 @@ class Customer extends Model
             ]);
         });
     }
+
+    public static function increaseReceivable($id, $total){
+        $last = self::whereId($id)->get()->last()->receivable ?? 0;
+        $current = $last + $total;
+        self::whereId($id)->update(["receivable" => $current]);
+    }
+
+    public static function decreaseReceivable($id, $total){
+        $last = self::whereId($id)->get()->last()->receivable ?? 0;
+        $current = $last - $total;
+        self::whereId($id)->update(["receivable" => $current]);
+    }
 }
