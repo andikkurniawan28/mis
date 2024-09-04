@@ -69,6 +69,10 @@ class Transaction extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function payment_gateway(){
+        return $this->belongsTo(Account::class, 'payment_gateway_id');
+    }
+
     public function transaction_detail(){
         return $this->hasMany(TransactionDetail::class);
     }

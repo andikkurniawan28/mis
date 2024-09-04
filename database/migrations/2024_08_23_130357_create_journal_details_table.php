@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('journal_details', function (Blueprint $table) {
             $table->id();
             $table->string('journal_id');
-            $table->foreign('journal_id')->references('id')->on('journals');
+            $table->foreign('journal_id')->references('id')->on('journals')->onDelete('cascade');
             $table->string('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->text('description');

@@ -493,9 +493,6 @@
                                                     <th>Taxes</th>
                                                     <th>Freight</th>
                                                     <th>Discount</th>
-                                                    <th>Grand Total</th>
-                                                    <th>Paid</th>
-                                                    <th>Gateway</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -504,9 +501,20 @@
                                                     <td id="total-taxes"><input type="number" name="taxes" id="taxes" class="form-control" readonly></td>
                                                     <td id="total-freight"><input type="number" name="freight" id="freight" class="form-control" value="0" required></td>
                                                     <td id="total-discount"><input type="number" name="discount" id="discount" class="form-control" value="0" required></td>
+                                                </tr>
+                                            </tbody>
+                                            <thead>
+                                                <tr>
+                                                    <th>Grand Total</th>
+                                                    <th>Paid</th>
+                                                    <th colspan="2">Gateway</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
                                                     <td id="grand-total"><input type="number" name="grand_total" id="grand_total" class="form-control" readonly></td>
                                                     <td id="total-paid"><input type="number" name="paid" id="paid" class="form-control" required></td>
-                                                    <td>
+                                                    <td colspan="2">
                                                         <select width="100%" id="payment_gateway_id" name="payment_gateway_id"
                                                             class="form-control select2">
                                                             <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_gateway')) }}</option>

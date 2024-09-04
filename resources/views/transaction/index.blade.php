@@ -27,6 +27,7 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'warehouse')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'grand_total')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'paid')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -72,6 +73,16 @@
                     {
                         data: 'grand_total',
                         name: 'grand_total',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
+                    },
+                    {
+                        data: 'paid',
+                        name: 'paid',
                         class: 'text-right',
                         render: function(data, type, row) {
                             return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {

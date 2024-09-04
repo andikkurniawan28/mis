@@ -133,11 +133,15 @@ class TransactionController extends Controller
                 'freight' => $request->freight,
                 'discount' => $request->discount,
                 'grand_total' => $request->grand_total,
+                'paid' => $request->paid,
+                'payment_gateway_id' => $request->payment_gateway_id,
             ]);
 
             // Simpan data transaction details
             $item_order = 1;
+
             $stock_normal_balance_id = TransactionCategory::whereId($request->transaction_category_id)->get()->last()->stock_normal_balance_id;
+
             foreach ($request->details as $detail) {
                 TransactionDetail::create([
                     'transaction_id' => $request->id, // Menggunakan $transaction->id yang baru disimpan
@@ -148,8 +152,10 @@ class TransactionController extends Controller
                     'discount' => $detail['discount'],
                     'total' => $detail['total'],
                 ]);
+
                 // Atur Stock
                 Material::countStock($detail['material_id'], $request->warehouse_id, $stock_normal_balance_id, $detail['qty']);
+
                 $item_order++;
             }
 
@@ -232,6 +238,7 @@ class TransactionController extends Controller
                         "credit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
                     ],
                 ]);
+
                 // Simpan data hutang / piutang ke Supplier / Customer
                 if($transaction_category->deal_with == "suppliers") {
                     Supplier::decreasePayable($request->supplier_id, $request->paid);
@@ -287,11 +294,24 @@ class TransactionController extends Controller
     public function destroy($id)
     {
         $transaction = Transaction::findOrFail($id);
+
+        $left = $transaction->grand_total - $transaction->paid;
+
+        if($transaction->transaction_category->deal_with == "suppliers"){
+            Supplier::decreasePayable($transaction->supplier_id, $left);
+        }
+        else if ($transaction->transaction_category->deal_with == "customers"){
+            Customer::decreasePayable($transaction->customer_id, $left);
+        }
+
         $transaction_details = TransactionDetail::where('transaction_id', $id)->get();
+
         foreach($transaction_details as $detail){
             Material::resetStock($detail->material_id, $detail->transaction->warehouse_id, $detail->transaction->transaction_category->stock_normal_balance_id, $detail->qty);
         }
+
         Transaction::findOrFail($id)->delete();
+
         return redirect()->back()->with("success", "Transaction has been deleted");
     }
 }

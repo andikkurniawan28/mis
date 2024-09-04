@@ -23,10 +23,19 @@ class ClosingEntryController extends Controller
         $month = (int)$request->month;
         $setup = Setup::init();
 
+        $closed_entries = Ledger::whereMonth("created_at", $month)->whereYear("created_at", $year)
+            ->where("is_closing_entry", 1)
+            ->get();
+
+        foreach($closed_entries as $closed_entry)
+        {
+            Journal::whereId($closed_entry->journal_id)->delete();
+        }
+
         // Buat jurnal Penutupan, debit dan credit diisi diakhir karena belum dapat angkanya
         $total_debit = 0;
         $total_credit = 0;
-        $item_order = 0;
+        $item_order = 1;
         $journal_id = Journal::generateID();
         Journal::create([
             "id" => $journal_id,
@@ -69,7 +78,7 @@ class ClosingEntryController extends Controller
                                 "journal_id" => $journal_id,
                                 "account_id" => $account->id,
                                 "description" => "Closing Entry for {$year}-{$month}",
-                                "item_order" => $item_order++,
+                                "item_order" => $item_order,
                                 "credit" => $credit,
                                 "debit" => $debit,
                             ]);
@@ -87,6 +96,7 @@ class ClosingEntryController extends Controller
 
                             $total_debit += $debit;
                             $total_credit += $credit;
+                            $item_order++;
                         }
                     }
                 }
@@ -103,7 +113,7 @@ class ClosingEntryController extends Controller
             "journal_id" => $journal_id,
             "account_id" => $akun_laba_ditahan,
             "description" => "Closing Entry for {$year}-{$month}",
-            "item_order" => $item_order++,
+            "item_order" => $item_order,
             "credit" => $net_income,
             "debit" => 0,
         ]);

@@ -27,6 +27,9 @@ return new class extends Migration
             $table->double('freight');
             $table->double('discount');
             $table->double('grand_total');
+            $table->double('paid');
+            $table->string('payment_gateway_id')->nullable();
+            $table->foreign('payment_gateway_id')->references('id')->on('accounts');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
