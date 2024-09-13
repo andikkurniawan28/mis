@@ -13,17 +13,26 @@ use App\Models\Education;
 use Illuminate\Http\Request;
 use App\Models\MaritalStatus;
 use App\Models\EmployeeStatus;
+use Yajra\DataTables\DataTables;
 
 class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $setup = Setup::init();
-        $employees = Employee::all();
-        return view('employee.index', compact('setup', 'employees'));
+        if ($request->ajax()) {
+            $data = Employee::with('title')->latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->editColumn('title_id', function($row) {
+                    return $row->title ? $row->title->name : 'N/A'; // Replace title_id with employee_status name
+                })
+                ->make(true);
+        }
+        return view('employee.index', compact('setup'));
     }
 
     /**
