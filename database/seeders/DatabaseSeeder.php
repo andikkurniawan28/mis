@@ -7,9 +7,12 @@ use App\Models\Bank;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Level;
 use App\Models\Major;
 use App\Models\Setup;
 use App\Models\Skill;
+use App\Models\Title;
+use App\Models\Campus;
 use App\Models\Account;
 use App\Models\Feature;
 use App\Models\TaxRate;
@@ -28,6 +31,8 @@ use App\Models\PaymentTerm;
 use App\Models\AccountGroup;
 use App\Models\MaritalStatus;
 use App\Models\NormalBalance;
+use App\Models\SubDepartment;
+use App\Models\EmployeeStatus;
 use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
 use App\Models\MaterialCategory;
@@ -261,6 +266,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_education')), 'route' => 'education.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_education')), 'route' => 'education.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_education')), 'route' => 'education.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_campus')), 'route' => 'campus.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_campus')), 'route' => 'campus.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_campus')), 'route' => 'campus.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_campus')), 'route' => 'campus.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_campus')), 'route' => 'campus.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_campus')), 'route' => 'campus.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_campus')), 'route' => 'campus.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_major')), 'route' => 'major.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_major')), 'route' => 'major.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_major')), 'route' => 'major.store'],
@@ -296,6 +308,20 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_skill')), 'route' => 'skill.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_skill')), 'route' => 'skill.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_skill')), 'route' => 'skill.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_title')), 'route' => 'title.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_title')), 'route' => 'title.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_title')), 'route' => 'title.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_title')), 'route' => 'title.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_title')), 'route' => 'title.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_title')), 'route' => 'title.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_title')), 'route' => 'title.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_employee')), 'route' => 'employee.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_employee')), 'route' => 'employee.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_employee')), 'route' => 'employee.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_employee')), 'route' => 'employee.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_employee')), 'route' => 'employee.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_employee')), 'route' => 'employee.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_employee')), 'route' => 'employee.destroy'],
         ];
         Feature::insert($features);
 
@@ -577,10 +603,39 @@ class DatabaseSeeder extends Seeder
         Department::insert([
             ["name" => "Direktur"],
             ["name" => "Keuangan"],
+            ["name" => "Personalia"],
             ["name" => "Produksi"],
             ["name" => "Gudang"],
             ["name" => "Pembelian"],
             ["name" => "Penjualan"],
+            ["name" => "Pemasaran"],
+        ]);
+
+        SubDepartment::insert([
+            ["name" => "Direktur", "department_id" => Department::where("name", "Direktur")->get()->last()->id],
+            ["name" => "Akunting", "department_id" => Department::where("name", "Keuangan")->get()->last()->id],
+            ["name" => "Keuangan", "department_id" => Department::where("name", "Keuangan")->get()->last()->id],
+            ["name" => "Personalia", "department_id" => Department::where("name", "Personalia")->get()->last()->id],
+            ["name" => "Tata Usaha", "department_id" => Department::where("name", "Personalia")->get()->last()->id],
+            ["name" => "Produksi", "department_id" => Department::where("name", "Produksi")->get()->last()->id],
+            ["name" => "QC", "department_id" => Department::where("name", "Produksi")->get()->last()->id],
+            ["name" => "Gudang Produk", "department_id" => Department::where("name", "Gudang")->get()->last()->id],
+            ["name" => "Gudang Bahan Baku", "department_id" => Department::where("name", "Gudang")->get()->last()->id],
+            ["name" => "Gudang Peralatan & Perlengkapan", "department_id" => Department::where("name", "Gudang")->get()->last()->id],
+            ["name" => "Pengadaan Barang", "department_id" => Department::where("name", "Pembelian")->get()->last()->id],
+            ["name" => "Pengadaan Jasa", "department_id" => Department::where("name", "Pembelian")->get()->last()->id],
+            ["name" => "Penjualan", "department_id" => Department::where("name", "Penjualan")->get()->last()->id],
+            ["name" => "Pemasaran", "department_id" => Department::where("name", "Pemasaran")->get()->last()->id],
+        ]);
+
+        Level::insert([
+            ["name" => "Direktur"],
+            ["name" => "Kepala Bagian"],
+            ["name" => "Kepala Seksie"],
+            ["name" => "Kepala Sub-Seksie"],
+            ["name" => "Supervisor"],
+            ["name" => "Kepala Regu"],
+            ["name" => "Pelaksana"],
         ]);
 
         Education::insert([
@@ -624,6 +679,7 @@ class DatabaseSeeder extends Seeder
             ["name" => "Buddha"],
             ["name" => "Konghucu"],
             ["name" => "Keperacayaan Lokal"],
+            ["name" => "Atheis"],
         ]);
 
         MaritalStatus::insert([
@@ -747,6 +803,52 @@ class DatabaseSeeder extends Seeder
             ["name" => "Konstruksi Bangunan"],
             ["name" => "Arsitek Bangunan"],
             ["name" => "Analisa Laboratorium"],
+        ]);
+
+        Campus::insert([
+            ["name" => "Institut Teknik Sepuluh November"],
+            ["name" => "Universitas Brawijaya"],
+            ["name" => "Politeknik LPP Agro"],
+            ["name" => "Universitas Negeri Malang"],
+            ["name" => "Politeknik Negeri Malang"],
+            ["name" => "Institut Nasional Malang"],
+            ["name" => "SMK Negeri 7 Malang"],
+            ["name" => "Lainnya"],
+        ]);
+
+        Title::insert([
+            [
+                'name' => 'Direktur Utama',
+                'sub_department_id' => SubDepartment::where('name', 'Direktur')->first()->id,
+                'level_id' => Level::where('name', 'Direktur')->first()->id,
+            ],
+            [
+                'name' => 'Kepala Bagian Akuntansi',
+                'sub_department_id' => SubDepartment::where('name', 'Akunting')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Supervisor Produksi',
+                'sub_department_id' => SubDepartment::where('name', 'Produksi')->first()->id,
+                'level_id' => Level::where('name', 'Supervisor')->first()->id,
+            ],
+            [
+                'name' => 'Kepala Gudang Produk',
+                'sub_department_id' => SubDepartment::where('name', 'Gudang Produk')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Pelaksana QC',
+                'sub_department_id' => SubDepartment::where('name', 'QC')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+        ]);
+
+        EmployeeStatus::insert([
+            ["name" => "Karyawan Tetap"],
+            ["name" => "Karyawan Kampanye"],
+            ["name" => "Karyawan PKWT"],
+            ["name" => "Karyawan Outsourcing"],
         ]);
 
     }

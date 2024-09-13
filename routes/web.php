@@ -10,7 +10,9 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\TitleController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CampusController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AccountController;
@@ -20,6 +22,7 @@ use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\SupplierController;
@@ -106,11 +109,14 @@ Route::resource('/sub_department', SubDepartmentController::class)->middleware([
 Route::resource('/level', LevelController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/employee_status', EmployeeStatusController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/education', EducationController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/campus', CampusController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/major', MajorController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/religion', ReligionController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/marital_status', MaritalStatusController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/bank', BankController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/skill', SkillController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/title', TitleController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/employee', EmployeeController::class)->middleware(['auth', 'check.permission']);
 
 
 

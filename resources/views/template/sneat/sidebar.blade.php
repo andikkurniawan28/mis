@@ -476,11 +476,14 @@
                 in_array('level.index', $permissions) ||
                 in_array('employee_status.index', $permissions) ||
                 in_array('education.index', $permissions) ||
+                in_array('campus.index', $permissions) ||
                 in_array('major.index', $permissions) ||
                 in_array('religion.index', $permissions) ||
                 in_array('marital_status.index', $permissions) ||
                 in_array('bank.index', $permissions) ||
-                in_array('skill.index', $permissions)
+                in_array('skill.index', $permissions) ||
+                in_array('title.index', $permissions) ||
+                in_array('employee.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Human Resource</span>
@@ -493,11 +496,14 @@
                 in_array('level.index', $permissions) ||
                 in_array('employee_status.index', $permissions) ||
                 in_array('education.index', $permissions) ||
+                in_array('campus.index', $permissions) ||
                 in_array('major.index', $permissions) ||
                 in_array('religion.index', $permissions) ||
                 in_array('marital_status.index', $permissions) ||
                 in_array('bank.index', $permissions) ||
-                in_array('skill.index', $permissions)
+                in_array('skill.index', $permissions) ||
+                in_array('title.index', $permissions) ||
+                in_array('employee.index', $permissions)
             )
             <li
                 class="menu-item
@@ -506,11 +512,14 @@
                 @yield('level-active')
                 @yield('employee_status-active')
                 @yield('education-active')
+                @yield('campus-active')
                 @yield('major-active')
                 @yield('religion-active')
                 @yield('marital_status-active')
                 @yield('bank-active')
                 @yield('skill-active')
+                @yield('title-active')
+                @yield('employee-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -557,6 +566,14 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('campus.index', $permissions))
+                        <li class="menu-item @yield('campus-active')">
+                            <a href="{{ route('campus.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'campus')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
                     @if (in_array('major.index', $permissions))
                         <li class="menu-item @yield('major-active')">
                             <a href="{{ route('major.index') }}" class="menu-link">
@@ -593,6 +610,22 @@
                         <li class="menu-item @yield('skill-active')">
                             <a href="{{ route('skill.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'skill')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('title.index', $permissions))
+                        <li class="menu-item @yield('title-active')">
+                            <a href="{{ route('title.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'title')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('employee.index', $permissions))
+                        <li class="menu-item @yield('employee-active')">
+                            <a href="{{ route('employee.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'employee')) }}
                                 </div>
                             </a>
                         </li>
