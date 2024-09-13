@@ -470,6 +470,137 @@
             </li>
         @endif
 
+        @if (
+                in_array('department.index', $permissions) ||
+                in_array('sub_department.index', $permissions) ||
+                in_array('level.index', $permissions) ||
+                in_array('employee_status.index', $permissions) ||
+                in_array('education.index', $permissions) ||
+                in_array('major.index', $permissions) ||
+                in_array('religion.index', $permissions) ||
+                in_array('marital_status.index', $permissions) ||
+                in_array('bank.index', $permissions) ||
+                in_array('skill.index', $permissions)
+            )
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Human Resource</span>
+        </li>
+        @endif
+
+        @if (
+                in_array('department.index', $permissions) ||
+                in_array('sub_department.index', $permissions) ||
+                in_array('level.index', $permissions) ||
+                in_array('employee_status.index', $permissions) ||
+                in_array('education.index', $permissions) ||
+                in_array('major.index', $permissions) ||
+                in_array('religion.index', $permissions) ||
+                in_array('marital_status.index', $permissions) ||
+                in_array('bank.index', $permissions) ||
+                in_array('skill.index', $permissions)
+            )
+            <li
+                class="menu-item
+                @yield('department-active')
+                @yield('sub_department-active')
+                @yield('level-active')
+                @yield('employee_status-active')
+                @yield('education-active')
+                @yield('major-active')
+                @yield('religion-active')
+                @yield('marital_status-active')
+                @yield('bank-active')
+                @yield('skill-active')
+            ">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'master')) }}</div>
+                </a>
+                <ul class="menu-sub">
+                    @if (in_array('department.index', $permissions))
+                        <li class="menu-item @yield('department-active')">
+                            <a href="{{ route('department.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'department')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('sub_department.index', $permissions))
+                        <li class="menu-item @yield('sub_department-active')">
+                            <a href="{{ route('sub_department.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'sub_department')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('level.index', $permissions))
+                        <li class="menu-item @yield('level-active')">
+                            <a href="{{ route('level.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'level')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('employee_status.index', $permissions))
+                        <li class="menu-item @yield('employee_status-active')">
+                            <a href="{{ route('employee_status.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'employee_status')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('education.index', $permissions))
+                        <li class="menu-item @yield('education-active')">
+                            <a href="{{ route('education.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'education')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('major.index', $permissions))
+                        <li class="menu-item @yield('major-active')">
+                            <a href="{{ route('major.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'major')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('religion.index', $permissions))
+                        <li class="menu-item @yield('religion-active')">
+                            <a href="{{ route('religion.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'religion')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('marital_status.index', $permissions))
+                        <li class="menu-item @yield('marital_status-active')">
+                            <a href="{{ route('marital_status.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'marital_status')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('bank.index', $permissions))
+                        <li class="menu-item @yield('bank-active')">
+                            <a href="{{ route('bank.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'bank')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('skill.index', $permissions))
+                        <li class="menu-item @yield('skill-active')">
+                            <a href="{{ route('skill.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'skill')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
     </ul>
 
 </aside>

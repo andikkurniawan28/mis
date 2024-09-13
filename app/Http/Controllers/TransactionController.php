@@ -104,6 +104,8 @@ class TransactionController extends Controller
             'discount' => 'required|numeric',
             'grand_total' => 'required|numeric',
             'paid' => 'required|numeric',
+            // 'given' => 'required|numeric',
+            'left' => 'required|numeric',
             'payment_gateway_id' => 'nullable|exists:accounts,id',
             'details' => 'required|array',
             'details.*.material_id' => 'required|exists:materials,id',
@@ -134,6 +136,8 @@ class TransactionController extends Controller
                 'discount' => $request->discount,
                 'grand_total' => $request->grand_total,
                 'paid' => $request->paid,
+                // 'given' => $request->given,
+                'left' => $request->left,
                 'payment_gateway_id' => $request->payment_gateway_id,
             ]);
 
@@ -241,9 +245,9 @@ class TransactionController extends Controller
 
                 // Simpan data hutang / piutang ke Supplier / Customer
                 if($transaction_category->deal_with == "suppliers") {
-                    Supplier::decreasePayable($request->supplier_id, $request->paid);
+                    Supplier::decreasePayable($request->supplier_id, $request->left);
                 } else if($transaction_category->deal_with == "customers") {
-                    Customer::decreasePayable($request->customer, $request->paid);
+                    Customer::decreasePayable($request->customer, $request->left);
                 }
             }
 

@@ -27,7 +27,7 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'warehouse')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'grand_total')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'paid')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'left')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -81,8 +81,8 @@
                         }
                     },
                     {
-                        data: 'paid',
-                        name: 'paid',
+                        data: 'left',
+                        name: 'left',
                         class: 'text-right',
                         render: function(data, type, row) {
                             return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {

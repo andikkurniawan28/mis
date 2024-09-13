@@ -2,10 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\SkillController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\RegionController;
@@ -17,9 +21,12 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EducationController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\MainAccountController;
@@ -29,7 +36,10 @@ use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\ClosingEntryController;
 use App\Http\Controllers\BudgetRefreshController;
+use App\Http\Controllers\MaritalStatusController;
 use App\Http\Controllers\NormalBalanceController;
+use App\Http\Controllers\SubDepartmentController;
+use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\MaterialCategoryController;
@@ -91,6 +101,16 @@ Route::resource('/supplier', SupplierController::class)->middleware(['auth', 'ch
 Route::resource('/customer', CustomerController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/transaction_category', TransactionCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/transaction', TransactionController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/department', DepartmentController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/sub_department', SubDepartmentController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/level', LevelController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/employee_status', EmployeeStatusController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/education', EducationController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/major', MajorController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/religion', ReligionController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/marital_status', MaritalStatusController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/bank', BankController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/skill', SkillController::class)->middleware(['auth', 'check.permission']);
 
 
 

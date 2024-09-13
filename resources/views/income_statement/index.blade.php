@@ -76,6 +76,10 @@
                                         <td id="total_revenue"></td>
                                     </tr>
                                     <tr>
+                                        <th><strong>Total COGS</strong></th>
+                                        <td id="total_cogs"></td>
+                                    </tr>
+                                    <tr>
                                         <th><strong>Total Expenses</strong></th>
                                         <td id="total_expenses"></td>
                                     </tr>
@@ -116,6 +120,7 @@
                         $('#income_statement_table tbody').empty();
 
                         var total_revenue = 0;
+                        var total_cogs = 0;
                         var total_expenses = 0;
 
                         var data_html = '';
@@ -163,6 +168,34 @@
                         });
 
                         $.each(response.data, function(index, account_group) {
+                            if (['Harga Pokok Penjualan'].includes(account_group.name)) {
+                                var group_total = parseFloat(account_group.income_statement) || 0;
+
+                                console.log('Group Total (COGS):', group_total);
+
+                                data_html += `
+                                    <tr>
+                                        <td style="padding-left: 10px;"><strong>${account_group.name}</strong></td>
+                                        <td>${number_format(group_total)}</td>
+                                    </tr>`;
+
+                                total_cogs += group_total;
+
+                                $.each(account_group.main_account, function(index, main_account) {
+                                    var main_total = renderAccount(main_account, 1);
+
+                                    $.each(main_account.sub_account, function(index, sub_account) {
+                                        var sub_total = renderAccount(sub_account, 2);
+
+                                        $.each(sub_account.account, function(index, account) {
+                                            var account_total = renderAccount(account, 3);
+                                        });
+                                    });
+                                });
+                            }
+                        });
+
+                        $.each(response.data, function(index, account_group) {
                             if (['Beban Operasional', 'Beban Lain-lain'].includes(account_group.name)) {
                                 var group_total = parseFloat(account_group.income_statement) || 0;
 
@@ -194,8 +227,9 @@
 
                         $('#income_statement_table tbody').append(data_html);
                         $('#total_revenue').text(number_format(total_revenue));
+                        $('#total_cogs').text(number_format(total_cogs));
                         $('#total_expenses').text(number_format(total_expenses));
-                        $('#net_income').text(number_format(total_revenue - total_expenses));
+                        $('#net_income').text(number_format(total_revenue - total_cogs - total_expenses));
                     }
                 });
             });

@@ -28,6 +28,8 @@ return new class extends Migration
             $table->double('discount');
             $table->double('grand_total');
             $table->double('paid');
+            $table->double('left');
+            // $table->double('cashback');
             $table->string('payment_gateway_id')->nullable();
             $table->foreign('payment_gateway_id')->references('id')->on('accounts');
             $table->timestamp('created_at')->useCurrent();

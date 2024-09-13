@@ -3,23 +3,30 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Bank;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Major;
 use App\Models\Setup;
+use App\Models\Skill;
 use App\Models\Account;
 use App\Models\Feature;
 use App\Models\TaxRate;
 use App\Models\Business;
 use App\Models\Customer;
 use App\Models\Material;
+use App\Models\Religion;
 use App\Models\Supplier;
+use App\Models\Education;
 use App\Models\Warehouse;
+use App\Models\Department;
 use App\Models\Permission;
 use App\Models\SubAccount;
 use App\Models\MainAccount;
 use App\Models\PaymentTerm;
 use App\Models\AccountGroup;
+use App\Models\MaritalStatus;
 use App\Models\NormalBalance;
 use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
@@ -219,6 +226,76 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_transaction')), 'route' => 'transaction.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_transaction')), 'route' => 'transaction.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction')), 'route' => 'transaction.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_department')), 'route' => 'department.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_department')), 'route' => 'department.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_department')), 'route' => 'department.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_department')), 'route' => 'department.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_department')), 'route' => 'department.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_department')), 'route' => 'department.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_department')), 'route' => 'department.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_sub_department')), 'route' => 'sub_department.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_sub_department')), 'route' => 'sub_department.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_sub_department')), 'route' => 'sub_department.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_sub_department')), 'route' => 'sub_department.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_sub_department')), 'route' => 'sub_department.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_sub_department')), 'route' => 'sub_department.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_sub_department')), 'route' => 'sub_department.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_level')), 'route' => 'level.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_level')), 'route' => 'level.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_level')), 'route' => 'level.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_level')), 'route' => 'level.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_level')), 'route' => 'level.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_level')), 'route' => 'level.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_level')), 'route' => 'level.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_employee_status')), 'route' => 'employee_status.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_employee_status')), 'route' => 'employee_status.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_employee_status')), 'route' => 'employee_status.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_employee_status')), 'route' => 'employee_status.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_employee_status')), 'route' => 'employee_status.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_employee_status')), 'route' => 'employee_status.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_employee_status')), 'route' => 'employee_status.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_education')), 'route' => 'education.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_education')), 'route' => 'education.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_education')), 'route' => 'education.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_education')), 'route' => 'education.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_education')), 'route' => 'education.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_education')), 'route' => 'education.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_education')), 'route' => 'education.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_major')), 'route' => 'major.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_major')), 'route' => 'major.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_major')), 'route' => 'major.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_major')), 'route' => 'major.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_major')), 'route' => 'major.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_major')), 'route' => 'major.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_major')), 'route' => 'major.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_religion')), 'route' => 'religion.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_religion')), 'route' => 'religion.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_religion')), 'route' => 'religion.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_religion')), 'route' => 'religion.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_religion')), 'route' => 'religion.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_religion')), 'route' => 'religion.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_religion')), 'route' => 'religion.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_marital_status')), 'route' => 'marital_status.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_marital_status')), 'route' => 'marital_status.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_marital_status')), 'route' => 'marital_status.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_marital_status')), 'route' => 'marital_status.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_marital_status')), 'route' => 'marital_status.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_marital_status')), 'route' => 'marital_status.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_marital_status')), 'route' => 'marital_status.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_bank')), 'route' => 'bank.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_bank')), 'route' => 'bank.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_bank')), 'route' => 'bank.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_bank')), 'route' => 'bank.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_bank')), 'route' => 'bank.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_bank')), 'route' => 'bank.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_bank')), 'route' => 'bank.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_skill')), 'route' => 'skill.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_skill')), 'route' => 'skill.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_skill')), 'route' => 'skill.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_skill')), 'route' => 'skill.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_skill')), 'route' => 'skill.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_skill')), 'route' => 'skill.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_skill')), 'route' => 'skill.destroy'],
         ];
         Feature::insert($features);
 
@@ -435,11 +512,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Supplier::insert([
-            ["name" => "Importir", "business_id" => Business::where("name", "Importir")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
+            ["name" => "Supplier A", "business_id" => Business::where("name", "Importir")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
+            ["name" => "Supplier B", "business_id" => Business::where("name", "Importir")->get()->last()->id, "phone_number" => "081234567891", "address" => "Pelabuhan Tanjung Mas"],
         ]);
 
         Customer::insert([
-            ["name" => "Konsumen 1", "business_id" => Business::where("name", "Konsumen")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
+            ["name" => "Customer A", "business_id" => Business::where("name", "Konsumen")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
         ]);
 
         Material::insert([
@@ -494,6 +572,181 @@ class DatabaseSeeder extends Seeder
                 "grand_total_account_id" => Account::where("name", "Piutang Dagang Lokal")->get()->last()->id,
                 "grand_total_normal_balance_id" => "D",
             ],
+        ]);
+
+        Department::insert([
+            ["name" => "Direktur"],
+            ["name" => "Keuangan"],
+            ["name" => "Produksi"],
+            ["name" => "Gudang"],
+            ["name" => "Pembelian"],
+            ["name" => "Penjualan"],
+        ]);
+
+        Education::insert([
+            ["name" => "Tidak Bersekolah Formal"],
+            ["name" => "Setara SD"],
+            ["name" => "Setara SMP"],
+            ["name" => "Setara SMA"],
+            ["name" => "Setara D1"],
+            ["name" => "Setara D2"],
+            ["name" => "Setara D3"],
+            ["name" => "Setara S1"],
+            ["name" => "Setara S2"],
+            ["name" => "Setara S3"],
+        ]);
+
+        Major::insert([
+            ["name" => "Ekonomi"],
+            ["name" => "Akuntansi"],
+            ["name" => "Statistika"],
+            ["name" => "Psikologi"],
+            ["name" => "Teknik Kimia"],
+            ["name" => "Teknik Mesin"],
+            ["name" => "Teknik Instrumen"],
+            ["name" => "Teknik Elektronika"],
+            ["name" => "Teknik Informatika"],
+            ["name" => "Pertanian"],
+            ["name" => "Ilmu Pangan"],
+            ["name" => "Kimia Murni"],
+            ["name" => "Fisika Murni"],
+            ["name" => "Matematika Murni"],
+            ["name" => "Sastra Bahasa Inggris"],
+            ["name" => "Sastra Bahasa Indonesia"],
+            ["name" => "Sastra Bahasa Mandarin"],
+        ]);
+
+        Religion::insert([
+            ["name" => "Islam"],
+            ["name" => "Kristen Protestan"],
+            ["name" => "Kristen Katholik"],
+            ["name" => "Hindu"],
+            ["name" => "Buddha"],
+            ["name" => "Konghucu"],
+            ["name" => "Keperacayaan Lokal"],
+        ]);
+
+        MaritalStatus::insert([
+            ["name" => "Lajang"],
+            ["name" => "Menikah"],
+            ["name" => "Cerai"],
+        ]);
+
+        Bank::insert([
+            ["name" => "Bank Aceh Syariah"],
+            ["name" => "Bank Aladin Syariah"],
+            ["name" => "Bank Amar Indonesia"],
+            ["name" => "Bank ANZ Indonesia"],
+            ["name" => "Bank Artha Graha Internasional"],
+            ["name" => "Bank Banten"],
+            ["name" => "Bank BCA Syariah"],
+            ["name" => "Bank Bengkulu"],
+            ["name" => "Bank BJB"],
+            ["name" => "Bank BJB Syariah"],
+            ["name" => "Bank BNP Paribas Indonesia"],
+            ["name" => "Bank BPD Bali"],
+            ["name" => "Bank BPD DIY"],
+            ["name" => "Bank BRK Syariah"],
+            ["name" => "Bank BSG"],
+            ["name" => "Bank BTPN"],
+            ["name" => "Bank Bumi Arta"],
+            ["name" => "Bank Capital Indonesia"],
+            ["name" => "Bank Central Asia"],
+            ["name" => "Bank China Construction Bank Indonesia"],
+            ["name" => "Bank CIMB Niaga"],
+            ["name" => "Bank Commonwealth"],
+            ["name" => "Bank CTBC Indonesia"],
+            ["name" => "Bank Danamon Indonesia"],
+            ["name" => "Bank DBS Indonesia"],
+            ["name" => "Bank Digital BCA"],
+            ["name" => "Bank DKI"],
+            ["name" => "Bank Ganesha"],
+            ["name" => "Bank Hana Indonesia"],
+            ["name" => "Bank Hibank Indonesia"],
+            ["name" => "Bank HSBC Indonesia"],
+            ["name" => "Bank IBK Indonesia"],
+            ["name" => "Bank ICBC Indonesia"],
+            ["name" => "Bank Ina Perdana"],
+            ["name" => "Bank Index Selindo"],
+            ["name" => "Bank Jago"],
+            ["name" => "Bank Jambi"],
+            ["name" => "Bank Jasa Jakarta"],
+            ["name" => "Bank Jateng"],
+            ["name" => "Bank Jatim"],
+            ["name" => "Bank J Trust Indonesia"],
+            ["name" => "Bank Kalbar"],
+            ["name" => "Bank Kalsel"],
+            ["name" => "Bank Kalteng"],
+            ["name" => "Bank KB Indonesia"],
+            ["name" => "Bank KB Syariah"],
+            ["name" => "Bank Lampung"],
+            ["name" => "Bank Maluku Malut"],
+            ["name" => "Bank Mandiri"],
+            ["name" => "Bank Mandiri Taspen"],
+            ["name" => "Bank Maspion"],
+            ["name" => "Bank Mayapada Internasional"],
+            ["name" => "Bank Maybank Indonesia"],
+            ["name" => "Bank Mega"],
+            ["name" => "Bank Mega Syariah"],
+            ["name" => "Bank Mestika Dharma"],
+            ["name" => "Bank Mizuho Indonesia"],
+            ["name" => "Bank MNC Internasional"],
+            ["name" => "Bank Muamalat Indonesia"],
+            ["name" => "Bank Multiarta Sentosa"],
+            ["name" => "Bank Nagari"],
+            ["name" => "Bank Nano Syariah"],
+            ["name" => "Bank Nationalnobu"],
+            ["name" => "Bank Negara Indonesia"],
+            ["name" => "Bank Neo Commerce"],
+            ["name" => "Bank NTT"],
+            ["name" => "Bank OCBC Indonesia"],
+            ["name" => "Bank Oke Indonesia"],
+            ["name" => "Bank Papua"],
+            ["name" => "Bank Permata"],
+            ["name" => "Bank QNB Indonesia"],
+            ["name" => "Bank Rakyat Indonesia"],
+            ["name" => "Bank Raya Indonesia"],
+            ["name" => "Bank Resona Perdania"],
+            ["name" => "Bank Sahabat Sampoerna"],
+            ["name" => "Bank SBI Indonesia"],
+            ["name" => "Bank Shinhan Indonesia"],
+            ["name" => "Bank Sinarmas"],
+            ["name" => "Bank Sulselbar"],
+            ["name" => "Bank Sulteng"],
+            ["name" => "Bank Sultra"],
+            ["name" => "Bank Sumsel Babel"],
+            ["name" => "Bank Sumut"],
+            ["name" => "Bank Superbank Indonesia"],
+            ["name" => "Bank Syariah Indonesia"],
+            ["name" => "Bank Tabungan Negara"],
+            ["name" => "Bank UOB Indonesia"],
+            ["name" => "Bank Victoria Syariah"],
+            ["name" => "Bank Woori Saudara"],
+        ]);
+
+        Skill::insert([
+            ["name" => "Public Speaking"],
+            ["name" => "Bahasa Inggris"],
+            ["name" => "Bahasa Mandarin"],
+            ["name" => "Akuntansi"],
+            ["name" => "Statistik"],
+            ["name" => "Pemrograman Desktop"],
+            ["name" => "Pemrograman Web"],
+            ["name" => "Pemrograman Mobile"],
+            ["name" => "Robotika"],
+            ["name" => "Instalasi Jaringan Fiber Optic"],
+            ["name" => "Instalasi Jaringan Ethernet"],
+            ["name" => "Teknisi Hardware"],
+            ["name" => "Panel Wiring"],
+            ["name" => "Pemrograman PLC"],
+            ["name" => "Pemrograman HMI"],
+            ["name" => "Instalasi Listrik Arus Kuat"],
+            ["name" => "Pengelasan"],
+            ["name" => "Mekanik Mesin"],
+            ["name" => "Pengoperasian Alat Berat"],
+            ["name" => "Konstruksi Bangunan"],
+            ["name" => "Arsitek Bangunan"],
+            ["name" => "Analisa Laboratorium"],
         ]);
 
     }

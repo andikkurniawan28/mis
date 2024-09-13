@@ -175,6 +175,7 @@
             let totalSubtotal = 0;
             let totalFreight = parseFloat(document.getElementById('freight')?.value) || 0;
             let totalDiscount = parseFloat(document.getElementById('discount')?.value) || 0;
+            let totalPaid = parseFloat(document.getElementById('paid')?.value) || 0;
 
             document.querySelectorAll('.total').forEach(function(input) {
                 totalSubtotal += parseFloat(input.value) || 0;
@@ -183,10 +184,13 @@
             let totalTaxes = (parseFloat(document.getElementById('rate').value) / 100) * totalSubtotal;
 
             const grandTotal = totalSubtotal + totalTaxes + totalFreight - totalDiscount;
+            const left = grandTotal - totalPaid;
+            // const paid = totalGiven - left;
+
             document.getElementById('subtotal').value = totalSubtotal.toFixed(0);
             document.getElementById('taxes').value = totalTaxes.toFixed(0);
             document.getElementById('grand_total').value = grandTotal.toFixed(0);
-            document.getElementById('paid').value = grandTotal.toFixed(0);
+            document.getElementById('left').value = left.toFixed(0);
 
             // Enable/Disable submit button based on totals
             const submitButton = document.getElementById('submit-button');
@@ -278,6 +282,7 @@
             const taxesInput = document.getElementById('taxes');
             const freightInput = document.getElementById('freight');
             const discountInput = document.getElementById('discount');
+            const paidInput = document.getElementById('paid');
 
             if (taxesInput) {
                 taxesInput.addEventListener('input', updateTotals);
@@ -289,6 +294,10 @@
 
             if (discountInput) {
                 discountInput.addEventListener('input', updateTotals);
+            }
+
+            if (paidInput) {
+                paidInput.addEventListener('input', updateTotals);
             }
 
             updateTotals(); // Initial totals calculation
@@ -506,15 +515,16 @@
                                             <thead>
                                                 <tr>
                                                     <th>Grand Total</th>
+                                                    <th>Gateway</th>
                                                     <th>Paid</th>
-                                                    <th colspan="2">Gateway</th>
+                                                    <th>Left</th>
+                                                    {{-- <th>Cashback</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td id="grand-total"><input type="number" name="grand_total" id="grand_total" class="form-control" readonly></td>
-                                                    <td id="total-paid"><input type="number" name="paid" id="paid" class="form-control" required></td>
-                                                    <td colspan="2">
+                                                    <td>
                                                         <select width="100%" id="payment_gateway_id" name="payment_gateway_id"
                                                             class="form-control select2">
                                                             <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_gateway')) }}</option>
@@ -523,6 +533,8 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
+                                                    <td id="total-paid"><input type="number" name="paid" id="paid" class="form-control" required></td>
+                                                    <td id="total-left"><input type="number" name="left" id="left" class="form-control" value="0"  readonly></td>
                                                 </tr>
                                             </tbody>
                                         </table>

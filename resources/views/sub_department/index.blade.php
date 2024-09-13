@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'account')) }}
+    {{ ucwords(str_replace('_', ' ', 'sub_department')) }}
 @endsection
 
-@section('account-active')
+@section('sub_department-active')
     {{ 'active' }}
 @endsection
 
@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('account.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('sub_department.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
@@ -23,29 +23,21 @@
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'department')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'sub_account')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'cash_flow_category')) }}</th>
-                                {{-- <th>{{ ucwords(str_replace('_', ' ', 'normal_balance')) }}</th> --}}
-                                <th>{{ ucwords(str_replace('_', ' ', 'initial_balance')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'is_payment_gateway')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($accounts as $account)
+                            @foreach ($sub_departments as $sub_department)
                                 <tr>
-                                    <td>{{ $account->id }}</td>
-                                    <td>{{ $account->name }}</td>
-                                    <td>{{ $account->sub_account->name }}</td>
-                                    <td>{{ $account->cash_flow_category->name ?? "-" }}</td>
-                                    {{-- <td>{{ $account->normal_balance->name }}</td> --}}
-                                    <td>{{ number_format($account->initial_balance) }}</td>
-                                    <td>{{ $account->is_payment_gateway }}</td>
+                                    <td>{{ $sub_department->id }}</td>
+                                    <td>{{ $sub_department->department->name }}</td>
+                                    <td>{{ $sub_department->name }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('account.edit', $account->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $account->id }}" data-name="{{ $account->name }}">Delete</button>
+                                            <a href="{{ route('sub_department.edit', $sub_department->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $sub_department->id }}" data-name="{{ $sub_department->name }}">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -63,8 +55,8 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    const account_id = this.getAttribute('data-id');
-                    const account_name = this.getAttribute('data-name');
+                    const sub_department_id = this.getAttribute('data-id');
+                    const sub_department_name = this.getAttribute('data-name');
                     Swal.fire({
                         title: 'Are you sure?',
                         text: 'You won\'t be able to revert this!',
@@ -78,8 +70,8 @@
                             const form = document.createElement('form');
                             form.setAttribute('method', 'POST');
                             form.setAttribute('action',
-                                `{{ route('account.destroy', ':id') }}`.replace(
-                                    ':id', account_id));
+                                `{{ route('sub_department.destroy', ':id') }}`.replace(
+                                    ':id', sub_department_id));
                             const csrfToken = document.getElementsByName("_token")[0].value;
 
                             const hiddenMethod = document.createElement('input');
@@ -90,7 +82,7 @@
                             const name = document.createElement('input');
                             name.setAttribute('type', 'hidden');
                             name.setAttribute('name', 'name');
-                            name.setAttribute('value', account_name);
+                            name.setAttribute('value', sub_department_name);
 
                             const csrfTokenInput = document.createElement('input');
                             csrfTokenInput.setAttribute('type', 'hidden');
