@@ -35,6 +35,7 @@ use App\Models\SubDepartment;
 use App\Models\EmployeeStatus;
 use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
+use App\Models\EmployeeIdentity;
 use App\Models\MaterialCategory;
 use App\Models\FinancialStatement;
 use Illuminate\Support\Facades\DB;
@@ -315,6 +316,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_title')), 'route' => 'title.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_title')), 'route' => 'title.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_title')), 'route' => 'title.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_employee_identity')), 'route' => 'employee_identity.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_employee_identity')), 'route' => 'employee_identity.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_employee_identity')), 'route' => 'employee_identity.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_employee_identity')), 'route' => 'employee_identity.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_employee_identity')), 'route' => 'employee_identity.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_employee_identity')), 'route' => 'employee_identity.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_employee_identity')), 'route' => 'employee_identity.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_employee')), 'route' => 'employee.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_employee')), 'route' => 'employee.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_employee')), 'route' => 'employee.store'],
@@ -850,6 +858,27 @@ class DatabaseSeeder extends Seeder
             ["name" => "Karyawan PKWT"],
             ["name" => "Karyawan Outsourcing"],
         ]);
+
+        EmployeeIdentity::insert([
+            ["name" => "Nomor Telepon"],
+            ["name" => "Nomor Induk Kependudukan"],
+            ["name" => "Nomor KK"],
+            ["name" => "NPWP"],
+            ["name" => "Nomor BPJS Kesehatan"],
+            ["name" => "Nomor BPJS Ketenagakerjaan"],
+        ]);
+
+        $employee_identities = EmployeeIdentity::all();
+        foreach ($employee_identities as $employee_identity) {
+            $column_name = str_replace(' ', '_', $employee_identity->name);
+            $queries = [
+                "ALTER TABLE employees ADD COLUMN `{$column_name}` VARCHAR(255) NULL",
+            ];
+
+            foreach ($queries as $query) {
+                DB::statement($query);
+            }
+        }
 
     }
 }

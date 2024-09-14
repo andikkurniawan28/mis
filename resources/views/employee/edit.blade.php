@@ -37,6 +37,42 @@
                             </div>
 
                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="name">
+                                    {{ ucwords(str_replace('_', ' ', 'name')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $employee->name) }}" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="address">
+                                    {{ ucwords(str_replace('_', ' ', 'address')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" name="address" id="address" required>{{ old('address', $employee->address) }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="place_of_birth">
+                                    {{ ucwords(str_replace('_', ' ', 'place_of_birth')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" value="{{ old('place_of_birth', $employee->place_of_birth) }}" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="birthday">
+                                    {{ ucwords(str_replace('_', ' ', 'birthday')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="date" class="form-control" id="birthday" name="birthday" value="{{ old('birthday', $employee->birthday) }}" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="title">
                                     {{ ucwords(str_replace('_', ' ', 'title')) }}
                                 </label>
@@ -164,42 +200,15 @@
                                 </div>
                             </div>
 
+                            @foreach($employee_identities as $employee_identity)
+                            @php $column_name = str_replace(' ', '_', $employee_identity->name); @endphp
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="name">
-                                    {{ ucwords(str_replace('_', ' ', 'name')) }}
-                                </label>
+                                <label class="col-sm-2 col-form-label" for="{{ $column_name }}">{{ ucwords(str_replace('_', ' ', $employee_identity->name)) }}</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $employee->name) }}" required autofocus>
+                                    <input type="text" class="form-control" id="{{ $column_name }}" name="{{ $column_name }}" value="{{ $employee->{$column_name} }}">
                                 </div>
                             </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="address">
-                                    {{ ucwords(str_replace('_', ' ', 'address')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" name="address" id="address" required>{{ old('address', $employee->address) }}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="place_of_birth">
-                                    {{ ucwords(str_replace('_', ' ', 'place_of_birth')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" value="{{ old('place_of_birth', $employee->place_of_birth) }}" required>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="birthday">
-                                    {{ ucwords(str_replace('_', ' ', 'birthday')) }}
-                                </label>
-                                <div class="col-sm-10">
-                                    <input type="date" class="form-control" id="birthday" name="birthday" value="{{ old('birthday', $employee->birthday) }}" required>
-                                </div>
-                            </div>
-
+                            @endforeach
 
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">

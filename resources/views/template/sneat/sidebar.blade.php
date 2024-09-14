@@ -483,6 +483,7 @@
                 in_array('bank.index', $permissions) ||
                 in_array('skill.index', $permissions) ||
                 in_array('title.index', $permissions) ||
+                in_array('employee_identity.index', $permissions) ||
                 in_array('employee.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
@@ -503,6 +504,7 @@
                 in_array('bank.index', $permissions) ||
                 in_array('skill.index', $permissions) ||
                 in_array('title.index', $permissions) ||
+                in_array('employee_identity.index', $permissions) ||
                 in_array('employee.index', $permissions)
             )
             <li
@@ -519,6 +521,7 @@
                 @yield('bank-active')
                 @yield('skill-active')
                 @yield('title-active')
+                @yield('employee_identity-active')
                 @yield('employee-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -618,6 +621,14 @@
                         <li class="menu-item @yield('title-active')">
                             <a href="{{ route('title.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'title')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('employee_identity.index', $permissions))
+                        <li class="menu-item @yield('employee_identity-active')">
+                            <a href="{{ route('employee_identity.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'employee_identity')) }}
                                 </div>
                             </a>
                         </li>

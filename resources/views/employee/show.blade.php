@@ -115,6 +115,16 @@
                             </div>
                         </div>
 
+                        @foreach($employee_identities as $employee_identity)
+                        @php $column_name = str_replace(' ', '_', $employee_identity->name); @endphp
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="{{ $column_name }}">{{ ucwords(str_replace('_', ' ', $employee_identity->name)) }}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="{{ $column_name }}" value="{{ $employee->{$column_name} }}" readonly>
+                            </div>
+                        </div>
+                        @endforeach
+
                         <div class="row justify-content-end">
                             <div class="col-sm-10">
                                 <a href="{{ route('employee.index') }}" class="btn btn-secondary">Back</a>

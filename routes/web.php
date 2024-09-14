@@ -45,6 +45,7 @@ use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\CashFlowCategoryController;
+use App\Http\Controllers\EmployeeIdentityController;
 use App\Http\Controllers\MaterialCategoryController;
 use App\Http\Controllers\FinancialStatementController;
 use App\Http\Controllers\MaterialSubCategoryController;
@@ -116,6 +117,7 @@ Route::resource('/marital_status', MaritalStatusController::class)->middleware([
 Route::resource('/bank', BankController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/skill', SkillController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/title', TitleController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/employee_identity', EmployeeIdentityController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/employee', EmployeeController::class)->middleware(['auth', 'check.permission']);
 
 

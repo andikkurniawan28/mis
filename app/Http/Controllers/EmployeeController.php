@@ -13,6 +13,7 @@ use App\Models\Education;
 use Illuminate\Http\Request;
 use App\Models\MaritalStatus;
 use App\Models\EmployeeStatus;
+use App\Models\EmployeeIdentity;
 use Yajra\DataTables\DataTables;
 
 class EmployeeController extends Controller
@@ -49,7 +50,8 @@ class EmployeeController extends Controller
         $religions = Religion::all();
         $marital_statuses = MaritalStatus::all();
         $banks = Bank::all();
-        return view('employee.create', compact('setup', 'employee_statuses', 'titles', 'educations',  'campuses', 'majors', 'religions', 'marital_statuses', 'banks'));
+        $employee_identities = EmployeeIdentity::all();
+        return view('employee.create', compact('setup', 'employee_statuses', 'titles', 'educations',  'campuses', 'majors', 'religions', 'marital_statuses', 'banks', 'employee_identities'));
     }
 
     /**
@@ -57,7 +59,8 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $employee_identities = EmployeeIdentity::all();
+        $validation_rules = [
             "id" => "required|unique:employees",
             "name" => "required|unique:employees",
             "address" => "required",
@@ -71,7 +74,12 @@ class EmployeeController extends Controller
             "religion_id" => "required|exists:religions,id",
             "marital_status_id" => "required|exists:marital_statuses,id",
             "bank_id" => "required|exists:banks,id",
-        ]);
+        ];
+        foreach($employee_identities as $employee_identity){
+            $column_name = str_replace(' ', '_', $employee_identity->name);
+            $validation_rules[$column_name] = "nullable";
+        }
+        $validated = $request->validate($validation_rules);
         $employee = Employee::create($validated);
         return redirect()->back()->with("success", "Employee has been created");
     }
@@ -83,7 +91,8 @@ class EmployeeController extends Controller
     {
         $setup = Setup::init();
         $employee = Employee::findOrFail($id);
-        return view('employee.show', compact('setup', 'employee'));
+        $employee_identities = EmployeeIdentity::all();
+        return view('employee.show', compact('setup', 'employee', 'employee_identities'));
     }
 
     /**
@@ -101,7 +110,8 @@ class EmployeeController extends Controller
         $religions = Religion::all();
         $marital_statuses = MaritalStatus::all();
         $banks = Bank::all();
-        return view('employee.edit', compact('setup', 'employee', 'employee_statuses', 'titles', 'educations',  'campuses', 'majors', 'religions', 'marital_statuses', 'banks'));
+        $employee_identities = EmployeeIdentity::all();
+        return view('employee.edit', compact('setup', 'employee', 'employee_statuses', 'titles', 'educations',  'campuses', 'majors', 'religions', 'marital_statuses', 'banks', 'employee_identities'));
     }
 
     /**
@@ -110,7 +120,8 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $employee = Employee::findOrFail($id);
-        $validated = $request->validate([
+        $employee_identities = EmployeeIdentity::all();
+        $validation_rules = [
             'id' => 'required|unique:employees,id,' . $employee->id,
             'name' => 'required|unique:employees,name,' . $employee->id,
             "address" => "required",
@@ -124,7 +135,12 @@ class EmployeeController extends Controller
             "religion_id" => "required|exists:religions,id",
             "marital_status_id" => "required|exists:marital_statuses,id",
             "bank_id" => "required|exists:banks,id",
-        ]);
+        ];
+        foreach($employee_identities as $employee_identity){
+            $column_name = str_replace(' ', '_', $employee_identity->name);
+            $validation_rules[$column_name] = "nullable";
+        }
+        $validated = $request->validate($validation_rules);
         $employee->update($validated);
         return redirect()->route('employee.index')->with("success", "Employee has been updated");
     }
