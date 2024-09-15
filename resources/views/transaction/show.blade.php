@@ -39,6 +39,7 @@
                                                 <th>Date</th>
                                                 <th>Timestamp</th>
                                                 <th>Warehouse</th>
+                                                <th>Admin</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -49,6 +50,7 @@
                                                 <td>{{ $transaction->created_at->format('d M Y') }}</td>
                                                 <td>{{ $transaction->created_at }}</td>
                                                 <td>{{ $transaction->warehouse->name }}</td>
+                                                <td>{{ $transaction->user->name }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -64,6 +66,7 @@
                                                 <th>Material</th>
                                                 <th>Qty</th>
                                                 <th>Price</th>
+                                                <th>Discount</th>
                                                 <th>Total</th>
                                             </tr>
                                         </thead>
@@ -74,13 +77,14 @@
                                                     <td>{{ $detail->material->name }}</td> <!-- Assuming 'material' refers to a product/service -->
                                                     <td>{{ $detail->qty }}</td>
                                                     <td>{{ number_format($detail->price, 0) }}</td>
+                                                    <td>{{ number_format($detail->discount, 0) }}</td>
                                                     <td>{{ number_format($detail->total, 0) }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="4">Subtotal</th>
+                                                <th colspan="5">Subtotal</th>
                                                 <th>{{ number_format($transaction->transaction_detail->sum('total'), 0) }}</th>
                                             </tr>
                                         </tfoot>
@@ -91,34 +95,29 @@
                                 <h6>Transaction Summary</h6>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-sm">
-                                        <tbody>
+                                        <thead>
                                             <tr>
                                                 <th>Subtotal</th>
-                                                <td>{{ number_format($transaction->subtotal, 0) }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Taxes</th>
-                                                <td>{{ number_format($transaction->taxes, 0) }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Freight</th>
-                                                <td>{{ number_format($transaction->freight, 0) }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Discount</th>
-                                                <td>{{ number_format($transaction->discount, 0) }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Grand Total</th>
-                                                <td>{{ number_format($transaction->grand_total, 0) }}</td>
-                                            </tr>
-                                            <tr>
                                                 <th>Left</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ number_format($transaction->subtotal, 0) }}</td>
+                                                <td>{{ number_format($transaction->taxes, 0) }}</td>
+                                                <td>{{ number_format($transaction->freight, 0) }}</td>
+                                                <td>{{ number_format($transaction->discount, 0) }}</td>
+                                                <td>{{ number_format($transaction->grand_total, 0) }}</td>
                                                 <td>{{ number_format($transaction->left, 0) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
+
                                 <br>
                                 <button class="btn btn-primary" onclick="window.print()">Print Invoice</button>
                             </div>
