@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    @csrf
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card">
             <div class="card-body">
@@ -19,102 +19,148 @@
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
-                    <table class="table table-hover table-bordered" id="example" width="100%">
+                    <table class="table table-bordered table-hovered" id="material_table" width="100%">
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'sub_category')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'unit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'sell_price')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'buy_price')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'sell')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'buy')) }}</th>
                                 @foreach($warehouses as $warehouse)
                                 <th>{{ ucwords(str_replace('_', ' ', $warehouse->name)) }}</th>
                                 @endforeach
-                                <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($materials as $material)
-                                <tr>
-                                    <td>{{ $material->id }}</td>
-                                    <td>{{ $material->name }}</td>
-                                    <td>{{ $material->material_sub_category->material_category->name }}</td>
-                                    <td>{{ $material->material_sub_category->name }}</td>
-                                    <td>{{ $material->unit->symbol }}</td>
-                                    <td>{{ number_format($material->sell_price) }}</td>
-                                    <td>{{ number_format($material->buy_price) }}</td>
-                                    @foreach($warehouses as $warehouse)
-                                    <td>
-                                        @php $column_name = str_replace(' ', '_', $warehouse->name); @endphp
-                                        @if($material->{$column_name} != 0)
-                                            {{ $material->{$column_name} }}
-                                        @endif
-                                    </td>
-                                    @endforeach
-                                    <td>
-                                        <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('material.edit', $material->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $material->id }}" data-name="{{ $material->name }}">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const deleteButtons = document.querySelectorAll('.delete-btn');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    const material_id = this.getAttribute('data-id');
-                    const material_name = this.getAttribute('data-name');
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: 'You won\'t be able to revert this!',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const form = document.createElement('form');
-                            form.setAttribute('method', 'POST');
-                            form.setAttribute('action',
-                                `{{ route('material.destroy', ':id') }}`.replace(
-                                    ':id', material_id));
-                            const csrfToken = document.getElementsByName("_token")[0].value;
+@endsection
 
-                            const hiddenMethod = document.createElement('input');
-                            hiddenMethod.setAttribute('type', 'hidden');
-                            hiddenMethod.setAttribute('name', '_method');
-                            hiddenMethod.setAttribute('value', 'DELETE');
-
-                            const name = document.createElement('input');
-                            name.setAttribute('type', 'hidden');
-                            name.setAttribute('name', 'name');
-                            name.setAttribute('value', material_name);
-
-                            const csrfTokenInput = document.createElement('input');
-                            csrfTokenInput.setAttribute('type', 'hidden');
-                            csrfTokenInput.setAttribute('name', '_token');
-                            csrfTokenInput.setAttribute('value', csrfToken);
-
-                            form.appendChild(hiddenMethod);
-                            form.appendChild(name);
-                            form.appendChild(csrfTokenInput);
-                            document.body.appendChild(form);
-                            form.submit();
+@section('additional_script')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#material_table').DataTable({
+                layout: {
+                    bottomStart: {
+                        buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
+                    },
+                },
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('material.index') }}",
+                order: [
+                    [0, 'desc']
+                ],
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'material_sub_category_id',
+                        name: 'material_sub_category.name'
+                    },
+                    {
+                        data: 'unit_id',
+                        name: 'unit.name'
+                    },
+                    {
+                        data: 'sell_price',
+                        name: 'sell_price',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            // Jika data null atau kosong, asumsikan sebagai 0
+                            const value = data ? parseFloat(data) : 0;
+                            return value.toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
                         }
-                    });
+                    },
+                    {
+                        data: 'buy_price',
+                        name: 'buy_price',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            // Jika data null atau kosong, asumsikan sebagai 0
+                            const value = data ? parseFloat(data) : 0;
+                            return value.toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
+                    },
+                    @foreach($warehouses as $warehouse)
+                    {
+                        data: '{{ str_replace(" ", "_", $warehouse->name) }}',
+                        name: '{{ str_replace(" ", "_", $warehouse->name) }}',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            // Jika data null atau kosong, asumsikan sebagai 0
+                            const value = data ? parseFloat(data) : 0;
+                            return value.toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
+                    },
+                    @endforeach
+                    {
+                        data: null,
+                        name: 'actions',
+                        render: function(data, type, row) {
+                            return `
+                                <div class="btn-group" role="group" aria-label="manage">
+                                    <a href="{{ url('material') }}/${row.id}/edit" class="btn btn-secondary btn-sm">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
+                                </div>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            // Event delegation for delete buttons
+            $(document).on('click', '.delete-btn', function(event) {
+                event.preventDefault();
+                const materialId = $(this).data('id');
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = $('<form>', {
+                            method: 'POST',
+                            action: `{{ url('material') }}/${materialId}`
+                        });
+
+                        $('<input>', {
+                            type: 'hidden',
+                            name: '_method',
+                            value: 'DELETE'
+                        }).appendTo(form);
+
+                        $('<input>', {
+                            type: 'hidden',
+                            name: '_token',
+                            value: csrfToken
+                        }).appendTo(form);
+
+                        form.appendTo('body').submit();
+                    }
                 });
             });
         });

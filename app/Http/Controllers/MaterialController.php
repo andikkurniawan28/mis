@@ -8,18 +8,37 @@ use App\Models\Material;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\MaterialSubCategory;
+use Yajra\DataTables\Facades\DataTables;
 
 class MaterialController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function index(Request $request)
     {
         $setup = Setup::init();
-        $materials = Material::all();
+        if ($request->ajax()) {
+            $materials = Material::with(['material_sub_category.material_category', 'unit'])->get();
+            return DataTables::of($materials)
+                ->editColumn('material_sub_category_id', function($row) {
+                    return $row->material_sub_category ? $row->material_sub_category->name : 'N/A'; // Replace material_sub_category_id with material_sub_category name
+                })
+                ->editColumn('unit_id', function($row) {
+                    return $row->unit ? $row->unit->name : 'N/A'; // Replace unit_id with unit name
+                })
+                ->addColumn('manage', function($row) {
+                    return '<div class="btn-group" role="group" aria-label="manage">
+                                <a href="'.route('material.edit', $row->id).'" class="btn btn-secondary btn-sm">Edit</a>
+                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="'.$row->id.'" data-name="'.$row->name.'">Delete</button>
+                            </div>';
+                })
+                ->rawColumns(['manage'])
+                ->make(true);
+        }
         $warehouses = Warehouse::all();
-        return view('material.index', compact('setup', 'materials', 'warehouses'));
+        return view('material.index', compact('warehouses', 'setup'));
     }
 
     /**
