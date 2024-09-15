@@ -1,0 +1,131 @@
+@extends('template.sneat.master')
+
+@section('title')
+    {{ ucwords(str_replace('_', ' ', 'show_transaction')) }}
+@endsection
+
+@section('transaction-active')
+    {{ 'active' }}
+@endsection
+
+@section('content')
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('transaction.index') }}">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@yield('title')</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-xxl">
+                <div class="card mb-4">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0">@yield('title')</h5>
+                        <a href="{{ route('transaction.index') }}" class="btn btn-primary">Back to List</a>
+                    </div>
+                    <div class="card-body">
+                        <h6>Invoice Details</h6>
+                        <div class="row mb-3">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Category</th>
+                                                <th>Customer/Supplier</th>
+                                                <th>Date</th>
+                                                <th>Timestamp</th>
+                                                <th>Warehouse</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ $transaction->id }}</td>
+                                                <td>{{ $transaction->transaction_category->name }}</td>
+                                                <td>{{ $transaction->supplier->name ?? $transaction->customer->name }}</td> <!-- Assuming 'party' refers to customer/supplier -->
+                                                <td>{{ $transaction->created_at->format('d M Y') }}</td>
+                                                <td>{{ $transaction->created_at }}</td>
+                                                <td>{{ $transaction->warehouse->name }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+
+                                <h6>Transaction Details</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Material</th>
+                                                <th>Qty</th>
+                                                <th>Price</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($transaction->transaction_detail as $detail)
+                                                <tr>
+                                                    <td>{{ $detail->item_order }}</td>
+                                                    <td>{{ $detail->material->name }}</td> <!-- Assuming 'material' refers to a product/service -->
+                                                    <td>{{ $detail->qty }}</td>
+                                                    <td>{{ number_format($detail->price, 0) }}</td>
+                                                    <td>{{ number_format($detail->total, 0) }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="4">Subtotal</th>
+                                                <th>{{ number_format($transaction->transaction_detail->sum('total'), 0) }}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <br>
+
+                                <h6>Transaction Summary</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <th>Subtotal</th>
+                                                <td>{{ number_format($transaction->subtotal, 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Taxes</th>
+                                                <td>{{ number_format($transaction->taxes, 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Freight</th>
+                                                <td>{{ number_format($transaction->freight, 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Discount</th>
+                                                <td>{{ number_format($transaction->discount, 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Grand Total</th>
+                                                <td>{{ number_format($transaction->grand_total, 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Left</th>
+                                                <td>{{ number_format($transaction->left, 0) }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <button class="btn btn-primary" onclick="window.print()">Print Invoice</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

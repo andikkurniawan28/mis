@@ -25,6 +25,8 @@
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'timestamp')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'category')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'supplier')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'customer')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'warehouse')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'grand_total')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'left')) }}</th>
@@ -65,6 +67,14 @@
                     {
                         data: 'transaction_category_id',
                         name: 'transaction_category.name'
+                    },
+                    {
+                        data: 'supplier_id',
+                        name: 'supplier.name'
+                    },
+                    {
+                        data: 'customer_id',
+                        name: 'customer.name'
                     },
                     {
                         data: 'warehouse_id',

@@ -545,9 +545,38 @@ class DatabaseSeeder extends Seeder
             ["name" => "Konsumen"],
         ]);
 
+        $importerBusinessId = Business::where('name', 'Importir')->first()->id;
         Supplier::insert([
-            ["name" => "Supplier A", "business_id" => Business::where("name", "Importir")->get()->last()->id, "phone_number" => "081234567890", "address" => "Pelabuhan Tanjung Perak"],
-            ["name" => "Supplier B", "business_id" => Business::where("name", "Importir")->get()->last()->id, "phone_number" => "081234567891", "address" => "Pelabuhan Tanjung Mas"],
+            [
+                'name' => 'PT Sumber Makmur',
+                'business_id' => $importerBusinessId,
+                'phone_number' => '081234567890',
+                'address' => 'Jl. Pelabuhan Tanjung Perak No.12, Surabaya'
+            ],
+            [
+                'name' => 'CV Aneka Kargo',
+                'business_id' => $importerBusinessId,
+                'phone_number' => '081234567891',
+                'address' => 'Jl. Pelabuhan Tanjung Mas No.8, Semarang'
+            ],
+            [
+                'name' => 'PT Bina Niaga Sejahtera',
+                'business_id' => $importerBusinessId,
+                'phone_number' => '081234567892',
+                'address' => 'Jl. Raya Pelabuhan Bakauheni No.5, Lampung'
+            ],
+            [
+                'name' => 'PT Mitra Samudera',
+                'business_id' => $importerBusinessId,
+                'phone_number' => '081234567893',
+                'address' => 'Jl. Pelabuhan Benoa No.20, Bali'
+            ],
+            [
+                'name' => 'CV Nusantara Kargo',
+                'business_id' => $importerBusinessId,
+                'phone_number' => '081234567894',
+                'address' => 'Jl. Pelabuhan Belawan No.3, Medan'
+            ],
         ]);
 
         Customer::insert([
