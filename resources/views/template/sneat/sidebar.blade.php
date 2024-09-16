@@ -113,7 +113,7 @@
                 in_array('transaction.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Accounting</span>
+            <span class="menu-header-text">Finance</span>
         </li>
         @endif
 
@@ -665,6 +665,10 @@
                 </ul>
             </li>
         @endif
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text"></span>
+        </li>
 
     </ul>
 
