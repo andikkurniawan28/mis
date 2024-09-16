@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('journal_id')->references('id')->on('journals')->onDelete('cascade');
             $table->string('transaction_id')->nullable();
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->string('repayment_id')->nullable();
+            $table->foreign('repayment_id')->references('id')->on('repayments')->onDelete('cascade');
             $table->string('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->foreignId('user_id')->constrained();

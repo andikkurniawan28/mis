@@ -26,4 +26,8 @@ class Ledger extends Model
     public function transaction(){
         return $this->belongsTo(Transaction::class);
     }
+
+    public function repayment(){
+        return $this->belongsTo(Repayment::class);
+    }
 }

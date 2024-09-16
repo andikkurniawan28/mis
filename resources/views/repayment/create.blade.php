@@ -48,11 +48,9 @@
         }
     </style>
 
-
     <script>
         function handleRepaymentCategoryChange(selectElement) {
             const repaymentCategoryId = selectElement.value;
-            // console.log('Selected Repayment Category ID:', repaymentCategoryId);
             const apiUrl = `/api/generate_repayment_id/${repaymentCategoryId}`;
             fetch(apiUrl)
                 .then(response => {
@@ -62,8 +60,6 @@
                     return response.json();
                 })
                 .then(data => {
-                    // console.log('Data fetched from API:', data);
-
                     // Asumsikan response dari API mengandung property `repayment_id`
                     if (data.repayment_id) {
                         // Menetapkan nilai repayment_id di input
@@ -71,11 +67,10 @@
                         deal_with = data.repayment_category.deal_with;
                         supplier_select = document.getElementById('supplier-select');
                         customer_select = document.getElementById('customer-select');
-                        if(deal_with === "suppliers"){
+                        if (deal_with === "suppliers") {
                             supplier_select.style.display = "block";
                             customer_select.style.display = "none";
-                        }
-                        else if(deal_with === "customers"){
+                        } else if (deal_with === "customers") {
                             supplier_select.style.display = "none";
                             customer_select.style.display = "block";
                         }
@@ -104,11 +99,12 @@
                     })
                     .then(data => {
                         // Cetak response ke console
-                        console.log('Response from unpaid transaction API:', data);
+                        // console.log('Response from unpaid transaction API:', data);
                         if (Array.isArray(data.data)) {
                             populateRepaymentTable(data.data); // Panggil fungsi dengan array transaksi
                         } else {
-                            console.error('Unexpected data format:', data); // Tampilkan pesan kesalahan jika format tidak sesuai
+                            console.error('Unexpected data format:',
+                                data); // Tampilkan pesan kesalahan jika format tidak sesuai
                         }
                     })
                     .catch(error => {
@@ -117,53 +113,107 @@
             }
         }
 
+        function updateTotal(id) {
+            const discountInput = document.getElementById(`details[${id}][discount]`);
+            const paidInput = document.getElementById(`details[${id}][paid]`);
+            const totalInput = document.getElementById(`details[${id}][total]`);
+
+            if (discountInput && paidInput && totalInput) {
+                const discount = parseFloat(discountInput.value) || 0;
+                const paid = parseFloat(paidInput.value) || 0;
+                const left = parseFloat(paidInput.getAttribute('data-left')) || 0;
+
+                // Calculate total
+                const total = discount + paid;
+                totalInput.value = total.toFixed(0);
+
+                updateGrandTotal();
+            } else {
+                console.error('One or more elements are missing:', {
+                    discountInput,
+                    paidInput,
+                    totalInput
+                });
+            }
+        }
+
+        function updateGrandTotal() {
+            const totalInputs = document.querySelectorAll('#repayment-details-table .total');
+            let grandTotal = 0;
+            const grandTotalElement = document.getElementById('grand_total');
+            const submitButton = document.getElementById('submit-button');
+
+            if (totalInputs.length === 0) {
+                grandTotalElement.value = 0;
+                submitButton.disabled = true; // Disable submit button if no total inputs
+                return;
+            }
+
+            totalInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                grandTotal += value;
+            });
+
+            if (grandTotalElement) {
+                grandTotalElement.value = grandTotal.toFixed(0);
+                submitButton.disabled = grandTotal === 0; // Enable submit button if grand total is greater than 0
+            } else {
+                console.error('Element with ID "grand_total" not found.');
+            }
+        }
+
         function populateRepaymentTable(transactions) {
             const tableBody = document.querySelector('#repayment-details-table tbody');
-            tableBody.innerHTML = ''; // Kosongkan isi table body
+            tableBody.innerHTML = '';
 
             transactions.forEach(item => {
                 let newRow = `
-                    <tr>
-                        <td>
-                            <input type="text" name="details[${item.id}][transaction_id]" id="details[${item.id}][transaction_id]" value="${item.id}" class="form-control" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="details[${item.id}][left]" id="details[${item.id}][left]" value="${item.left}" class="form-control" readonly>
-                        </td>
-                        <td>
-                            <input type="number" name="details[${item.id}][discount]" id="details[${item.id}][discount]" value="0" class="form-control discount" oninput="updateTotal(${item.id})">
-                        </td>
-                        <td>
-                            <input type="number" id="details[${item.id}][paid]" value="${item.left}" class="form-control paid" oninput="updateTotal(${item.id})">
-                        </td>
-                        <td>
-                            <input type="number" name="details[${item.id}][total]" id="details[${item.id}][total]" value="${item.left}" class="form-control total" readonly>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger remove-row">Remove</button>
-                        </td>
-                    </tr>
-                `;
+            <tr>
+                <td>
+                    <input type="text" name="details[${item.id}][transaction_id]" id="details[${item.id}][transaction_id]" value="${item.id}" class="form-control" readonly>
+                </td>
+                <td>
+                    <input type="text" name="details[${item.id}][left]" id="details[${item.id}][left]" value="${item.left}" class="form-control" readonly>
+                </td>
+                <td>
+                    <input type="number" name="details[${item.id}][discount]" id="details[${item.id}][discount]" value="0" class="form-control discount" oninput="updateTotal('${item.id}')">
+                </td>
+                <td>
+                    <input type="number" id="details[${item.id}][paid]" value="${item.left}" class="form-control paid" oninput="updateTotal('${item.id}')">
+                </td>
+                <td>
+                    <input type="number" name="details[${item.id}][total]" id="details[${item.id}][total]" value="${item.left}" class="form-control total" readonly>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger remove-row">Remove</button>
+                </td>
+            </tr>
+        `;
                 tableBody.insertAdjacentHTML('beforeend', newRow);
             });
-        }
 
-        function updateTotal(id) {
-            const paidInput = document.getElementById(`details[${id}][paid]`);
-            const discountInput = document.getElementById(`details[${id}][discount]`);
-            const totalInput = document.getElementById(`details[${id}][total]`);
-
-            const paid = parseFloat(paidInput.value) || 0;
-            const discount = parseFloat(discountInput.value) || 0;
-            const total = paid + discount;
-
-            totalInput.value = total.toFixed(0); // Update total dengan hasil paid + discount
+            updateGrandTotal();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            let rowCount = 1;
+            document.querySelector('#repayment-details-table').addEventListener('input', function(e) {
+                if (e.target.classList.contains('discount') || e.target.classList.contains('paid')) {
+                    let row = e.target.closest('tr');
+                    let id = row.querySelector('[name^="details["]').getAttribute('name').match(/\d+/)[0];
+                    updateTotal(id);
+                }
+            });
 
-            // Initialize Select2 for dynamically added rows
+            document.querySelector('#repayment-details-table').addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-row')) {
+                    e.target.closest('tr').remove();
+                    // console.log('Row removed, updating grand total.');
+                    updateTotal();
+                    updateGrandTotal();
+                }
+            });
+
+            // Initialize Select2
             function initializeSelect2() {
                 $('.select2').select2({
                     placeholder: "Select an option",
@@ -173,75 +223,17 @@
                 });
             }
 
-            initializeSelect2(); // Initialize for existing rows
+            initializeSelect2();
 
-            // Ketika repayment category berubah
             document.getElementById('repayment_category_id').addEventListener('change', function() {
                 handleRepaymentCategoryChange(this);
             });
 
-            // Ketika supplier atau customer berubah
             document.getElementById('supplier_id').addEventListener('change', handleSupplierOrCustomerChange);
             document.getElementById('customer_id').addEventListener('change', handleSupplierOrCustomerChange);
 
-            // document.getElementById('add-row').addEventListener('click', function() {
-            //     let tableBody = document.querySelector('#repayment-details-table tbody');
-            //     let newRow = "";
-            //     tableBody.insertAdjacentHTML('beforeend', newRow);
-            //     initializeSelect2(); // Re-initialize Select2 for new row
-            //     rowCount++;
-
-            //     // Fetch material info for the newly added select element
-            //     const newMaterialSelect = tableBody.querySelector(`tr:last-child .material-select`);
-            //     // fetchMaterialInfo(newMaterialSelect);
-            //     updateTotal(); // Update totals after adding new row
-            // });
-
-
-            document.querySelector('#repayment-details-table').addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-row')) {
-                    e.target.closest('tr').remove();
-                    updateTotal(); // Update totals after removing a row
-                }
-            });
-
-            document.querySelector('#repayment-details-table').addEventListener('input', function(e) {
-                if (e.target.classList.contains('qty') || e.target.classList.contains('price') || e.target
-                    .classList
-                    .contains('discount')) {
-                    let row = e.target.closest('tr');
-                    let qty = parseFloat(row.querySelector('.qty').value) || 0;
-                    let price = parseFloat(row.querySelector('.price').value) || 0;
-                    let discount = parseFloat(row.querySelector('.discount').value) || 0;
-                    let total = (qty * price) - discount;
-                    row.querySelector('.total').value = total.toFixed(0);
-                    updateTotal(); // Update totals when values change
-                }
-            });
-
-            // Safely adding event listeners to 'taxes', 'freight', and 'discount' inputs
-            const taxesInput = document.getElementById('taxes');
-            const freightInput = document.getElementById('freight');
-            const discountInput = document.getElementById('discount');
-            const paidInput = document.getElementById('paid');
-
-            if (taxesInput) {
-                taxesInput.addEventListener('input', updateTotal);
-            }
-
-            if (freightInput) {
-                freightInput.addEventListener('input', updateTotal);
-            }
-
-            if (discountInput) {
-                discountInput.addEventListener('input', updateTotal);
-            }
-
-            if (paidInput) {
-                paidInput.addEventListener('input', updateTotal);
-            }
-
-            updateTotal(); // Initial totals calculation
+            // Initial Grand Total Calculation
+            updateGrandTotal();
         });
     </script>
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -271,8 +263,8 @@
                                             <label for="repayment_category_id">
                                                 {{ ucwords(str_replace('_', ' ', 'repayment_category')) }}
                                             </label>
-                                            <select width="100%" id="repayment_category_id"
-                                                name="repayment_category_id" class="form-control select2" required
+                                            <select width="100%" id="repayment_category_id" name="repayment_category_id"
+                                                class="form-control select2" required
                                                 onChange="handleRepaymentCategoryChange(this)">
                                                 <option disabled selected>Select a
                                                     {{ ucwords(str_replace('_', ' ', 'repayment_category')) }}</option>
@@ -296,7 +288,8 @@
                                                 {{ ucwords(str_replace('_', ' ', 'supplier')) }}
                                             </label>
                                             <select width="100%" id="supplier_id" name="supplier_id"
-                                                class="form-control select2" onChange="handleSupplierOrCustomerChange(this)">
+                                                class="form-control select2"
+                                                onChange="handleSupplierOrCustomerChange(this)">
                                                 <option disabled selected>Select a
                                                     {{ ucwords(str_replace('_', ' ', 'supplier')) }}</option>
                                                 @foreach ($suppliers as $supplier)
@@ -309,7 +302,8 @@
                                                 {{ ucwords(str_replace('_', ' ', 'customer')) }}
                                             </label>
                                             <select width="100%" id="customer_id" name="customer_id"
-                                                class="form-control select2" onChange="handleSupplierOrCustomerChange(this)">
+                                                class="form-control select2"
+                                                onChange="handleSupplierOrCustomerChange(this)">
                                                 <option disabled selected>Select a
                                                     {{ ucwords(str_replace('_', ' ', 'customer')) }}</option>
                                                 @foreach ($customers as $customer)
@@ -349,13 +343,17 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td id="grand-total"><input type="number" name="grand_total" id="grand_total" class="form-control" readonly></td>
+                                                    <td id="grand-total"><input type="number" name="grand_total"
+                                                            id="grand_total" class="form-control" readonly></td>
                                                     <td>
-                                                        <select width="100%" id="payment_gateway_id" name="payment_gateway_id"
-                                                            class="form-control select2">
-                                                            <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'payment_gateway')) }}</option>
+                                                        <select width="100%" id="payment_gateway_id"
+                                                            name="payment_gateway_id" class="form-control select2">
+                                                            <option disabled selected>Select a
+                                                                {{ ucwords(str_replace('_', ' ', 'payment_gateway')) }}
+                                                            </option>
                                                             @foreach ($payment_gateways as $payment_gateway)
-                                                                <option value="{{ $payment_gateway->id }}">{{ $payment_gateway->name }}</option>
+                                                                <option value="{{ $payment_gateway->id }}">
+                                                                    {{ $payment_gateway->name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>

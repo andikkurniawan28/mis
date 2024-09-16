@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Repayment extends Model
 {
@@ -40,7 +42,7 @@ class Repayment extends Model
     }
 
     public function repayment_category(){
-        return $this->belongsTo(TransactionCategory::class);
+        return $this->belongsTo(RepaymentCategory::class);
     }
 
     public function user(){
