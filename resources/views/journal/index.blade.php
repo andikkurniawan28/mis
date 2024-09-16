@@ -86,12 +86,12 @@
                         }
                     },
                     {
+                        // <a href="{{ url('journal') }}/${row.id}/edit" class="btn btn-secondary btn-sm">Edit</a>
                         data: null,
                         name: 'actions',
                         render: function(data, type, row) {
                             return `
                                 <div class="btn-group" role="group" aria-label="manage">
-                                    <a href="{{ url('journal') }}/${row.id}/edit" class="btn btn-secondary btn-sm">Edit</a>
                                     <a href="{{ url('journal') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
                                 </div>

@@ -23,10 +23,10 @@ class MaterialController extends Controller
             $materials = Material::with(['material_sub_category.material_category', 'unit'])->get();
             return DataTables::of($materials)
                 ->editColumn('material_sub_category_id', function($row) {
-                    return $row->material_sub_category ? $row->material_sub_category->name : 'N/A'; // Replace material_sub_category_id with material_sub_category name
+                    return $row->material_sub_category ? $row->material_sub_category->name : '-'; // Replace material_sub_category_id with material_sub_category name
                 })
                 ->editColumn('unit_id', function($row) {
-                    return $row->unit ? $row->unit->name : 'N/A'; // Replace unit_id with unit name
+                    return $row->unit ? $row->unit->symbol : '-'; // Replace unit_id with unit name
                 })
                 ->addColumn('manage', function($row) {
                     return '<div class="btn-group" role="group" aria-label="manage">

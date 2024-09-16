@@ -347,7 +347,7 @@
                                                             id="grand_total" class="form-control" readonly></td>
                                                     <td>
                                                         <select width="100%" id="payment_gateway_id"
-                                                            name="payment_gateway_id" class="form-control select2">
+                                                            name="payment_gateway_id" class="form-control select2" required>
                                                             <option disabled selected>Select a
                                                                 {{ ucwords(str_replace('_', ' ', 'payment_gateway')) }}
                                                             </option>

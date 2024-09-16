@@ -71,10 +71,10 @@ class RepaymentController extends Controller
         $request = self::storeValidate($request);
         try {
             DB::beginTransaction();
-            $repayment = self::saveHeader($request);
+            $repayment = self::saveHeader($request, $repayment_category);
             self::saveBody($request, 1, $repayment_category);
             self::saveRepaymentToLedger($request, $repayment_category);
-            // self::updatePayableOrReceivable($request, $repayment_category);
+            self::updatePayableOrReceivable($request, $repayment_category);
             DB::commit();
             return redirect()->route('repayment.index')->with('success', 'Repayment successfully created.');
         } catch (\Exception $e) {
@@ -114,24 +114,24 @@ class RepaymentController extends Controller
      */
     public function destroy($id)
     {
-        $repayment = Repayment::findOrFail($id);
-        $repayment->delete();
-        // try {
-        //     DB::beginRepayment();
-        //     $repayment = Repayment::findOrFail($id);
-        //     $repayment->repayment_category->deal_with == "suppliers"
-        //         ? Supplier::decreasePayable($repayment->supplier_id, $repayment->left)
-        //         : Customer::decreaseReceivable($repayment->customer_id, $repayment->left);
-        //     foreach($repayment->repayment_detail as $detail){
-        //         Material::resetStock($detail->transaction_id, $detail->repayment->warehouse_id, $detail->repayment->repayment_category->stock_normal_balance_id, $detail->qty);
-        //     }
-        //     $repayment->delete();
-        //     DB::commit();
-        //     return redirect()->back()->with("success", "Repayment has been deleted");
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return redirect()->back()->with('fail', 'Failed to create repayment: ' . $e->getMessage());
-        // }
+        try {
+            DB::beginTransaction();
+            $repayment = Repayment::findOrFail($id);
+            foreach($repayment->repayment_detail as $detail){
+                $transaction = Transaction::findOrFail($detail->transaction_id);
+                $left = $transaction->left + $detail->total;
+                $repayment->repayment_category->deal_with == "suppliers"
+                    ? Supplier::increasePayable($repayment->supplier_id, $detail->total)
+                    : Customer::increaseReceivable($repayment->customer_id, $detail->total);
+                $transaction->update(["left" => $left]);
+            }
+            $repayment->delete();
+            DB::commit();
+            return redirect()->back()->with("success", "Repayment has been deleted");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('fail', 'Failed to create repayment: ' . $e->getMessage());
+        }
     }
 
     public static function storeValidate($request){
@@ -143,7 +143,7 @@ class RepaymentController extends Controller
             'supplier_id' => 'nullable|exists:suppliers,id',
             'customer_id' => 'nullable|exists:customers,id',
             'grand_total' => 'required|numeric',
-            'payment_gateway_id' => 'nullable|exists:accounts,id',
+            'payment_gateway_id' => 'required|exists:accounts,id',
             'details' => 'required|array',
             'details.*.transaction_id' => 'required|exists:transactions,id',
             'details.*.left' => 'required|numeric',
@@ -153,7 +153,7 @@ class RepaymentController extends Controller
         return $request;
     }
 
-    public static function saveHeader($request){
+    public static function saveHeader($request, $repayment_category){
         $repayment = Repayment::create([
             'id' => $request->id,
             'repayment_category_id' => $request->repayment_category_id,
@@ -162,6 +162,14 @@ class RepaymentController extends Controller
             'customer_id' => $request->customer_id,
             'grand_total' => $request->grand_total,
             'payment_gateway_id' => $request->payment_gateway_id,
+        ]);
+        Ledger::insert([
+            "repayment_id" => $request->id,
+            "account_id" => $request->payment_gateway_id,
+            "user_id" => $request->user_id,
+            "description" => "{$repayment_category->name} - {$request->id}",
+            "debit" => $repayment_category->grand_total_normal_balance_id == "C" ? $request->grand_total : 0,
+            "credit" => $repayment_category->grand_total_normal_balance_id == "D" ? $request->grand_total : 0,
         ]);
         return $repayment;
     }
@@ -202,11 +210,9 @@ class RepaymentController extends Controller
 
     public static function updatePayableOrReceivable($request, $repayment_category)
     {
-        if ($request->left > 0) {
-            $repayment_category->deal_with == "suppliers"
-                ? Supplier::increasePayable($request->supplier_id, $request->left)
-                : Customer::increaseReceivable($request->customer_id, $request->left);
-        }
+        $repayment_category->deal_with == "suppliers"
+            ? Supplier::decreasePayable($request->supplier_id, $request->grand_total)
+            : Customer::decreaseReceivable($request->customer_id, $request->grand_total);
     }
 
 }

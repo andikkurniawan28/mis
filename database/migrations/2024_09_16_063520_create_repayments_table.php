@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('supplier_id')->nullable()->constrained();
             $table->foreignId('customer_id')->nullable()->constrained();
-            $table->string('payment_gateway_id')->nullable();
+            $table->string('payment_gateway_id');
             $table->foreign('payment_gateway_id')->references('id')->on('accounts');
             $table->double('grand_total');
             $table->timestamp('created_at')->useCurrent();
