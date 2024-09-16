@@ -37,6 +37,7 @@ use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
 use App\Models\EmployeeIdentity;
 use App\Models\MaterialCategory;
+use App\Models\RepaymentCategory;
 use App\Models\FinancialStatement;
 use Illuminate\Support\Facades\DB;
 use App\Models\MaterialSubCategory;
@@ -136,6 +137,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_transaction_category')), 'route' => 'transaction_category.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_transaction_category')), 'route' => 'transaction_category.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction_category')), 'route' => 'transaction_category.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_repayment_category')), 'route' => 'repayment_category.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_repayment_category')), 'route' => 'repayment_category.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_repayment_category')), 'route' => 'repayment_category.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_repayment_category')), 'route' => 'repayment_category.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_repayment_category')), 'route' => 'repayment_category.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_repayment_category')), 'route' => 'repayment_category.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_repayment_category')), 'route' => 'repayment_category.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_journal')), 'route' => 'journal.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_journal')), 'route' => 'journal.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_journal')), 'route' => 'journal.store'],
@@ -232,6 +240,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_transaction')), 'route' => 'transaction.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_transaction')), 'route' => 'transaction.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction')), 'route' => 'transaction.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_repayment')), 'route' => 'repayment.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_repayment')), 'route' => 'repayment.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_repayment')), 'route' => 'repayment.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_repayment')), 'route' => 'repayment.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_repayment')), 'route' => 'repayment.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_repayment')), 'route' => 'repayment.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_repayment')), 'route' => 'repayment.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_department')), 'route' => 'department.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_department')), 'route' => 'department.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_department')), 'route' => 'department.store'],
@@ -634,6 +649,23 @@ class DatabaseSeeder extends Seeder
                 "discount_normal_balance_id" => "D",
                 "grand_total_account_id" => Account::where("name", "Piutang Dagang Lokal")->get()->last()->id,
                 "grand_total_normal_balance_id" => "D",
+            ],
+        ]);
+
+        RepaymentCategory::insert([
+            [
+                "id" => "PRP",
+                "name" => "Pelunasan Hutang",
+                "deal_with" => "suppliers",
+                "grand_total_account_id" => Account::where("name", "Hutang Usaha Lokal")->get()->last()->id,
+                "grand_total_normal_balance_id" => "D",
+            ],
+            [
+                "id" => "RRP",
+                "name" => "Pelunasan Piutang",
+                "deal_with" => "customers",
+                "grand_total_account_id" => Account::where("name", "Piutang Dagang Lokal")->get()->last()->id,
+                "grand_total_normal_balance_id" => "C",
             ],
         ]);
 

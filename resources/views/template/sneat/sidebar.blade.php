@@ -109,6 +109,7 @@
                 in_array('cash_flow.index', $permissions) ||
                 in_array('ledger.index', $permissions) ||
                 in_array('transaction_category.index', $permissions) ||
+                in_array('repayment_category.index', $permissions) ||
                 in_array('transaction.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
@@ -126,7 +127,8 @@
                 in_array('account.index', $permissions) ||
                 in_array('tax_rate.index', $permissions) ||
                 in_array('payment_term.index', $permissions) ||
-                in_array('transaction_category.index', $permissions)
+                in_array('transaction_category.index', $permissions) ||
+                in_array('repayment_category.index', $permissions)
             )
             <li
                 class="menu-item
@@ -140,6 +142,7 @@
                 @yield('tax_rate-active')
                 @yield('payment_term-active')
                 @yield('transaction_category-active')
+                @yield('repayment_category-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -226,6 +229,14 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('repayment_category.index', $permissions))
+                        <li class="menu-item @yield('repayment_category-active')">
+                            <a href="{{ route('repayment_category.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'repayment_category')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
         @endif
@@ -233,13 +244,15 @@
         @if (
                 in_array('journal.index', $permissions) ||
                 in_array('budget.index', $permissions) ||
-                in_array('transaction.index', $permissions)
+                in_array('transaction.index', $permissions) ||
+                in_array('repayment.index', $permissions)
             )
             <li
                 class="menu-item
                 @yield('journal-active')
                 @yield('budget-active')
                 @yield('transaction-active')
+                @yield('repayment-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
@@ -266,6 +279,14 @@
                     <li class="menu-item @yield('transaction-active')">
                         <a href="{{ route('transaction.index') }}" class="menu-link">
                             <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'transaction')) }}
+                            </div>
+                        </a>
+                    </li>
+                    @endif
+                    @if (in_array('repayment.index', $permissions))
+                    <li class="menu-item @yield('repayment-active')">
+                        <a href="{{ route('repayment.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'repayment')) }}
                             </div>
                         </a>
                     </li>

@@ -27,20 +27,11 @@ class TransactionController extends Controller
     {
         $setup = Setup::init();
         if ($request->ajax()) {
-            $data = Transaction::with('transaction_category', 'user', 'payment_term', 'tax_rate', 'warehouse', 'supplier', 'customer')->latest()->get();
+            $data = Transaction::with('transaction_category', 'warehouse', 'supplier', 'customer')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('transaction_category_id', function($row) {
                     return $row->transaction_category ? $row->transaction_category->name : '-'; // Replace transaction_category_id with user name
-                })
-                ->editColumn('user_id', function($row) {
-                    return $row->user ? $row->user->name : '-'; // Replace user_id with user name
-                })
-                ->editColumn('payment_term_id', function($row) {
-                    return $row->payment_term ? $row->payment_term->name : '-'; // Replace payment_term_id with payment_term name
-                })
-                ->editColumn('tax_rate_id', function($row) {
-                    return $row->tax_rate ? $row->tax_rate->name : '-'; // Replace tax_rate_id with tax_rate name
                 })
                 ->editColumn('warehouse_id', function($row) {
                     return $row->warehouse ? $row->warehouse->name : '-'; // Replace warehouse_id with warehouse name
