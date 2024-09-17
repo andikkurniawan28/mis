@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('unit_id')->constrained();
             $table->string('name')->unique();
             $table->double('sell_price')->nullable();
             $table->double('buy_price')->nullable();

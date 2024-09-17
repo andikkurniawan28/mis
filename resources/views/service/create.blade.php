@@ -37,6 +37,20 @@
                             </div>
 
                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="unit">
+                                    {{ ucwords(str_replace('_', ' ', 'unit')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select class="form-control select2" id="unit" name="unit_id" width="100%" required>
+                                        <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'unit')) }} :</option>
+                                        @foreach ($units as $unit)
+                                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="sell_price">
                                     {{ ucwords(str_replace('_', ' ', 'sell_price')) }}
                                 </label>
@@ -65,4 +79,15 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('additional_script')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#unit').select2({
+            theme: 'bootstrap',
+            placeholder: "Select a unit"
+        });
+    });
+</script>
 @endsection

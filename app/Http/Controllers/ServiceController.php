@@ -20,8 +20,11 @@ class ServiceController extends Controller
     {
         $setup = Setup::init();
         if ($request->ajax()) {
-            $services = Service::get();
+            $services = Service::with(['unit'])->get();
             return DataTables::of($services)
+                ->editColumn('unit_id', function($row) {
+                    return $row->unit ? $row->unit->symbol : '-'; // Replace unit_id with unit name
+                })
                 ->addColumn('manage', function($row) {
                     return '<div class="btn-group" role="group" aria-label="manage">
                                 <a href="'.route('service.edit', $row->id).'" class="btn btn-secondary btn-sm">Edit</a>
@@ -40,7 +43,8 @@ class ServiceController extends Controller
     public function create()
     {
         $setup = Setup::init();
-        return view('service.create', compact('setup'));
+        $units = Unit::all();
+        return view('service.create', compact('setup', 'units'));
     }
 
     /**
@@ -49,6 +53,7 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            "unit_id" => "required",
             "name" => "required|unique:services",
             "sell_price" => "nullable",
             "buy_price" => "nullable",
@@ -72,7 +77,8 @@ class ServiceController extends Controller
     {
         $setup = Setup::init();
         $service = Service::findOrFail($id);
-        return view('service.edit', compact('setup', 'service' ));
+        $units = Unit::all();
+        return view('service.edit', compact('setup', 'service', 'units'));
     }
 
     /**
@@ -82,6 +88,7 @@ class ServiceController extends Controller
     {
         $service = Service::findOrFail($id);
         $validated = $request->validate([
+            "unit_id" => "required",
             'name' => 'required|unique:services,name,' . $service->id,
             "sell_price" => "nullable",
             "buy_price" => "nullable",

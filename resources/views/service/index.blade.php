@@ -24,6 +24,7 @@
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'unit')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'sell')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'buy')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
@@ -59,6 +60,10 @@
                     {
                         data: 'name',
                         name: 'name'
+                    },
+                    {
+                        data: 'unit_id',
+                        name: 'unit.name'
                     },
                     {
                         data: 'sell_price',
