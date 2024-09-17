@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ActivityLog;
 
-class Transaction extends Model
+class Invoice extends Model
 {
     use HasFactory;
 
@@ -19,30 +19,30 @@ class Transaction extends Model
 
     protected static function booted()
     {
-        static::created(function ($transaction) {
+        static::created(function ($invoice) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'description' => "Transaction '{$transaction->id}' was created.",
+                'description' => "Invoice '{$invoice->id}' was created.",
             ]);
         });
 
-        static::updated(function ($transaction) {
+        static::updated(function ($invoice) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'description' => "Transaction '{$transaction->id}' was updated.",
+                'description' => "Invoice '{$invoice->id}' was updated.",
             ]);
         });
 
-        static::deleted(function ($transaction) {
+        static::deleted(function ($invoice) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'description' => "Transaction '{$transaction->id}' was deleted.",
+                'description' => "Invoice '{$invoice->id}' was deleted.",
             ]);
         });
     }
 
-    public function transaction_category(){
-        return $this->belongsTo(TransactionCategory::class);
+    public function invoice_category(){
+        return $this->belongsTo(InvoiceCategory::class);
     }
 
     public function user(){
@@ -73,15 +73,15 @@ class Transaction extends Model
         return $this->belongsTo(Account::class, 'payment_gateway_id');
     }
 
-    public function transaction_detail(){
-        return $this->hasMany(TransactionDetail::class);
+    public function invoice_detail(){
+        return $this->hasMany(InvoiceDetail::class);
     }
 
-    public static function generateID($transaction_category_id)
+    public static function generateID($invoice_category_id)
     {
-        $prefix = $transaction_category_id;
+        $prefix = $invoice_category_id;
         $date = date('Ymd'); // Format: YYYYMMDD
-        $lastJournal = self::where("transaction_category_id", $transaction_category_id)
+        $lastJournal = self::where("invoice_category_id", $invoice_category_id)
             ->whereDate('created_at', today())
             ->latest('created_at')->first();
         $sequence = $lastJournal ? intval(substr($lastJournal->id, -4)) + 1 : 1;

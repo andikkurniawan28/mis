@@ -41,7 +41,7 @@ use App\Models\RepaymentCategory;
 use App\Models\FinancialStatement;
 use Illuminate\Support\Facades\DB;
 use App\Models\MaterialSubCategory;
-use App\Models\TransactionCategory;
+use App\Models\InvoiceCategory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -130,13 +130,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'edit_tax_rate')), 'route' => 'tax_rate.edit'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_tax_rate')), 'route' => 'tax_rate.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_tax_rate')), 'route' => 'tax_rate.destroy'],
-            ['name' => ucfirst(str_replace('_', ' ', 'list_of_transaction_category')), 'route' => 'transaction_category.index'],
-            ['name' => ucfirst(str_replace('_', ' ', 'create_transaction_category')), 'route' => 'transaction_category.create'],
-            ['name' => ucfirst(str_replace('_', ' ', 'save_transaction_category')), 'route' => 'transaction_category.store'],
-            ['name' => ucfirst(str_replace('_', ' ', 'edit_transaction_category')), 'route' => 'transaction_category.edit'],
-            ['name' => ucfirst(str_replace('_', ' ', 'show_transaction_category')), 'route' => 'transaction_category.show'],
-            ['name' => ucfirst(str_replace('_', ' ', 'update_transaction_category')), 'route' => 'transaction_category.update'],
-            ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction_category')), 'route' => 'transaction_category.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_invoice_category')), 'route' => 'invoice_category.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_invoice_category')), 'route' => 'invoice_category.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_invoice_category')), 'route' => 'invoice_category.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_invoice_category')), 'route' => 'invoice_category.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_invoice_category')), 'route' => 'invoice_category.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_invoice_category')), 'route' => 'invoice_category.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_invoice_category')), 'route' => 'invoice_category.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_repayment_category')), 'route' => 'repayment_category.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_repayment_category')), 'route' => 'repayment_category.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_repayment_category')), 'route' => 'repayment_category.store'],
@@ -226,6 +226,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_supplier')), 'route' => 'supplier.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_supplier')), 'route' => 'supplier.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_supplier')), 'route' => 'supplier.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_vendor')), 'route' => 'vendor.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_vendor')), 'route' => 'vendor.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_vendor')), 'route' => 'vendor.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_vendor')), 'route' => 'vendor.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_vendor')), 'route' => 'vendor.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_vendor')), 'route' => 'vendor.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_vendor')), 'route' => 'vendor.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_customer')), 'route' => 'customer.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_customer')), 'route' => 'customer.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_customer')), 'route' => 'customer.store'],
@@ -233,13 +240,13 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_customer')), 'route' => 'customer.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_customer')), 'route' => 'customer.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_customer')), 'route' => 'customer.destroy'],
-            ['name' => ucfirst(str_replace('_', ' ', 'list_of_transaction')), 'route' => 'transaction.index'],
-            ['name' => ucfirst(str_replace('_', ' ', 'create_transaction')), 'route' => 'transaction.create'],
-            ['name' => ucfirst(str_replace('_', ' ', 'save_transaction')), 'route' => 'transaction.store'],
-            ['name' => ucfirst(str_replace('_', ' ', 'edit_transaction')), 'route' => 'transaction.edit'],
-            ['name' => ucfirst(str_replace('_', ' ', 'show_transaction')), 'route' => 'transaction.show'],
-            ['name' => ucfirst(str_replace('_', ' ', 'update_transaction')), 'route' => 'transaction.update'],
-            ['name' => ucfirst(str_replace('_', ' ', 'delete_transaction')), 'route' => 'transaction.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_invoice')), 'route' => 'invoice.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_invoice')), 'route' => 'invoice.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_invoice')), 'route' => 'invoice.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_invoice')), 'route' => 'invoice.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_invoice')), 'route' => 'invoice.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_invoice')), 'route' => 'invoice.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_invoice')), 'route' => 'invoice.destroy'],
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_repayment')), 'route' => 'repayment.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_repayment')), 'route' => 'repayment.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_repayment')), 'route' => 'repayment.store'],
@@ -615,7 +622,7 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
 
-        TransactionCategory::insert([
+        InvoiceCategory::insert([
             [
                 "id" => "PRC",
                 "name" => "Pembelian",

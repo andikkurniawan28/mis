@@ -1,48 +1,48 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'create_transaction')) }}
+    {{ ucwords(str_replace('_', ' ', 'create_invoice')) }}
 @endsection
 
-@section('transaction-active')
+@section('invoice-active')
     {{ 'active' }}
 @endsection
 
 @section('content')
     <style>
-        #transaction-details-table {
+        #invoice-details-table {
             width: 100%;
         }
 
-        #transaction-details-table th,
-        #transaction-details-table td {
+        #invoice-details-table th,
+        #invoice-details-table td {
             text-align: center;
             padding: 8px;
         }
 
         /* Define column widths */
-        #transaction-details-table .col-material {
+        #invoice-details-table .col-material {
             width: 30%;
         }
 
-        #transaction-details-table .col-qty {
+        #invoice-details-table .col-qty {
             width: 15%;
         }
 
-        #transaction-details-table .col-price {
+        #invoice-details-table .col-price {
             width: 20%;
         }
 
-        #transaction-details-table .col-discount {
+        #invoice-details-table .col-discount {
             width: 15%;
         }
 
-        #transaction-details-table .col-total {
+        #invoice-details-table .col-total {
             width: 20%;
         }
 
-        #transaction-details-table th:last-child,
-        #transaction-details-table td:last-child {
+        #invoice-details-table th:last-child,
+        #invoice-details-table td:last-child {
             width: auto;
             /* For Action column */
         }
@@ -105,24 +105,24 @@
                     return response.json();
                 })
                 .then(materialData => {
-                    // Get the selected transaction category
-                    const transactionCategorySelect = document.getElementById('transaction_category_id');
-                    const transactionCategoryId = transactionCategorySelect.value;
+                    // Get the selected invoice category
+                    const invoiceCategorySelect = document.getElementById('invoice_category_id');
+                    const invoiceCategoryId = invoiceCategorySelect.value;
 
-                    // Fetch transaction category info
-                    return fetch(`/api/generate_transaction_category_info/${transactionCategoryId}`)
+                    // Fetch invoice category info
+                    return fetch(`/api/generate_invoice_category_info/${invoiceCategoryId}`)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }
                             return response.json();
                         })
-                        .then(transactionCategoryData => {
+                        .then(invoiceCategoryData => {
                             // Map the price_used to the corresponding price
                             const priceField = selectElement.closest('tr').querySelector('.price');
                             const discountField = selectElement.closest('tr').querySelector('.discount');
                             const unitField = selectElement.closest('tr').querySelector('.unit');
-                            const priceKey = transactionCategoryData.transaction_category.price_used;
+                            const priceKey = invoiceCategoryData.invoice_category.price_used;
                             discountField.value = 0;
                             priceField.value = materialData.material[priceKey] !== null ? materialData.material[
                                 priceKey] : 0; // Dynamically assign sell_price or buy_price
@@ -136,9 +136,9 @@
         }
 
         function handleTransactionCategoryChange(selectElement) {
-            const transactionCategoryId = selectElement.value;
-            // console.log('Selected Transaction Category ID:', transactionCategoryId);
-            const apiUrl = `/api/generate_transaction_id/${transactionCategoryId}`;
+            const invoiceCategoryId = selectElement.value;
+            // console.log('Selected Transaction Category ID:', invoiceCategoryId);
+            const apiUrl = `/api/generate_invoice_id/${invoiceCategoryId}`;
             fetch(apiUrl)
                 .then(response => {
                     if (!response.ok) {
@@ -149,11 +149,11 @@
                 .then(data => {
                     // console.log('Data fetched from API:', data);
 
-                    // Asumsikan response dari API mengandung property `transaction_id`
-                    if (data.transaction_id) {
-                        // Menetapkan nilai transaction_id di input
-                        document.getElementById('id').value = data.transaction_id;
-                        deal_with = data.transaction_category.deal_with;
+                    // Asumsikan response dari API mengandung property `invoice_id`
+                    if (data.invoice_id) {
+                        // Menetapkan nilai invoice_id di input
+                        document.getElementById('id').value = data.invoice_id;
+                        deal_with = data.invoice_category.deal_with;
                         supplier_select = document.getElementById('supplier-select');
                         customer_select = document.getElementById('customer-select');
                         if(deal_with === "suppliers"){
@@ -217,7 +217,7 @@
             initializeSelect2(); // Initialize for existing rows
 
             document.getElementById('add-row').addEventListener('click', function() {
-                let tableBody = document.querySelector('#transaction-details-table tbody');
+                let tableBody = document.querySelector('#invoice-details-table tbody');
                 let newRow = `
                     <tr>
                         <td>
@@ -257,14 +257,14 @@
             });
 
 
-            document.querySelector('#transaction-details-table').addEventListener('click', function(e) {
+            document.querySelector('#invoice-details-table').addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-row')) {
                     e.target.closest('tr').remove();
                     updateTotals(); // Update totals after removing a row
                 }
             });
 
-            document.querySelector('#transaction-details-table').addEventListener('input', function(e) {
+            document.querySelector('#invoice-details-table').addEventListener('input', function(e) {
                 if (e.target.classList.contains('qty') || e.target.classList.contains('price') || e.target
                     .classList
                     .contains('discount')) {
@@ -308,7 +308,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a
-                        href="{{ route('transaction.index') }}">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</a></li>
+                        href="{{ route('invoice.index') }}">{{ ucwords(str_replace('_', ' ', 'invoice')) }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">@yield('title')</li>
             </ol>
         </nav>
@@ -320,22 +320,22 @@
                         <h5 class="mb-0">@yield('title')</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('transaction.store') }}" method="POST" id="transaction-form">
+                        <form action="{{ route('invoice.store') }}" method="POST" id="invoice-form">
                             @csrf @method('POST')
 
                             <div class="container-xxl flex-grow-1 container-p-y">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="transaction_category_id">
-                                                {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
+                                            <label for="invoice_category_id">
+                                                {{ ucwords(str_replace('_', ' ', 'invoice_category')) }}
                                             </label>
-                                            <select width="100%" id="transaction_category_id"
-                                                name="transaction_category_id" class="form-control select2" required
+                                            <select width="100%" id="invoice_category_id"
+                                                name="invoice_category_id" class="form-control select2" required
                                                 onChange="handleTransactionCategoryChange(this)">
                                                 <option disabled selected>Select a
-                                                    {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}</option>
-                                                @foreach ($transaction_categories as $category)
+                                                    {{ ucwords(str_replace('_', ' ', 'invoice_category')) }}</option>
+                                                @foreach ($invoice_categories as $category)
                                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
@@ -441,7 +441,7 @@
                                 <div class="row mb-3">
                                     <div class="col-sm-12">
                                         <br>
-                                        <table class="table table-bordered" id="transaction-details-table">
+                                        <table class="table table-bordered" id="invoice-details-table">
                                             <thead>
                                                 <tr>
                                                     <th class="col-material">Material</th>

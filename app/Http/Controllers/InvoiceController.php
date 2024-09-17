@@ -11,14 +11,14 @@ use App\Models\Material;
 use App\Models\Supplier;
 use App\Models\Warehouse;
 use App\Models\PaymentTerm;
-use App\Models\Transaction;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Models\TransactionDetail;
+use App\Models\InvoiceDetail;
 use Illuminate\Support\Facades\DB;
-use App\Models\TransactionCategory;
+use App\Models\InvoiceCategory;
 
-class TransactionController extends Controller
+class InvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,11 +27,11 @@ class TransactionController extends Controller
     {
         $setup = Setup::init();
         if ($request->ajax()) {
-            $data = Transaction::with('transaction_category', 'warehouse', 'supplier', 'customer')->latest()->get();
+            $data = Invoice::with('invoice_category', 'warehouse', 'supplier', 'customer')->latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->editColumn('transaction_category_id', function($row) {
-                    return $row->transaction_category ? $row->transaction_category->name : '-'; // Replace transaction_category_id with user name
+                ->editColumn('invoice_category_id', function($row) {
+                    return $row->invoice_category ? $row->invoice_category->name : '-'; // Replace invoice_category_id with user name
                 })
                 ->editColumn('warehouse_id', function($row) {
                     return $row->warehouse ? $row->warehouse->name : '-'; // Replace warehouse_id with warehouse name
@@ -47,7 +47,7 @@ class TransactionController extends Controller
                 })
                 ->make(true);
         }
-        return view('transaction.index', compact('setup'));
+        return view('invoice.index', compact('setup'));
     }
 
     /**
@@ -56,7 +56,7 @@ class TransactionController extends Controller
     public function create()
     {
         $setup = Setup::init();
-        $transaction_categories = TransactionCategory::all();
+        $invoice_categories = InvoiceCategory::all();
         $payment_terms = PaymentTerm::all();
         $tax_rates = TaxRate::all();
         $warehouses = Warehouse::all();
@@ -64,7 +64,7 @@ class TransactionController extends Controller
         $customers = Customer::all();
         $materials = Material::all();
         $payment_gateways = Account::where("is_payment_gateway", 1)->get();
-        return view('transaction.create', compact('setup', 'transaction_categories', 'payment_terms', 'tax_rates', 'warehouses', 'suppliers', 'customers', 'materials', 'payment_gateways'));
+        return view('invoice.create', compact('setup', 'invoice_categories', 'payment_terms', 'tax_rates', 'warehouses', 'suppliers', 'customers', 'materials', 'payment_gateways'));
     }
 
     /**
@@ -72,20 +72,20 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $transaction_category = TransactionCategory::findOrFail($request->transaction_category_id) ;
+        $invoice_category = InvoiceCategory::findOrFail($request->invoice_category_id) ;
         $request = self::storeValidate($request);
         try {
             DB::beginTransaction();
-            $transaction = self::saveHeader($request);
-            self::saveBody($request, 1, $transaction_category);
-            self::saveTransactionToLedger($request, $transaction_category);
-            self::savePaymentToLedger($request, $transaction_category);
-            self::updatePayableOrReceivable($request, $transaction_category);
+            $invoice = self::saveHeader($request);
+            self::saveBody($request, 1, $invoice_category);
+            self::saveInvoiceToLedger($request, $invoice_category);
+            self::savePaymentToLedger($request, $invoice_category);
+            self::updatePayableOrReceivable($request, $invoice_category);
             DB::commit();
-            return redirect()->route('transaction.index')->with('success', 'Transaction successfully created.');
+            return redirect()->route('invoice.index')->with('success', 'Invoice successfully created.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('fail', 'Failed to create transaction: ' . $e->getMessage());
+            return redirect()->back()->with('fail', 'Failed to create invoice: ' . $e->getMessage());
         }
     }
 
@@ -95,14 +95,14 @@ class TransactionController extends Controller
     public function show($id)
     {
         $setup = Setup::init();
-        $transaction = Transaction::findOrFail($id);
-        return view("transaction.show", compact('setup', 'transaction'));
+        $invoice = Invoice::findOrFail($id);
+        return view("invoice.show", compact('setup', 'invoice'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Transaction $transaction)
+    public function edit(Invoice $invoice)
     {
         //
     }
@@ -110,7 +110,7 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request, Invoice $invoice)
     {
         //
     }
@@ -122,27 +122,27 @@ class TransactionController extends Controller
     {
         try {
             DB::beginTransaction();
-            $transaction = Transaction::findOrFail($id);
-            $transaction->transaction_category->deal_with == "suppliers"
-                ? Supplier::decreasePayable($transaction->supplier_id, $transaction->left)
-                : Customer::decreaseReceivable($transaction->customer_id, $transaction->left);
-            foreach($transaction->transaction_detail as $detail){
-                Material::resetStock($detail->material_id, $detail->transaction->warehouse_id, $detail->transaction->transaction_category->stock_normal_balance_id, $detail->qty);
+            $invoice = Invoice::findOrFail($id);
+            $invoice->invoice_category->deal_with == "suppliers"
+                ? Supplier::decreasePayable($invoice->supplier_id, $invoice->left)
+                : Customer::decreaseReceivable($invoice->customer_id, $invoice->left);
+            foreach($invoice->invoice_detail as $detail){
+                Material::resetStock($detail->material_id, $detail->invoice->warehouse_id, $detail->invoice->invoice_category->stock_normal_balance_id, $detail->qty);
             }
-            $transaction->delete();
+            $invoice->delete();
             DB::commit();
-            return redirect()->back()->with("success", "Transaction has been deleted");
+            return redirect()->back()->with("success", "Invoice has been deleted");
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('fail', 'Failed to create transaction: ' . $e->getMessage());
+            return redirect()->back()->with('fail', 'Failed to create invoice: ' . $e->getMessage());
         }
     }
 
     public static function storeValidate($request){
         $request->request->add(['user_id' => auth()->id()]);
         $request->validate([
-            'id' => 'required|unique:transactions',
-            'transaction_category_id' => 'required|exists:transaction_categories,id',
+            'id' => 'required|unique:invoices',
+            'invoice_category_id' => 'required|exists:invoice_categories,id',
             'user_id' => 'required|exists:users,id',
             'payment_term_id' => 'required|exists:payment_terms,id',
             'tax_rate_id' => 'required|exists:tax_rates,id',
@@ -169,9 +169,9 @@ class TransactionController extends Controller
     }
 
     public static function saveHeader($request){
-        $transaction = Transaction::create([
+        $invoice = Invoice::create([
             'id' => $request->id,
-            'transaction_category_id' => $request->transaction_category_id,
+            'invoice_category_id' => $request->invoice_category_id,
             'user_id' => $request->user_id,
             'payment_term_id' => $request->payment_term_id,
             'tax_rate_id' => $request->tax_rate_id,
@@ -188,14 +188,14 @@ class TransactionController extends Controller
             'left' => $request->left,
             'payment_gateway_id' => $request->payment_gateway_id,
         ]);
-        return $transaction;
+        return $invoice;
     }
 
-    public static function saveBody($request, $item_order, $transaction_category){
-        $stock_normal_balance_id = $transaction_category->stock_normal_balance_id;
+    public static function saveBody($request, $item_order, $invoice_category){
+        $stock_normal_balance_id = $invoice_category->stock_normal_balance_id;
         foreach ($request->details as $detail) {
-            TransactionDetail::create([
-                'transaction_id' => $request->id,
+            InvoiceDetail::create([
+                'invoice_id' => $request->id,
                 'material_id' => $detail['material_id'],
                 'item_order' => $item_order,
                 'qty' => $detail['qty'],
@@ -208,47 +208,47 @@ class TransactionController extends Controller
         }
     }
 
-    public static function saveTransactionToLedger($request, $transaction_category){
+    public static function saveInvoiceToLedger($request, $invoice_category){
         $data = [
             [
-                "transaction_id" => $request->id,
-                "account_id" => $transaction_category->subtotal_account_id,
+                "invoice_id" => $request->id,
+                "account_id" => $invoice_category->subtotal_account_id,
                 "user_id" => $request->user_id,
-                "description" => "{$transaction_category->name} - {$request->id}",
-                "debit" => $transaction_category->subtotal_normal_balance_id == "D" ? $request->subtotal : 0,
-                "credit" => $transaction_category->subtotal_normal_balance_id == "C" ? $request->subtotal : 0,
+                "description" => "{$invoice_category->name} - {$request->id}",
+                "debit" => $invoice_category->subtotal_normal_balance_id == "D" ? $request->subtotal : 0,
+                "credit" => $invoice_category->subtotal_normal_balance_id == "C" ? $request->subtotal : 0,
             ],
             [
-                "transaction_id" => $request->id,
-                "account_id" => $transaction_category->taxes_account_id,
+                "invoice_id" => $request->id,
+                "account_id" => $invoice_category->taxes_account_id,
                 "user_id" => $request->user_id,
-                "description" => "{$transaction_category->name} - {$request->id}",
-                "debit" => $transaction_category->taxes_normal_balance_id == "D" ? $request->taxes : 0,
-                "credit" => $transaction_category->taxes_normal_balance_id == "C" ? $request->taxes : 0,
+                "description" => "{$invoice_category->name} - {$request->id}",
+                "debit" => $invoice_category->taxes_normal_balance_id == "D" ? $request->taxes : 0,
+                "credit" => $invoice_category->taxes_normal_balance_id == "C" ? $request->taxes : 0,
             ],
             [
-                "transaction_id" => $request->id,
-                "account_id" => $transaction_category->freight_account_id,
+                "invoice_id" => $request->id,
+                "account_id" => $invoice_category->freight_account_id,
                 "user_id" => $request->user_id,
-                "description" => "{$transaction_category->name} - {$request->id}",
-                "debit" => $transaction_category->freight_normal_balance_id == "D" ? $request->freight : 0,
-                "credit" => $transaction_category->freight_normal_balance_id == "C" ? $request->freight : 0,
+                "description" => "{$invoice_category->name} - {$request->id}",
+                "debit" => $invoice_category->freight_normal_balance_id == "D" ? $request->freight : 0,
+                "credit" => $invoice_category->freight_normal_balance_id == "C" ? $request->freight : 0,
             ],
             [
-                "transaction_id" => $request->id,
-                "account_id" => $transaction_category->discount_account_id,
+                "invoice_id" => $request->id,
+                "account_id" => $invoice_category->discount_account_id,
                 "user_id" => $request->user_id,
-                "description" => "{$transaction_category->name} - {$request->id}",
-                "debit" => $transaction_category->discount_normal_balance_id == "D" ? $request->discount : 0,
-                "credit" => $transaction_category->discount_normal_balance_id == "C" ? $request->discount : 0,
+                "description" => "{$invoice_category->name} - {$request->id}",
+                "debit" => $invoice_category->discount_normal_balance_id == "D" ? $request->discount : 0,
+                "credit" => $invoice_category->discount_normal_balance_id == "C" ? $request->discount : 0,
             ],
             [
-                "transaction_id" => $request->id,
-                "account_id" => $transaction_category->grand_total_account_id,
+                "invoice_id" => $request->id,
+                "account_id" => $invoice_category->grand_total_account_id,
                 "user_id" => $request->user_id,
-                "description" => "{$transaction_category->name} - {$request->id}",
-                "debit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->grand_total : 0,
-                "credit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->grand_total : 0,
+                "description" => "{$invoice_category->name} - {$request->id}",
+                "debit" => $invoice_category->grand_total_normal_balance_id == "D" ? $request->grand_total : 0,
+                "credit" => $invoice_category->grand_total_normal_balance_id == "C" ? $request->grand_total : 0,
             ],
         ];
 
@@ -259,33 +259,33 @@ class TransactionController extends Controller
         Ledger::insert($filteredData);
     }
 
-    public static function savePaymentToLedger($request, $transaction_category){
+    public static function savePaymentToLedger($request, $invoice_category){
         if ($request->payment_gateway_id || $request->paid != 0) {
             Ledger::insert([
                 [
-                    "transaction_id" => $request->id,
-                    "account_id" => $transaction_category->grand_total_account_id,
+                    "invoice_id" => $request->id,
+                    "account_id" => $invoice_category->grand_total_account_id,
                     "user_id" => $request->user_id,
-                    "description" => "Pembayaran {$transaction_category->name} - {$request->id}",
-                    "debit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
-                    "credit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->paid : 0,
+                    "description" => "Pembayaran {$invoice_category->name} - {$request->id}",
+                    "debit" => $invoice_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
+                    "credit" => $invoice_category->grand_total_normal_balance_id == "D" ? $request->paid : 0,
                 ],
                 [
-                    "transaction_id" => $request->id,
+                    "invoice_id" => $request->id,
                     "account_id" => $request->payment_gateway_id,
                     "user_id" => $request->user_id,
-                    "description" => "Pembayaran {$transaction_category->name} - {$request->id}",
-                    "debit" => $transaction_category->grand_total_normal_balance_id == "D" ? $request->paid : 0,
-                    "credit" => $transaction_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
+                    "description" => "Pembayaran {$invoice_category->name} - {$request->id}",
+                    "debit" => $invoice_category->grand_total_normal_balance_id == "D" ? $request->paid : 0,
+                    "credit" => $invoice_category->grand_total_normal_balance_id == "C" ? $request->paid : 0,
                 ],
             ]);
         }
     }
 
-    public static function updatePayableOrReceivable($request, $transaction_category)
+    public static function updatePayableOrReceivable($request, $invoice_category)
     {
         if ($request->left > 0) {
-            $transaction_category->deal_with == "suppliers"
+            $invoice_category->deal_with == "suppliers"
                 ? Supplier::increasePayable($request->supplier_id, $request->left)
                 : Customer::increaseReceivable($request->customer_id, $request->left);
         }

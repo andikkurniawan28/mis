@@ -88,7 +88,7 @@
 
             let selectedId = supplierId || customerId; // Pilih ID dari supplier atau customer yang terpilih
             if (repaymentCategoryId && selectedId) {
-                const apiUrl = `/api/generate_unpaid_transaction/${repaymentCategoryId}/${selectedId}`;
+                const apiUrl = `/api/generate_unpaid_invoice/${repaymentCategoryId}/${selectedId}`;
 
                 fetch(apiUrl)
                     .then(response => {
@@ -99,18 +99,40 @@
                     })
                     .then(data => {
                         // Cetak response ke console
-                        // console.log('Response from unpaid transaction API:', data);
+                        console.log('Response from unpaid invoice API:', data);
                         if (Array.isArray(data.data)) {
-                            populateRepaymentTable(data.data); // Panggil fungsi dengan array transaksi
+                            if (data.data.length > 0) {
+                                populateRepaymentTable(data.data); // Panggil fungsi dengan array transaksi
+                            } else {
+                                // Trigger Sweet Alert jika array kosong
+                                clearRepaymentTable();
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Unpaid Invoice Not Found',
+                                    text: 'No unpaid invoices were found for this supplier / customer.',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
                         } else {
-                            console.error('Unexpected data format:',
-                                data); // Tampilkan pesan kesalahan jika format tidak sesuai
+                            console.error('Unexpected data format:', data); // Tampilkan pesan kesalahan jika format tidak sesuai
                         }
                     })
                     .catch(error => {
                         console.error('There has been a problem with your fetch operation:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing the request. Please try again later.',
+                            confirmButtonText: 'OK'
+                        });
                     });
             }
+        }
+
+        function clearRepaymentTable() {
+            // Implementasikan logika untuk mengosongkan tabel di sini
+            const tableBody = document.querySelector('#repayment-details-table tbody');
+            tableBody.innerHTML = ''; // Kosongkan isi dari tabel
         }
 
         function updateTotal(id) {
@@ -162,15 +184,15 @@
             }
         }
 
-        function populateRepaymentTable(transactions) {
+        function populateRepaymentTable(invoices) {
             const tableBody = document.querySelector('#repayment-details-table tbody');
             tableBody.innerHTML = '';
 
-            transactions.forEach(item => {
+            invoices.forEach(item => {
                 let newRow = `
             <tr>
                 <td>
-                    <input type="text" name="details[${item.id}][transaction_id]" id="details[${item.id}][transaction_id]" value="${item.id}" class="form-control" readonly>
+                    <input type="text" name="details[${item.id}][invoice_id]" id="details[${item.id}][invoice_id]" value="${item.id}" class="form-control" readonly>
                 </td>
                 <td>
                     <input type="text" name="details[${item.id}][left]" id="details[${item.id}][left]" value="${item.left}" class="form-control" readonly>

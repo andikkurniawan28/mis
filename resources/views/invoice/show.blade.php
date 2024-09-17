@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'show_transaction')) }}
+    {{ ucwords(str_replace('_', ' ', 'show_invoice')) }}
 @endsection
 
-@section('transaction-active')
+@section('invoice-active')
     {{ 'active' }}
 @endsection
 
@@ -13,7 +13,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('transaction.index') }}">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('invoice.index') }}">{{ ucwords(str_replace('_', ' ', 'invoice')) }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">@yield('title')</li>
             </ol>
         </nav>
@@ -23,7 +23,7 @@
                 <div class="card mb-4">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h5 class="mb-0">@yield('title')</h5>
-                        <a href="{{ route('transaction.index') }}" class="btn btn-primary">Back to List</a>
+                        <a href="{{ route('invoice.index') }}" class="btn btn-primary">Back to List</a>
                     </div>
                     <div class="card-body">
                         <h6>Invoice Details</h6>
@@ -44,20 +44,20 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ $transaction->id }}</td>
-                                                <td>{{ $transaction->transaction_category->name }}</td>
-                                                <td>{{ $transaction->supplier->name ?? $transaction->customer->name }}</td> <!-- Assuming 'party' refers to customer/supplier -->
-                                                <td>{{ $transaction->created_at->format('d M Y') }}</td>
-                                                <td>{{ $transaction->created_at }}</td>
-                                                <td>{{ $transaction->warehouse->name }}</td>
-                                                <td>{{ $transaction->user->name }}</td>
+                                                <td>{{ $invoice->id }}</td>
+                                                <td>{{ $invoice->invoice_category->name }}</td>
+                                                <td>{{ $invoice->supplier->name ?? $invoice->customer->name }}</td> <!-- Assuming 'party' refers to customer/supplier -->
+                                                <td>{{ $invoice->created_at->format('d M Y') }}</td>
+                                                <td>{{ $invoice->created_at }}</td>
+                                                <td>{{ $invoice->warehouse->name }}</td>
+                                                <td>{{ $invoice->user->name }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <br>
 
-                                <h6>Transaction Details</h6>
+                                <h6>Invoice Details</h6>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-sm">
                                         <thead>
@@ -71,7 +71,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($transaction->transaction_detail as $detail)
+                                            @foreach($invoice->invoice_detail as $detail)
                                                 <tr>
                                                     <td>{{ $detail->item_order }}</td>
                                                     <td>{{ $detail->material->name }}</td> <!-- Assuming 'material' refers to a product/service -->
@@ -85,14 +85,14 @@
                                         <tfoot>
                                             <tr>
                                                 <th colspan="5">Subtotal</th>
-                                                <th>{{ number_format($transaction->transaction_detail->sum('total'), 0) }}</th>
+                                                <th>{{ number_format($invoice->invoice_detail->sum('total'), 0) }}</th>
                                             </tr>
                                         </tfoot>
                                     </table>
                                 </div>
                                 <br>
 
-                                <h6>Transaction Summary</h6>
+                                <h6>Invoice Summary</h6>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-sm">
                                         <thead>
@@ -107,12 +107,12 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ number_format($transaction->subtotal, 0) }}</td>
-                                                <td>{{ number_format($transaction->taxes, 0) }}</td>
-                                                <td>{{ number_format($transaction->freight, 0) }}</td>
-                                                <td>{{ number_format($transaction->discount, 0) }}</td>
-                                                <td>{{ number_format($transaction->grand_total, 0) }}</td>
-                                                <td>{{ number_format($transaction->left, 0) }}</td>
+                                                <td>{{ number_format($invoice->subtotal, 0) }}</td>
+                                                <td>{{ number_format($invoice->taxes, 0) }}</td>
+                                                <td>{{ number_format($invoice->freight, 0) }}</td>
+                                                <td>{{ number_format($invoice->discount, 0) }}</td>
+                                                <td>{{ number_format($invoice->grand_total, 0) }}</td>
+                                                <td>{{ number_format($invoice->left, 0) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

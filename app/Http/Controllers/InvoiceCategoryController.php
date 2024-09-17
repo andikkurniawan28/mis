@@ -6,9 +6,9 @@ use App\Models\Setup;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\NormalBalance;
-use App\Models\TransactionCategory;
+use App\Models\InvoiceCategory;
 
-class TransactionCategoryController extends Controller
+class InvoiceCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class TransactionCategoryController extends Controller
     public function index()
     {
         $setup = Setup::init();
-        $transaction_categories = TransactionCategory::all();
-        return view('transaction_category.index', compact('setup', 'transaction_categories'));
+        $invoice_categories = InvoiceCategory::all();
+        return view('invoice_category.index', compact('setup', 'invoice_categories'));
     }
 
     /**
@@ -28,7 +28,7 @@ class TransactionCategoryController extends Controller
         $setup = Setup::init();
         $accounts = Account::all();
         $normal_balances = NormalBalance::all();
-        return view('transaction_category.create', compact('setup', 'accounts', 'normal_balances'));
+        return view('invoice_category.create', compact('setup', 'accounts', 'normal_balances'));
     }
 
     /**
@@ -37,8 +37,8 @@ class TransactionCategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "id" => "required|string|unique:transaction_categories,id",
-            "name" => "required|string|unique:transaction_categories,name",
+            "id" => "required|string|unique:invoice_categories,id",
+            "name" => "required|string|unique:invoice_categories,name",
             "deal_with" => "required|string|in:customers,suppliers",
             "stock_normal_balance_id" => "required|string|exists:normal_balances,id",
             "subtotal_account_id" => "required|string|exists:accounts,id",
@@ -52,14 +52,14 @@ class TransactionCategoryController extends Controller
             "grand_total_account_id" => "required|string|exists:accounts,id",
             "grand_total_normal_balance_id" => "required|string|exists:normal_balances,id",
         ]);
-        $transaction_category = TransactionCategory::create($validated);
-        return redirect()->back()->with("success", "Transaction Category has been created");
+        $invoice_category = InvoiceCategory::create($validated);
+        return redirect()->back()->with("success", "Invoice Category has been created");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(TransactionCategory $transaction_category)
+    public function show(InvoiceCategory $invoice_category)
     {
         //
     }
@@ -70,10 +70,10 @@ class TransactionCategoryController extends Controller
     public function edit($id)
     {
         $setup = Setup::init();
-        $transaction_category = TransactionCategory::findOrFail($id);
+        $invoice_category = InvoiceCategory::findOrFail($id);
         $accounts = Account::all();
         $normal_balances = NormalBalance::all();
-        return view('transaction_category.edit', compact('setup', 'transaction_category', 'accounts', 'normal_balances'));
+        return view('invoice_category.edit', compact('setup', 'invoice_category', 'accounts', 'normal_balances'));
     }
 
     /**
@@ -81,10 +81,10 @@ class TransactionCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $transaction_category = TransactionCategory::findOrFail($id);
+        $invoice_category = InvoiceCategory::findOrFail($id);
         $validated = $request->validate([
-            // 'id' => 'required|unique:transaction_categories,id,' . $transaction_category->id,
-            'name' => 'required|unique:transaction_categories,name,' . $transaction_category->id,
+            // 'id' => 'required|unique:invoice_categories,id,' . $invoice_category->id,
+            'name' => 'required|unique:invoice_categories,name,' . $invoice_category->id,
             "deal_with" => "required|string|in:customers,suppliers",
             "stock_normal_balance_id" => "required|string|exists:normal_balances,id",
             "subtotal_account_id" => "required|string|exists:accounts,id",
@@ -98,8 +98,8 @@ class TransactionCategoryController extends Controller
             "grand_total_account_id" => "required|string|exists:accounts,id",
             "grand_total_normal_balance_id" => "required|string|exists:normal_balances,id",
         ]);
-        $transaction_category->update($validated);
-        return redirect()->route('transaction_category.index')->with("success", "Transaction Category has been updated");
+        $invoice_category->update($validated);
+        return redirect()->route('invoice_category.index')->with("success", "Invoice Category has been updated");
     }
 
     /**
@@ -107,7 +107,7 @@ class TransactionCategoryController extends Controller
      */
     public function destroy($id)
     {
-        TransactionCategory::findOrFail($id)->delete();
-        return redirect()->back()->with("success", "Transaction Category has been deleted");
+        InvoiceCategory::findOrFail($id)->delete();
+        return redirect()->back()->with("success", "Invoice Category has been deleted");
     }
 }

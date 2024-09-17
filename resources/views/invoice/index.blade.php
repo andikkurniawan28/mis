@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'transaction')) }}
+    {{ ucwords(str_replace('_', ' ', 'invoice')) }}
 @endsection
 
-@section('transaction-active')
+@section('invoice-active')
     {{ 'active' }}
 @endsection
 
@@ -15,11 +15,11 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('transaction.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('invoice.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
-                    <table class="table table-bordered table-hovered" id="transaction_table" width="100%">
+                    <table class="table table-bordered table-hovered" id="invoice_table" width="100%">
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
@@ -43,7 +43,7 @@
 @section('additional_script')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#transaction_table').DataTable({
+            $('#invoice_table').DataTable({
                 layout: {
                     bottomStart: {
                         buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
@@ -51,7 +51,7 @@
                 },
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('transaction.index') }}",
+                ajax: "{{ route('invoice.index') }}",
                 order: [
                     [0, 'desc']
                 ],
@@ -65,8 +65,8 @@
                         name: 'created_at'
                     },
                     {
-                        data: 'transaction_category_id',
-                        name: 'transaction_category.name'
+                        data: 'invoice_category_id',
+                        name: 'invoice_category.name'
                     },
                     {
                         data: 'supplier_id',
@@ -106,7 +106,7 @@
                         render: function(data, type, row) {
                             return `
                                 <div class="btn-group" role="group" aria-label="manage">
-                                    <a href="{{ url('transaction') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
+                                    <a href="{{ url('invoice') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
                                 </div>
                             `;
@@ -118,7 +118,7 @@
             // Event delegation for delete buttons
             $(document).on('click', '.delete-btn', function(event) {
                 event.preventDefault();
-                const transactionId = $(this).data('id');
+                const invoiceId = $(this).data('id');
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 Swal.fire({
@@ -133,7 +133,7 @@
                     if (result.isConfirmed) {
                         const form = $('<form>', {
                             method: 'POST',
-                            action: `{{ url('transaction') }}/${transactionId}`
+                            action: `{{ url('invoice') }}/${invoiceId}`
                         });
 
                         $('<input>', {

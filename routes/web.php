@@ -15,7 +15,9 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\VendorController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\PostingController;
 use App\Http\Controllers\TaxRateController;
@@ -35,7 +37,6 @@ use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\MainAccountController;
 use App\Http\Controllers\PaymentTermController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AccountGroupController;
 use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\ClosingEntryController;
@@ -45,13 +46,13 @@ use App\Http\Controllers\NormalBalanceController;
 use App\Http\Controllers\SubDepartmentController;
 use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\IncomeStatementController;
+use App\Http\Controllers\InvoiceCategoryController;
 use App\Http\Controllers\CashFlowCategoryController;
 use App\Http\Controllers\EmployeeIdentityController;
 use App\Http\Controllers\MaterialCategoryController;
 use App\Http\Controllers\RepaymentCategoryController;
 use App\Http\Controllers\FinancialStatementController;
 use App\Http\Controllers\MaterialSubCategoryController;
-use App\Http\Controllers\TransactionCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,9 +106,10 @@ Route::resource('/region', RegionController::class)->middleware(['auth', 'check.
 Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/supplier', SupplierController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/customer', CustomerController::class)->middleware(['auth', 'check.permission']);
-Route::resource('/transaction_category', TransactionCategoryController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/vendor', VendorController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/invoice_category', InvoiceCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/repayment_category', RepaymentCategoryController::class)->middleware(['auth', 'check.permission']);
-Route::resource('/transaction', TransactionController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/invoice', InvoiceController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/repayment', RepaymentController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/department', DepartmentController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/sub_department', SubDepartmentController::class)->middleware(['auth', 'check.permission']);

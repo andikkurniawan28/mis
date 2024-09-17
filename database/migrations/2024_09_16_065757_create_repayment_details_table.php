@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('repayment_id');
             $table->foreign('repayment_id')->references('id')->on('repayments')->onDelete('cascade');
-            $table->string('transaction_id');
-            $table->foreign('transaction_id')->references('id')->on('transactions');
+            $table->string('invoice_id');
+            $table->foreign('invoice_id')->references('id')->on('invoices');
             $table->double('left');
             $table->double('discount');
             $table->double('total');

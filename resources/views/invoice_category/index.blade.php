@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'transaction_category')) }}
+    {{ ucwords(str_replace('_', ' ', 'invoice_category')) }}
 @endsection
 
-@section('transaction_category-active')
+@section('invoice_category-active')
     {{ 'active' }}
 @endsection
 
@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('transaction_category.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('invoice_category.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
@@ -48,27 +48,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($transaction_categories as $transaction_category)
+                            @foreach ($invoice_categories as $invoice_category)
                                 <tr>
-                                    <td>{{ $transaction_category->id }}</td>
-                                    <td>{{ $transaction_category->name }}</td>
-                                    <td>{{ $transaction_category->deal_with }}</td>
-                                    <td>{{ $transaction_category->price_used }}</td>
-                                    <td>{{ $transaction_category->stock_normal_balance->name }}</td>
-                                    <td>{{ $transaction_category->subtotal_account->name }}</td>
-                                    <td>{{ $transaction_category->subtotal_normal_balance->name }}</td>
-                                    <td>{{ $transaction_category->taxes_account->name }}</td>
-                                    <td>{{ $transaction_category->taxes_normal_balance->name }}</td>
-                                    <td>{{ $transaction_category->freight_account->name }}</td>
-                                    <td>{{ $transaction_category->freight_normal_balance->name }}</td>
-                                    <td>{{ $transaction_category->discount_account->name }}</td>
-                                    <td>{{ $transaction_category->discount_normal_balance->name }}</td>
-                                    <td>{{ $transaction_category->grand_total_account->name }}</td>
-                                    <td>{{ $transaction_category->grand_total_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->id }}</td>
+                                    <td>{{ $invoice_category->name }}</td>
+                                    <td>{{ $invoice_category->deal_with }}</td>
+                                    <td>{{ $invoice_category->price_used }}</td>
+                                    <td>{{ $invoice_category->stock_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->subtotal_account->name }}</td>
+                                    <td>{{ $invoice_category->subtotal_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->taxes_account->name }}</td>
+                                    <td>{{ $invoice_category->taxes_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->freight_account->name }}</td>
+                                    <td>{{ $invoice_category->freight_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->discount_account->name }}</td>
+                                    <td>{{ $invoice_category->discount_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->grand_total_account->name }}</td>
+                                    <td>{{ $invoice_category->grand_total_normal_balance->name }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('transaction_category.edit', $transaction_category->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $transaction_category->id }}" data-name="{{ $transaction_category->name }}">Delete</button>
+                                            <a href="{{ route('invoice_category.edit', $invoice_category->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $invoice_category->id }}" data-name="{{ $invoice_category->name }}">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -86,8 +86,8 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    const transaction_category_id = this.getAttribute('data-id');
-                    const transaction_category_name = this.getAttribute('data-name');
+                    const invoice_category_id = this.getAttribute('data-id');
+                    const invoice_category_name = this.getAttribute('data-name');
                     Swal.fire({
                         title: 'Are you sure?',
                         text: 'You won\'t be able to revert this!',
@@ -101,8 +101,8 @@
                             const form = document.createElement('form');
                             form.setAttribute('method', 'POST');
                             form.setAttribute('action',
-                                `{{ route('transaction_category.destroy', ':id') }}`.replace(
-                                    ':id', transaction_category_id));
+                                `{{ route('invoice_category.destroy', ':id') }}`.replace(
+                                    ':id', invoice_category_id));
                             const csrfToken = document.getElementsByName("_token")[0].value;
 
                             const hiddenMethod = document.createElement('input');
@@ -113,7 +113,7 @@
                             const name = document.createElement('input');
                             name.setAttribute('type', 'hidden');
                             name.setAttribute('name', 'name');
-                            name.setAttribute('value', transaction_category_name);
+                            name.setAttribute('value', invoice_category_name);
 
                             const csrfTokenInput = document.createElement('input');
                             csrfTokenInput.setAttribute('type', 'hidden');

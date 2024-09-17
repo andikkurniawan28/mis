@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TransactionCategory extends Model
+class InvoiceCategory extends Model
 {
     use HasFactory;
 
@@ -63,24 +63,24 @@ class TransactionCategory extends Model
 
     protected static function booted()
     {
-        static::created(function ($transaction_category) {
+        static::created(function ($invoice_category) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'description' => "TransactionCategory '{$transaction_category->name}' was created.",
+                'description' => "InvoiceCategory '{$invoice_category->name}' was created.",
             ]);
         });
 
-        static::updated(function ($transaction_category) {
+        static::updated(function ($invoice_category) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'description' => "TransactionCategory '{$transaction_category->name}' was updated.",
+                'description' => "InvoiceCategory '{$invoice_category->name}' was updated.",
             ]);
         });
 
-        static::deleted(function ($transaction_category) {
+        static::deleted(function ($invoice_category) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
-                'description' => "TransactionCategory '{$transaction_category->name}' was deleted.",
+                'description' => "InvoiceCategory '{$invoice_category->name}' was deleted.",
             ]);
         });
     }

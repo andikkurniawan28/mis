@@ -13,7 +13,7 @@ use App\Models\Supplier;
 use App\Models\Repayment;
 use App\Models\Warehouse;
 use App\Models\PaymentTerm;
-use App\Models\Transaction;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\RepaymentDetail;
 use Yajra\DataTables\DataTables;
@@ -118,12 +118,12 @@ class RepaymentController extends Controller
             DB::beginTransaction();
             $repayment = Repayment::findOrFail($id);
             foreach($repayment->repayment_detail as $detail){
-                $transaction = Transaction::findOrFail($detail->transaction_id);
-                $left = $transaction->left + $detail->total;
+                $invoice = Invoice::findOrFail($detail->invoice_id);
+                $left = $invoice->left + $detail->total;
                 $repayment->repayment_category->deal_with == "suppliers"
                     ? Supplier::increasePayable($repayment->supplier_id, $detail->total)
                     : Customer::increaseReceivable($repayment->customer_id, $detail->total);
-                $transaction->update(["left" => $left]);
+                $invoice->update(["left" => $left]);
             }
             $repayment->delete();
             DB::commit();
@@ -145,7 +145,7 @@ class RepaymentController extends Controller
             'grand_total' => 'required|numeric',
             'payment_gateway_id' => 'required|exists:accounts,id',
             'details' => 'required|array',
-            'details.*.transaction_id' => 'required|exists:transactions,id',
+            'details.*.invoice_id' => 'required|exists:invoices,id',
             'details.*.left' => 'required|numeric',
             'details.*.discount' => 'required|numeric',
             'details.*.total' => 'required|numeric',
@@ -178,12 +178,12 @@ class RepaymentController extends Controller
         foreach ($request->details as $detail) {
             RepaymentDetail::create([
                 'repayment_id' => $request->id,
-                'transaction_id' => $detail['transaction_id'],
+                'invoice_id' => $detail['invoice_id'],
                 'left' => $detail['left'],
                 'discount' => $detail['discount'],
                 'total' => $detail['total'],
             ]);
-            Transaction::whereId($detail['transaction_id'])->update([
+            Invoice::whereId($detail['invoice_id'])->update([
                 "left" => $detail['left'] - $detail['total'],
             ]);
         }

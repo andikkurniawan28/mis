@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Models\RepaymentCategory;
-use App\Models\TransactionCategory;
+use App\Models\InvoiceCategory;
 
-class ApiGenerateUnpaidTransactionController extends Controller
+class ApiGenerateUnpaidInvoiceController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -16,9 +16,9 @@ class ApiGenerateUnpaidTransactionController extends Controller
     {
         $repayment_category = RepaymentCategory::findOrFail($repayment_category_id);
         if($repayment_category->deal_with == "suppliers"){
-            $data = Transaction::where("supplier_id", $supplier_customer_id)->where("left", ">", 0)->get();
+            $data = Invoice::where("supplier_id", $supplier_customer_id)->where("left", ">", 0)->get();
         } else {
-            $data = Transaction::where("customer", $supplier_customer_id)->where("left", ">", 0)->get();
+            $data = Invoice::where("customer", $supplier_customer_id)->where("left", ">", 0)->get();
         }
         return response()->json([
             'data' => $data,

@@ -51,8 +51,9 @@
                                 </label>
                                 <div class="col-sm-8">
                                     <select class="form-control select2" id="deal_with" name="deal_with" required>
-                                        <option value="customers" {{ $repayment_category->deal_with == 'customers' ? 'selected' : '' }}>Customers</option>
-                                        <option value="suppliers" {{ $repayment_category->deal_with == 'suppliers' ? 'selected' : '' }}>Suppliers</option>
+                                        <option value="customers" {{ $repayment_category->deal_with == 'customers' ? 'selected' : '' }}>customers</option>
+                                        <option value="suppliers" {{ $repayment_category->deal_with == 'suppliers' ? 'selected' : '' }}>suppliers</option>
+                                        <option value="vendors" {{ $repayment_category->deal_with == 'vendors' ? 'selected' : '' }}>vendors</option>
                                     </select>
                                 </div>
                             </div>

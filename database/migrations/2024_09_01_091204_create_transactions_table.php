@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('transaction_category_id');
-            $table->foreign('transaction_category_id')->references('id')->on('transaction_categories');
+            $table->string('invoice_category_id');
+            $table->foreign('invoice_category_id')->references('id')->on('invoice_categories');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('payment_term_id')->constrained();
             $table->foreignId('tax_rate_id')->constrained();
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('invoices');
     }
 };

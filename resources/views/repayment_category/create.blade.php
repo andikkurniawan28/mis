@@ -54,6 +54,7 @@
                                         <option disabled selected>Select a {{ ucwords(str_replace('_', ' ', 'deal_with')) }} :</option>
                                         <option value="customers">customers</option>
                                         <option value="suppliers">suppliers</option>
+                                        <option value="vendors">vendors</option>
                                     </select>
                                 </div>
                             </div>

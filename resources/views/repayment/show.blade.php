@@ -38,7 +38,6 @@
                                                 <th>Customer/Supplier</th>
                                                 <th>Date</th>
                                                 <th>Timestamp</th>
-                                                <th>Warehouse</th>
                                                 <th>Admin</th>
                                             </tr>
                                         </thead>
@@ -46,10 +45,9 @@
                                             <tr>
                                                 <td>{{ $repayment->id }}</td>
                                                 <td>{{ $repayment->repayment_category->name }}</td>
-                                                <td>{{ $repayment->supplier->name ?? $repayment->customer->name }}</td> <!-- Assuming 'party' refers to customer/supplier -->
+                                                <td>{{ $repayment->supplier->name ?? $repayment->customer->name }}</td>
                                                 <td>{{ $repayment->created_at->format('d M Y') }}</td>
                                                 <td>{{ $repayment->created_at }}</td>
-                                                <td>{{ $repayment->warehouse->name }}</td>
                                                 <td>{{ $repayment->user->name }}</td>
                                             </tr>
                                         </tbody>
@@ -57,15 +55,13 @@
                                 </div>
                                 <br>
 
-                                <h6>Transaction Details</h6>
+                                <h6>Repayment Details</h6>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-sm">
                                         <thead>
                                             <tr>
-                                                <th>#</th>
-                                                <th>Material</th>
-                                                <th>Qty</th>
-                                                <th>Price</th>
+                                                <th>Invoice</th>
+                                                <th>Left</th>
                                                 <th>Discount</th>
                                                 <th>Total</th>
                                             </tr>
@@ -73,10 +69,8 @@
                                         <tbody>
                                             @foreach($repayment->repayment_detail as $detail)
                                                 <tr>
-                                                    <td>{{ $detail->item_order }}</td>
-                                                    <td>{{ $detail->material->name }}</td> <!-- Assuming 'material' refers to a product/service -->
-                                                    <td>{{ $detail->qty }}</td>
-                                                    <td>{{ number_format($detail->price, 0) }}</td>
+                                                    <td>{{ $detail->invoice->id }}</td>
+                                                    <td>{{ number_format($detail->left, 0) }}</td>
                                                     <td>{{ number_format($detail->discount, 0) }}</td>
                                                     <td>{{ number_format($detail->total, 0) }}</td>
                                                 </tr>
@@ -84,7 +78,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="5">Subtotal</th>
+                                                <th colspan="3">Subtotal</th>
                                                 <th>{{ number_format($repayment->repayment_detail->sum('total'), 0) }}</th>
                                             </tr>
                                         </tfoot>
@@ -92,27 +86,17 @@
                                 </div>
                                 <br>
 
-                                <h6>Transaction Summary</h6>
+                                <h6>Repayment Summary</h6>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-sm">
                                         <thead>
                                             <tr>
-                                                <th>Subtotal</th>
-                                                <th>Taxes</th>
-                                                <th>Freight</th>
-                                                <th>Discount</th>
                                                 <th>Grand Total</th>
-                                                <th>Left</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>{{ number_format($repayment->subtotal, 0) }}</td>
-                                                <td>{{ number_format($repayment->taxes, 0) }}</td>
-                                                <td>{{ number_format($repayment->freight, 0) }}</td>
-                                                <td>{{ number_format($repayment->discount, 0) }}</td>
                                                 <td>{{ number_format($repayment->grand_total, 0) }}</td>
-                                                <td>{{ number_format($repayment->left, 0) }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
