@@ -20,6 +20,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\PostingController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
@@ -101,6 +102,7 @@ Route::resource('/unit', UnitController::class)->middleware(['auth', 'check.perm
 Route::resource('/material_category', MaterialCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/material_sub_category', MaterialSubCategoryController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/material', MaterialController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/service', ServiceController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/payment_term', PaymentTermController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/region', RegionController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/business', BusinessController::class)->middleware(['auth', 'check.permission']);

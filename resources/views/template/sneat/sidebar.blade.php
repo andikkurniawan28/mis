@@ -245,7 +245,8 @@
                 in_array('journal.index', $permissions) ||
                 in_array('budget.index', $permissions) ||
                 in_array('invoice.index', $permissions) ||
-                in_array('repayment.index', $permissions)
+                in_array('repayment.index', $permissions) ||
+                in_array('ledger.index', $permissions)
             )
             <li
                 class="menu-item
@@ -253,6 +254,7 @@
                 @yield('budget-active')
                 @yield('invoice-active')
                 @yield('repayment-active')
+                @yield('ledger-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
@@ -291,29 +293,6 @@
                         </a>
                     </li>
                     @endif
-                </ul>
-            </li>
-        @endif
-
-        @if (
-                in_array('balance_sheet.index', $permissions) ||
-                in_array('income_statement.index', $permissions) ||
-                in_array('cash_flow.index', $permissions) ||
-                in_array('ledger.index', $permissions)
-            )
-            <li
-                class="menu-item
-                @yield('balance_sheet-active')
-                @yield('income_statement-active')
-                @yield('cash_flow-active')
-                @yield('ledger-active')
-            ">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-bar-chart"></i>
-                    {{-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAKVJREFUSEvllQsOQDAQRJ+bcBM3w0lcxU24CdlExae6/RDCJk2T6s6rSdPJuLmym/WxAUqgAmR2VQ002gFtgB7Itcb5uwqxAUYPcRGWIeWExAKkT2xUISkAOb0KSQWokCsAe8hGMxbgugdBALPZ52YZ6M8BPpYlWfQ9gO2PLrXo/QCPl/uwRbUoJHD26gNQrBfPIrMNSDWj180RKvNSj4R+jO+nPRPGLzQZA0u51gAAAABJRU5ErkJggg=="/> --}}
-                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'report')) }}</div>
-                </a>
-                <ul class="menu-sub">
                     @if (in_array('ledger.index', $permissions))
                         <li class="menu-item @yield('ledger-active')">
                             <a href="{{ route('ledger.index') }}" class="menu-link">
@@ -322,6 +301,27 @@
                             </a>
                         </li>
                     @endif
+                </ul>
+            </li>
+        @endif
+
+        @if (
+                in_array('balance_sheet.index', $permissions) ||
+                in_array('income_statement.index', $permissions) ||
+                in_array('cash_flow.index', $permissions)
+            )
+            <li
+                class="menu-item
+                @yield('balance_sheet-active')
+                @yield('income_statement-active')
+                @yield('cash_flow-active')
+            ">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-bar-chart"></i>
+                    {{-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAKVJREFUSEvllQsOQDAQRJ+bcBM3w0lcxU24CdlExae6/RDCJk2T6s6rSdPJuLmym/WxAUqgAmR2VQ002gFtgB7Itcb5uwqxAUYPcRGWIeWExAKkT2xUISkAOb0KSQWokCsAe8hGMxbgugdBALPZ52YZ6M8BPpYlWfQ9gO2PLrXo/QCPl/uwRbUoJHD26gNQrBfPIrMNSDWj180RKvNSj4R+jO+nPRPGLzQZA0u51gAAAABJRU5ErkJggg=="/> --}}
+                    <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'report')) }}</div>
+                </a>
+                <ul class="menu-sub">
                     @if (in_array('balance_sheet.index', $permissions))
                         <li class="menu-item @yield('balance_sheet-active')">
                             <a href="{{ route('balance_sheet.index') }}" class="menu-link">
@@ -356,6 +356,8 @@
                 in_array('material_category.index', $permissions) ||
                 in_array('material_sub_category.index', $permissions) ||
                 in_array('material.index', $permissions) ||
+                in_array('service.index', $permissions) ||
+                in_array('vendor.index', $permissions) ||
                 in_array('supplier.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
@@ -369,6 +371,7 @@
                 in_array('material_category.index', $permissions) ||
                 in_array('material_sub_category.index', $permissions) ||
                 in_array('material.index', $permissions) ||
+                in_array('service.index', $permissions) ||
                 in_array('supplier.index', $permissions) ||
                 in_array('vendor.index', $permissions)
             )
@@ -379,6 +382,7 @@
                 @yield('material_category-active')
                 @yield('material_sub_category-active')
                 @yield('material-active')
+                @yield('service-active')
                 @yield('supplier-active')
                 @yield('vendor-active')
             ">
@@ -423,6 +427,14 @@
                         <li class="menu-item @yield('material-active')">
                             <a href="{{ route('material.index') }}" class="menu-link">
                                 <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'material')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
+                    @if (in_array('service.index', $permissions))
+                        <li class="menu-item @yield('service-active')">
+                            <a href="{{ route('service.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'service')) }}
                                 </div>
                             </a>
                         </li>
