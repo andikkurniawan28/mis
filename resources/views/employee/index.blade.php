@@ -25,6 +25,7 @@
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'title')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'skill')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -63,6 +64,7 @@
                         data: 'title_id',
                         name: 'title.name'
                     },
+                    { data: 'skills', name: 'skills' }, // Kolom untuk skills
                     {
                         data: null,
                         name: 'actions',

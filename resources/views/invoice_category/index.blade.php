@@ -56,7 +56,7 @@
                                     <td>{{ $invoice_category->deal_with }}</td>
                                     <td>{{ $invoice_category->item }}</td>
                                     <td>{{ $invoice_category->price_used }}</td>
-                                    <td>{{ $invoice_category->stock_normal_balance->name }}</td>
+                                    <td>{{ $invoice_category->stock_normal_balance->name ?? "-" }}</td>
                                     <td>{{ $invoice_category->subtotal_account->name }}</td>
                                     <td>{{ $invoice_category->subtotal_normal_balance->name }}</td>
                                     <td>{{ $invoice_category->taxes_account->name }}</td>

@@ -125,6 +125,33 @@
                         </div>
                         @endforeach
 
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label skill-section">{{ ucwords(str_replace('_', ' ', 'skills')) }}</label>
+                            <div class="col-sm-10 skill-section">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="select_all" disabled>
+                                    <label class="form-check-label" for="select_all">
+                                        Select All
+                                    </label>
+                                </div>
+                                <hr>
+                                <!-- Checkbox for each skill -->
+                                @php
+                                    $employee_skill_ids = $employee->employee_skill->pluck('skill_id')->toArray(); // Ambil daftar skill_id yang dimiliki employee
+                                @endphp
+                                @foreach ($skills as $skill)
+                                    <div class="form-check">
+                                        <input class="form-check-input skill-checkbox" type="checkbox" name="skill_ids[]"
+                                            value="{{ $skill->id }}" id="skill_{{ $skill->id }}"
+                                            {{ in_array($skill->id, $employee_skill_ids) ? 'checked' : '' }} disabled>
+                                        <label class="form-check-label" for="skill_{{ $skill->id }}">
+                                            {{ $skill->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <div class="row justify-content-end">
                             <div class="col-sm-10">
                                 <a href="{{ route('employee.index') }}" class="btn btn-secondary">Back</a>

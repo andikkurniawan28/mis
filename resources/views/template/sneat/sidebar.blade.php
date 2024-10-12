@@ -25,7 +25,7 @@
             </a>
         </li>
 
-        @if (
+        {{-- @if (
                 in_array('role.index', $permissions) ||
                 in_array('user.index', $permissions) ||
                 in_array('activity_log', $permissions)
@@ -89,7 +89,7 @@
                     </li>
                 @endif
             </ul>
-        @endif
+        @endif --}}
 
         @if (
                 in_array('cash_flow_category.index', $permissions) ||

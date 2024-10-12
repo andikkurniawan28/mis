@@ -49,6 +49,10 @@ class Employee extends Model
         return $this->belongsTo(Bank::class);
     }
 
+    public function employee_skill(){
+        return $this->hasMany(EmployeeSkill::class);
+    }
+
     protected static function booted()
     {
         static::created(function ($employee) {

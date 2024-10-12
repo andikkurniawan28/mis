@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('deal_with');
             $table->string('item');
             $table->string('price_used');
-            $table->string('stock_normal_balance_id');
+            $table->string('stock_normal_balance_id')->nullable();
             $table->foreign('stock_normal_balance_id')->references('id')->on('normal_balances');
             $table->string('subtotal_account_id');
             $table->foreign('subtotal_account_id')->references('id')->on('accounts');

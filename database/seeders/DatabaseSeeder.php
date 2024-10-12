@@ -676,7 +676,7 @@ class DatabaseSeeder extends Seeder
                 "deal_with" => "vendors",
                 "item" => "services",
                 "price_used" => "buy_price",
-                "stock_normal_balance_id" => "D",
+                "stock_normal_balance_id" => null,
                 "subtotal_account_id" => Account::where("name", "Beban Jasa")->get()->last()->id,
                 "subtotal_normal_balance_id" => "D",
                 "taxes_account_id" => Account::where("name", "Beban Pajak Pembelian")->get()->last()->id,
@@ -694,7 +694,7 @@ class DatabaseSeeder extends Seeder
                 "deal_with" => "customers",
                 "item" => "services",
                 "price_used" => "sell_price",
-                "stock_normal_balance_id" => "C",
+                "stock_normal_balance_id" => null,
                 "subtotal_account_id" => Account::where("name", "Pendapatan Jasa Konsultasi")->get()->last()->id,
                 "subtotal_normal_balance_id" => "C",
                 "taxes_account_id" => Account::where("name", "Beban Pajak Penjualan")->get()->last()->id,
@@ -977,6 +977,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         EmployeeIdentity::insert([
+            ["name" => "Nomor Rekening Bank"],
             ["name" => "Nomor Telepon"],
             ["name" => "Nomor Induk Kependudukan"],
             ["name" => "Nomor KK"],
