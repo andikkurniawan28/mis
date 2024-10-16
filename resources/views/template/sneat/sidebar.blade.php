@@ -25,7 +25,7 @@
             </a>
         </li>
 
-        {{-- @if (
+        @if (
                 in_array('role.index', $permissions) ||
                 in_array('user.index', $permissions) ||
                 in_array('activity_log', $permissions)
@@ -89,7 +89,7 @@
                     </li>
                 @endif
             </ul>
-        @endif --}}
+        @endif
 
         @if (
                 in_array('cash_flow_category.index', $permissions) ||
@@ -527,7 +527,9 @@
                 in_array('skill.index', $permissions) ||
                 in_array('title.index', $permissions) ||
                 in_array('employee_identity.index', $permissions) ||
-                in_array('employee.index', $permissions)
+                in_array('employee.index', $permissions) ||
+                in_array('shift.index', $permissions) ||
+                in_array('attendance.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Human Resource</span>
@@ -548,7 +550,8 @@
                 in_array('skill.index', $permissions) ||
                 in_array('title.index', $permissions) ||
                 in_array('employee_identity.index', $permissions) ||
-                in_array('employee.index', $permissions)
+                in_array('employee.index', $permissions) ||
+                in_array('shift.index', $permissions)
             )
             <li
                 class="menu-item
@@ -566,6 +569,7 @@
                 @yield('title-active')
                 @yield('employee_identity-active')
                 @yield('employee-active')
+                @yield('shift-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -684,8 +688,39 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('shift.index', $permissions))
+                        <li class="menu-item @yield('shift-active')">
+                            <a href="{{ route('shift.index') }}" class="menu-link">
+                                <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'shift')) }}
+                                </div>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </li>
+        @endif
+
+        @if (
+                in_array('attendance.index', $permissions)
+            )
+            <li
+                class="menu-item
+                @yield('attendance-active')
+            ">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
+                <div data-i18n="Analytics">{{ ucwords(str_replace('_', ' ', 'transaction')) }}</div>
+            </a>
+            <ul class="menu-sub">
+                @if (in_array('attendance.index', $permissions))
+                    <li class="menu-item @yield('attendance-active')">
+                        <a href="{{ route('attendance.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'attendance')) }}
+                            </div>
+                        </a>
+                    </li>
+                @endif
+            </ul>
         @endif
 
         <li class="menu-header small text-uppercase">

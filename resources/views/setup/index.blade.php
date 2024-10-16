@@ -73,6 +73,30 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="daily_wage">
+                                    {{ ucwords(str_replace('_', ' ', 'daily_wage')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="daily_wage" name="daily_wage" value="{{ $setup->daily_wage }}">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="hourly_wage">
+                                    {{ ucwords(str_replace('_', ' ', 'hourly_wage')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="hourly_wage" name="hourly_wage" value="{{ $setup->hourly_wage }}">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="hourly_overtime">
+                                    {{ ucwords(str_replace('_', ' ', 'hourly_overtime')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="hourly_overtime" name="hourly_overtime" value="{{ $setup->hourly_overtime }}">
+                                </div>
+                            </div>
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Update</button>

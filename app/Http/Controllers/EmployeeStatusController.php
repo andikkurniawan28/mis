@@ -34,6 +34,8 @@ class EmployeeStatusController extends Controller
     {
         $validated = $request->validate([
             "name" => "required|unique:employee_statuses",
+            "incentive" => "required",
+            "salary_multiplier" => "required",
         ]);
         $employee_status = EmployeeStatus::create($validated);
         return redirect()->back()->with("success", "Employee Status has been created");
@@ -65,6 +67,8 @@ class EmployeeStatusController extends Controller
         $employee_status = EmployeeStatus::findOrFail($id);
         $validated = $request->validate([
             'name' => 'required|unique:employee_statuses,name,' . $employee_status->id,
+            "incentive" => "required",
+            "salary_multiplier" => "required",
         ]);
         $employee_status->update($validated);
         return redirect()->route('employee_status.index')->with("success", "Employee Status has been updated");

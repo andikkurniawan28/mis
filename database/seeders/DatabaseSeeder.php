@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Level;
 use App\Models\Major;
 use App\Models\Setup;
+use App\Models\Shift;
 use App\Models\Skill;
 use App\Models\Title;
 use App\Models\Campus;
@@ -18,6 +19,7 @@ use App\Models\Feature;
 use App\Models\TaxRate;
 use App\Models\Business;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Material;
 use App\Models\Religion;
 use App\Models\Supplier;
@@ -33,6 +35,7 @@ use App\Models\MaritalStatus;
 use App\Models\NormalBalance;
 use App\Models\SubDepartment;
 use App\Models\EmployeeStatus;
+use App\Models\InvoiceCategory;
 use Illuminate\Database\Seeder;
 use App\Models\CashFlowCategory;
 use App\Models\EmployeeIdentity;
@@ -41,7 +44,6 @@ use App\Models\RepaymentCategory;
 use App\Models\FinancialStatement;
 use Illuminate\Support\Facades\DB;
 use App\Models\MaterialSubCategory;
-use App\Models\InvoiceCategory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -359,6 +361,20 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_employee')), 'route' => 'employee.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_employee')), 'route' => 'employee.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_employee')), 'route' => 'employee.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_shift')), 'route' => 'shift.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_shift')), 'route' => 'shift.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_shift')), 'route' => 'shift.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_shift')), 'route' => 'shift.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_shift')), 'route' => 'shift.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_shift')), 'route' => 'shift.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_shift')), 'route' => 'shift.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_attendance')), 'route' => 'attendance.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_attendance')), 'route' => 'attendance.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_attendance')), 'route' => 'attendance.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_attendance')), 'route' => 'attendance.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_attendance')), 'route' => 'attendance.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_attendance')), 'route' => 'attendance.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_attendance')), 'route' => 'attendance.destroy'],
         ];
         Feature::insert($features);
 
@@ -517,6 +533,8 @@ class DatabaseSeeder extends Seeder
             'company_name' => ucwords(str_replace('_', ' ', 'PG Kebon Agung')),
             'company_logo' => 'setups/1718631326.png',
             'retained_earning_id' => "30211",
+            'daily_wage' => 120000,
+            'hourly_overtime' => 120000/8,
         ];
         Setup::insert($setup);
 
@@ -942,38 +960,149 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Title::insert([
+            // Departemen Direktur
             [
                 'name' => 'Direktur Utama',
                 'sub_department_id' => SubDepartment::where('name', 'Direktur')->first()->id,
                 'level_id' => Level::where('name', 'Direktur')->first()->id,
             ],
             [
+                'name' => 'Asisten Direktur',
+                'sub_department_id' => SubDepartment::where('name', 'Direktur')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Seksie')->first()->id,
+            ],
+
+            // Departemen Keuangan
+            [
                 'name' => 'Kepala Bagian Akuntansi',
                 'sub_department_id' => SubDepartment::where('name', 'Akunting')->first()->id,
                 'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
             ],
+            [
+                'name' => 'Kepala Bagian Keuangan',
+                'sub_department_id' => SubDepartment::where('name', 'Keuangan')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Akuntansi',
+                'sub_department_id' => SubDepartment::where('name', 'Akunting')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+            [
+                'name' => 'Staf Keuangan',
+                'sub_department_id' => SubDepartment::where('name', 'Keuangan')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+
+            // Departemen Personalia
+            [
+                'name' => 'Kepala Personalia',
+                'sub_department_id' => SubDepartment::where('name', 'Personalia')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Personalia',
+                'sub_department_id' => SubDepartment::where('name', 'Personalia')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+
+            // Departemen Produksi
             [
                 'name' => 'Supervisor Produksi',
                 'sub_department_id' => SubDepartment::where('name', 'Produksi')->first()->id,
                 'level_id' => Level::where('name', 'Supervisor')->first()->id,
             ],
             [
-                'name' => 'Kepala Gudang Produk',
+                'name' => 'Operator Produksi',
+                'sub_department_id' => SubDepartment::where('name', 'Produksi')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+            [
+                'name' => 'Quality Control Manager',
+                'sub_department_id' => SubDepartment::where('name', 'QC')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Quality Control Staff',
+                'sub_department_id' => SubDepartment::where('name', 'QC')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+
+            // Departemen Gudang
+            [
+                'name' => 'Kepala Gudang',
                 'sub_department_id' => SubDepartment::where('name', 'Gudang Produk')->first()->id,
                 'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
             ],
             [
-                'name' => 'Pelaksana QC',
-                'sub_department_id' => SubDepartment::where('name', 'QC')->first()->id,
+                'name' => 'Staf Gudang',
+                'sub_department_id' => SubDepartment::where('name', 'Gudang Produk')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+            [
+                'name' => 'Kepala Gudang Bahan Baku',
+                'sub_department_id' => SubDepartment::where('name', 'Gudang Bahan Baku')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Gudang Bahan Baku',
+                'sub_department_id' => SubDepartment::where('name', 'Gudang Bahan Baku')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+
+            // Departemen Pembelian
+            [
+                'name' => 'Kepala Pengadaan',
+                'sub_department_id' => SubDepartment::where('name', 'Pengadaan Barang')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Pengadaan',
+                'sub_department_id' => SubDepartment::where('name', 'Pengadaan Barang')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+            [
+                'name' => 'Kepala Pengadaan Jasa',
+                'sub_department_id' => SubDepartment::where('name', 'Pengadaan Jasa')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Pengadaan Jasa',
+                'sub_department_id' => SubDepartment::where('name', 'Pengadaan Jasa')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+
+            // Departemen Penjualan
+            [
+                'name' => 'Kepala Penjualan',
+                'sub_department_id' => SubDepartment::where('name', 'Penjualan')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Penjualan',
+                'sub_department_id' => SubDepartment::where('name', 'Penjualan')->first()->id,
+                'level_id' => Level::where('name', 'Pelaksana')->first()->id,
+            ],
+
+            // Departemen Pemasaran
+            [
+                'name' => 'Kepala Pemasaran',
+                'sub_department_id' => SubDepartment::where('name', 'Pemasaran')->first()->id,
+                'level_id' => Level::where('name', 'Kepala Bagian')->first()->id,
+            ],
+            [
+                'name' => 'Staf Pemasaran',
+                'sub_department_id' => SubDepartment::where('name', 'Pemasaran')->first()->id,
                 'level_id' => Level::where('name', 'Pelaksana')->first()->id,
             ],
         ]);
 
         EmployeeStatus::insert([
-            ["name" => "Karyawan Tetap"],
-            ["name" => "Karyawan Kampanye"],
-            ["name" => "Karyawan PKWT"],
-            ["name" => "Karyawan Outsourcing"],
+            ["name" => "Tetap"],
+            ["name" => "Kampanye"],
+            ["name" => "PKWTT"],
+            ["name" => "PKWT"],
+            ["name" => "Outsourcing"],
         ]);
 
         EmployeeIdentity::insert([
@@ -996,6 +1125,73 @@ class DatabaseSeeder extends Seeder
             foreach ($queries as $query) {
                 DB::statement($query);
             }
+        }
+
+        Shift::insert([
+            ["name" => "Harian", "start" => "07:00", "finish" => "15:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 0, "salary_multiplier" => 1],
+            ["name" => "Pagi", "start" => "05:00", "finish" => "13:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 0, "salary_multiplier" => 1],
+            ["name" => "Sore", "start" => "13:00", "finish" => "21:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 0, "salary_multiplier" => 1],
+            ["name" => "Malam", "start" => "21:00", "finish" => "05:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 1, "salary_multiplier" => 2],
+        ]);
+
+        $titles = \App\Models\Title::pluck('id')->toArray();
+        $statuses = \App\Models\EmployeeStatus::pluck('id')->toArray();
+        $educations = \App\Models\Education::pluck('id')->toArray();
+        $campuses = \App\Models\Campus::pluck('id')->toArray();
+        $majors = \App\Models\Major::pluck('id')->toArray();
+        $religions = \App\Models\Religion::pluck('id')->toArray();
+        $maritalStatuses = \App\Models\MaritalStatus::pluck('id')->toArray();
+        $banks = \App\Models\Bank::pluck('id')->toArray();
+
+        $employees = [
+            ['name' => 'Andik Kurniawan', 'address' => 'Jl. Kebon Agung No. 1', 'place_of_birth' => 'Malang', 'birthday' => '1990-01-01'],
+            ['name' => 'Budi Santoso', 'address' => 'Jl. Merdeka No. 2', 'place_of_birth' => 'Surabaya', 'birthday' => '1985-05-15'],
+            ['name' => 'Siti Nurhaliza', 'address' => 'Jl. Bunga No. 3', 'place_of_birth' => 'Jakarta', 'birthday' => '1992-08-20'],
+            ['name' => 'Dewi Lestari', 'address' => 'Jl. Anggrek No. 4', 'place_of_birth' => 'Bandung', 'birthday' => '1993-12-12'],
+            ['name' => 'Toni Rachman', 'address' => 'Jl. Cendana No. 5', 'place_of_birth' => 'Semarang', 'birthday' => '1991-03-30'],
+            ['name' => 'Eko Prasetyo', 'address' => 'Jl. Melati No. 6', 'place_of_birth' => 'Yogyakarta', 'birthday' => '1989-09-25'],
+            ['name' => 'Linda Anggraeni', 'address' => 'Jl. Kenanga No. 7', 'place_of_birth' => 'Palembang', 'birthday' => '1995-07-14'],
+            ['name' => 'Rudi Setiawan', 'address' => 'Jl. Mawar No. 8', 'place_of_birth' => 'Bali', 'birthday' => '1988-04-10'],
+            ['name' => 'Intan Permata', 'address' => 'Jl. Flamboyan No. 9', 'place_of_birth' => 'Medan', 'birthday' => '1994-11-22'],
+            ['name' => 'Asep Rahmat', 'address' => 'Jl. Kaktus No. 10', 'place_of_birth' => 'Makassar', 'birthday' => '1990-06-06'],
+            ['name' => 'Rina Pratiwi', 'address' => 'Jl. Delima No. 11', 'place_of_birth' => 'Jambi', 'birthday' => '1987-02-18'],
+            ['name' => 'Fajar Ardiansyah', 'address' => 'Jl. Jati No. 12', 'place_of_birth' => 'Bandung', 'birthday' => '1992-10-05'],
+            ['name' => 'Zahra Rahmawati', 'address' => 'Jl. Teratai No. 13', 'place_of_birth' => 'Medan', 'birthday' => '1993-08-29'],
+            ['name' => 'Hendri Saputra', 'address' => 'Jl. Melati No. 14', 'place_of_birth' => 'Surabaya', 'birthday' => '1986-12-16'],
+            ['name' => 'Diana Citra', 'address' => 'Jl. Kamboja No. 15', 'place_of_birth' => 'Palangkaraya', 'birthday' => '1995-09-11'],
+            ['name' => 'Syaiful Anwar', 'address' => 'Jl. Kenanga No. 16', 'place_of_birth' => 'Tangerang', 'birthday' => '1990-03-04'],
+            ['name' => 'Tina Mulia', 'address' => 'Jl. Angsana No. 17', 'place_of_birth' => 'Bogor', 'birthday' => '1994-07-17'],
+            ['name' => 'Dwi Handoko', 'address' => 'Jl. Srikaya No. 18', 'place_of_birth' => 'Yogyakarta', 'birthday' => '1988-05-22'],
+            ['name' => 'Ferry Setyo', 'address' => 'Jl. Gembira No. 19', 'place_of_birth' => 'Jakarta', 'birthday' => '1987-11-30'],
+            ['name' => 'Nina Fatma', 'address' => 'Jl. Kemuning No. 20', 'place_of_birth' => 'Surabaya', 'birthday' => '1993-02-23'],
+            ['name' => 'Aldo Aji', 'address' => 'Jl. Taman No. 21', 'place_of_birth' => 'Semarang', 'birthday' => '1991-04-14'],
+            ['name' => 'Yuli Rahayu', 'address' => 'Jl. Rawa No. 22', 'place_of_birth' => 'Malang', 'birthday' => '1995-01-06'],
+            ['name' => 'Sinta Mahardika', 'address' => 'Jl. Cempaka No. 23', 'place_of_birth' => 'Palembang', 'birthday' => '1992-06-01'],
+            ['name' => 'Iwan Setyawan', 'address' => 'Jl. Kembang No. 24', 'place_of_birth' => 'Bali', 'birthday' => '1986-08-20'],
+            ['name' => 'Rina Yuliana', 'address' => 'Jl. Melati No. 25', 'place_of_birth' => 'Medan', 'birthday' => '1993-10-10'],
+            ['name' => 'Gita Cahyani', 'address' => 'Jl. Garuda No. 26', 'place_of_birth' => 'Bandung', 'birthday' => '1995-02-15'],
+            ['name' => 'Rudi Sembiring', 'address' => 'Jl. Seroja No. 27', 'place_of_birth' => 'Yogyakarta', 'birthday' => '1990-12-05'],
+            ['name' => 'Sofia Sari', 'address' => 'Jl. Bambu No. 28', 'place_of_birth' => 'Tangerang', 'birthday' => '1994-09-30'],
+            ['name' => 'Bagus Setiawan', 'address' => 'Jl. Puspa No. 29', 'place_of_birth' => 'Jakarta', 'birthday' => '1992-03-11'],
+            ['name' => 'Dhea Fajria', 'address' => 'Jl. Taman No. 30', 'place_of_birth' => 'Malang', 'birthday' => '1988-05-20'],
+        ];
+
+        foreach ($employees as $employee) {
+            Employee::insert([
+                'id' => uniqid(), // Unique ID for employee
+                'name' => $employee['name'],
+                'address' => $employee['address'],
+                'place_of_birth' => $employee['place_of_birth'],
+                'birthday' => $employee['birthday'],
+                'title_id' => $titles[array_rand($titles)],
+                'employee_status_id' => $statuses[array_rand($statuses)],
+                'education_id' => $educations[array_rand($educations)],
+                'campus_id' => $campuses[array_rand($campuses)],
+                'major_id' => $majors[array_rand($majors)],
+                'religion_id' => $religions[array_rand($religions)],
+                'marital_status_id' => $maritalStatuses[array_rand($maritalStatuses)],
+                'bank_id' => $banks[array_rand($banks)],
+            ]);
         }
 
     }

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TitleController;
 use App\Http\Controllers\BudgetController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\RepaymentController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\ActivityLogController;
@@ -127,6 +129,7 @@ Route::resource('/skill', SkillController::class)->middleware(['auth', 'check.pe
 Route::resource('/title', TitleController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/employee_identity', EmployeeIdentityController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/employee', EmployeeController::class)->middleware(['auth', 'check.permission']);
-
+Route::resource('/shift', ShiftController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/attendance', AttendanceController::class)->middleware(['auth', 'check.permission']);
 
 

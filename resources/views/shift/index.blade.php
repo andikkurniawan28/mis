@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'employee_status')) }}
+    {{ ucwords(str_replace('_', ' ', 'shift')) }}
 @endsection
 
-@section('employee_status-active')
+@section('shift-active')
     {{ 'active' }}
 @endsection
 
@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('employee_status.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('shift.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
@@ -24,22 +24,32 @@
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'incentive')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'start')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'finish')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'start_break')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'finish_break')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'delta_day_of_start')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'delta_day_of_finish')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'salary_multiplier')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($employee_statuses as $employee_status)
+                            @foreach ($shifts as $shift)
                                 <tr>
-                                    <td>{{ $employee_status->id }}</td>
-                                    <td>{{ $employee_status->name }}</td>
-                                    <td>{{ number_format($employee_status->incentive) }}</td>
-                                    <td>{{ number_format($employee_status->salary_multiplier, 2) }}</td>
+                                    <td>{{ $shift->id }}</td>
+                                    <td>{{ $shift->name }}</td>
+                                    <td>{{ $shift->start }}</td>
+                                    <td>{{ $shift->finish }}</td>
+                                    <td>{{ $shift->start_break ?? "-" }}</td>
+                                    <td>{{ $shift->finish_break ?? "-" }}</td>
+                                    <td>{{ $shift->delta_day_of_start }}</td>
+                                    <td>{{ $shift->delta_day_of_finish }}</td>
+                                    <td>{{ number_format($shift->salary_multiplier, 2) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
-                                            <a href="{{ route('employee_status.edit', $employee_status->id) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $employee_status->id }}" data-name="{{ $employee_status->name }}">Delete</button>
+                                            <a href="{{ route('shift.edit', $shift->id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $shift->id }}" data-name="{{ $shift->name }}">Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -57,8 +67,8 @@
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    const employee_status_id = this.getAttribute('data-id');
-                    const employee_status_name = this.getAttribute('data-name');
+                    const shift_id = this.getAttribute('data-id');
+                    const shift_name = this.getAttribute('data-name');
                     Swal.fire({
                         title: 'Are you sure?',
                         text: 'You won\'t be able to revert this!',
@@ -72,8 +82,8 @@
                             const form = document.createElement('form');
                             form.setAttribute('method', 'POST');
                             form.setAttribute('action',
-                                `{{ route('employee_status.destroy', ':id') }}`.replace(
-                                    ':id', employee_status_id));
+                                `{{ route('shift.destroy', ':id') }}`.replace(
+                                    ':id', shift_id));
                             const csrfToken = document.getElementsByName("_token")[0].value;
 
                             const hiddenMethod = document.createElement('input');
@@ -84,7 +94,7 @@
                             const name = document.createElement('input');
                             name.setAttribute('type', 'hidden');
                             name.setAttribute('name', 'name');
-                            name.setAttribute('value', employee_status_name);
+                            name.setAttribute('value', shift_name);
 
                             const csrfTokenInput = document.createElement('input');
                             csrfTokenInput.setAttribute('type', 'hidden');

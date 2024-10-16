@@ -36,6 +36,24 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="incentive">
+                                    {{ ucwords(str_replace('_', ' ', 'incentive')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="incentive" name="incentive" value="{{ old("incentive") }}" step="any" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="salary_multiplier">
+                                    {{ ucwords(str_replace('_', ' ', 'salary_multiplier')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="salary_multiplier" name="salary_multiplier" value="{{ old("salary_multiplier") }}" step="any" required>
+                                </div>
+                            </div>
+
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Send</button>

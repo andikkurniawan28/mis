@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('employee_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->double('incentive')->default(0);
+            $table->float('salary_multiplier')->default(1);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

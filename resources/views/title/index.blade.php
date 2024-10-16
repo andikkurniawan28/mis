@@ -27,6 +27,8 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'sub_department')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'level')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'incentive')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'salary_multiplier')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
                         </thead>
@@ -38,6 +40,8 @@
                                     <td>{{ $title->sub_department->name }}</td>
                                     <td>{{ $title->level->name }}</td>
                                     <td>{{ $title->name }}</td>
+                                    <td>{{ number_format($title->incentive) }}</td>
+                                    <td>{{ number_format($title->salary_multiplier, 2) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">
                                             <a href="{{ route('title.edit', $title->id) }}" class="btn btn-secondary btn-sm">Edit</a>

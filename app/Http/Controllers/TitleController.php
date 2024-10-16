@@ -40,6 +40,8 @@ class TitleController extends Controller
             "name" => "required|unique:titles",
             "sub_department_id" => "required",
             "level_id" => "required",
+            "incentive" => "required",
+            "salary_multiplier" => "required",
         ]);
         $title = Title::create($validated);
         return redirect()->back()->with("success", "Title has been created");
@@ -75,6 +77,8 @@ class TitleController extends Controller
             'name' => 'required|unique:titles,name,' . $title->id,
             "sub_department_id" => "required",
             "level_id" => "required",
+            "incentive" => "required",
+            "salary_multiplier" => "required",
         ]);
         $title->update($validated);
         return redirect()->route('title.index')->with("success", "Title has been updated");
