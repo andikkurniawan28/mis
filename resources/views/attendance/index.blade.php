@@ -25,6 +25,11 @@
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'employee')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'shift')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'check_in')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'check_out')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'net_salary')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -64,13 +69,31 @@
                         name: 'shift.name'
                     },
                     {
+                        data: 'date',
+                        name: 'date'
+                    },
+                    {
+                        data: 'check_in',
+                        name: 'check_in'
+                    },
+                    {
+                        data: 'check_out',
+                        name: 'check_out'
+                    },
+                    {
+                        data: 'credit',
+                        name: 'credit'
+                    },
+                    {
+                        data: 'net_salary',
+                        name: 'net_salary'
+                    },
+                    {
                         data: null,
                         name: 'actions',
                         render: function(data, type, row) {
                             return `
                                 <div class="btn-group" role="group" aria-label="manage">
-                                    <a href="{{ url('attendance') }}/${row.id}/edit" class="btn btn-secondary btn-sm">Edit</a>
-                                    <a href="{{ url('attendance') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
                                 </div>
                             `;

@@ -41,6 +41,24 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="time">
+                                    {{ ucwords(str_replace('_', ' ', 'time')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="time" id="time" name="time" class="form-control" value="{{ date("H:i:s") }}" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="today">
+                                    {{ ucwords(str_replace('_', ' ', 'today')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="date" id="today" name="today" class="form-control" value="{{ date("Y-m-d") }}" required>
+                                </div>
+                            </div>
+
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Send</button>
