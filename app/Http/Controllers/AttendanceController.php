@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Setup;
 use App\Models\Shift;
 use App\Models\Employee;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use App\Models\TimeOperation;
 use Yajra\DataTables\DataTables;
-use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -23,10 +24,10 @@ class AttendanceController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->editColumn('employee_id', function($row) {
-                    return $row->employee ? $row->employee->name : 'N/A'; // Replace employee_id with employee name
+                    return $row->employee ? $row->employee->name : '-';
                 })
                 ->editColumn('shift_id', function($row) {
-                    return $row->shift ? $row->shift->name : 'N/A'; // Replace shift_id with shift name
+                    return $row->shift ? $row->shift->name : '-';
                 })
                 ->make(true);
         }
@@ -46,51 +47,32 @@ class AttendanceController extends Controller
     public function store(Request $request)
     {
         $employee = Employee::findOrFail($request->employee_id);
-        $basic_salary = Setup::latest()->first()->daily_wage * $employee->title->salary_multiplier;
+        $basic_salary = Setup::dailyWage() * $employee->title->salary_multiplier;
 
-        // For Testing Only
+        /* For Testing */
         $time = $request->time;
         $today = $request->today;
 
-        // For Production
+        /* For Production */
         // $time = date("H:i:s");
         // $today = date("Y-m-d");
 
-        $yesterday = date("Y-m-d", strtotime("$today -1 day"));
+        $yesterday = TimeOperation::decreaseDay($today, 1);
         $shift = self::determineShift($time);
 
-        // Update yesterday's incomplete attendance or today's new attendance
-        $attendance = Attendance::where("employee_id", $request->employee_id)
-            ->whereIn("date", [$yesterday, $today])
-            ->where("check_out", null)
-            ->first();
+        /* Update yesterday's incomplete attendance or today's new attendance */
+        $attendance = self::checkIncompleteAttendance($request, $yesterday, $today);
 
         if ($attendance) {
             $interval = self::countInterval($attendance->shift->start, $time);
             $credit = self::countCredit($interval, $attendance->shift->salary_multiplier);
-            $net_salary = $attendance->basic_salary * $credit;
+            $net_salary = self::countNetSalary($attendance->basic_salary, $credit);
             $early_late = self::countEarlyOrLate($attendance->shift->finish, $time);
-            $attendance->update([
-                "check_out" => $time,
-                "credit" => $credit,
-                "net_salary" => $net_salary,
-                "early_check_out" => $early_late["early"],
-                "late_check_out" => $early_late["late"],
-            ]);
+            self::updateChecklog($attendance, $time, $credit, $net_salary, $early_late);
         } else {
             if ($shift) {
                 $early_late = self::countEarlyOrLate($shift->start, $time);
-                Attendance::create([
-                    "employee_id" => $request->employee_id,
-                    "date" => $today,
-                    "basic_salary" => $basic_salary,
-                    "credit" => 0,
-                    "net_salary" => 0,
-                    "check_in" => $time,
-                    "shift_id" => $shift->id,
-                    "early_check_in" => $early_late["early"],
-                    "late_check_in" => $early_late["late"],
-                ]);
+                self::newChecklog($request, $today, $basic_salary, $time, $shift, $early_late);
             } else {
                 return redirect()->route('attendance.index')->with("fail", "The time does not fall within any shift. Please come back later.");
             }
@@ -113,10 +95,7 @@ class AttendanceController extends Controller
      */
     public function edit($id)
     {
-        $setup = Setup::init();
-        $attendance = Attendance::findOrFail($id);
-        $employees = Employee::all();
-        return view('attendance.edit', compact('setup', 'attendance', 'employees'));
+        //
     }
 
     /**
@@ -124,12 +103,7 @@ class AttendanceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $attendance = Attendance::findOrFail($id);
-        $validated = $request->validate([
-            'name' => 'required|unique:attendances,name,' . $attendance->id,
-        ]);
-        $attendance->update($validated);
-        return redirect()->route('attendance.index')->with("success", "Attendance has been updated");
+        //
     }
 
     /**
@@ -141,19 +115,30 @@ class AttendanceController extends Controller
         return redirect()->back()->with("success", "Attendance has been deleted");
     }
 
-    public static function countCredit($interval, $salary_multiplier){
+    public static function checkIncompleteAttendance($request, $yesterday, $today)
+    {
+        return Attendance::where("employee_id", $request->employee_id)
+            ->whereIn("date", [$yesterday, $today])
+            ->where("check_out", null)
+            ->first();
+    }
+
+    public static function countCredit($interval, $salary_multiplier)
+    {
         $real_credit = ($interval / 8) * 1;
         if($real_credit > 1) $credit = 1; else $credit = $real_credit;
         return $credit * $salary_multiplier;
     }
 
-    public static function countInterval($check_in, $check_out){
+    public static function countInterval($check_in, $check_out)
+    {
         $checkInTime = Carbon::createFromFormat('H:i:s', $check_in);
         $checkOutTime = Carbon::createFromFormat('H:i:s', $check_out);
         return $checkInTime->diffInHours($checkOutTime);
     }
 
-    public static function determineShift($time){
+    public static function determineShift($time)
+    {
         $shifts = Shift::all();
         $currentTime = Carbon::createFromFormat('H:i:s', $time);
         $currentShift = null;
@@ -180,5 +165,36 @@ class AttendanceController extends Controller
             "early" => !$isLate ? $diff : 0,
         ];
         return $data;
+    }
+
+    public static function newChecklog($request, $today, $basic_salary, $time, $shift, $early_late)
+    {
+        Attendance::create([
+            "employee_id" => $request->employee_id,
+            "date" => $today,
+            "basic_salary" => $basic_salary,
+            "credit" => 0,
+            "net_salary" => 0,
+            "check_in" => $time,
+            "shift_id" => $shift->id,
+            "early_check_in" => $early_late["early"],
+            "late_check_in" => $early_late["late"],
+        ]);
+    }
+
+    public static function updateChecklog($attendance, $time, $credit, $net_salary, $early_late)
+    {
+        $attendance->update([
+            "check_out" => $time,
+            "credit" => $credit,
+            "net_salary" => $net_salary,
+            "early_check_out" => $early_late["early"],
+            "late_check_out" => $early_late["late"],
+        ]);
+    }
+
+    public static function countNetSalary($basic_salary, $credit)
+    {
+        return $basic_salary * $credit;
     }
 }

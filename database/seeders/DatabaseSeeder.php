@@ -375,6 +375,14 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_attendance')), 'route' => 'attendance.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_attendance')), 'route' => 'attendance.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_attendance')), 'route' => 'attendance.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_overtime')), 'route' => 'overtime.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_overtime')), 'route' => 'overtime.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_overtime')), 'route' => 'overtime.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_overtime')), 'route' => 'overtime.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_overtime')), 'route' => 'overtime.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_overtime')), 'route' => 'overtime.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_overtime')), 'route' => 'overtime.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'checklog')), 'route' => 'checklog'],
         ];
         Feature::insert($features);
 

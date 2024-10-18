@@ -25,9 +25,11 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\CashFlowController;
+use App\Http\Controllers\ChecklogController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
@@ -131,5 +133,7 @@ Route::resource('/employee_identity', EmployeeIdentityController::class)->middle
 Route::resource('/employee', EmployeeController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/shift', ShiftController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/attendance', AttendanceController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/overtime', OvertimeController::class)->middleware(['auth', 'check.permission']);
+Route::get('/checklog', ChecklogController::class)->name('checklog')->middleware(['auth', 'check.permission']);
 
 

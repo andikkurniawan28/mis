@@ -529,7 +529,9 @@
                 in_array('employee_identity.index', $permissions) ||
                 in_array('employee.index', $permissions) ||
                 in_array('shift.index', $permissions) ||
-                in_array('attendance.index', $permissions)
+                in_array('attendance.index', $permissions) ||
+                in_array('overtime.index', $permissions) ||
+                in_array('checklog', $permissions)
             )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Human Resource</span>
@@ -701,11 +703,15 @@
         @endif
 
         @if (
-                in_array('attendance.index', $permissions)
+                in_array('attendance.index', $permissions) ||
+                in_array('overtime.index', $permissions) ||
+                in_array('checklog', $permissions)
             )
             <li
                 class="menu-item
                 @yield('attendance-active')
+                @yield('overtime-active')
+                @yield('checklog-active')
             ">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
@@ -716,6 +722,22 @@
                     <li class="menu-item @yield('attendance-active')">
                         <a href="{{ route('attendance.index') }}" class="menu-link">
                             <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'attendance')) }}
+                            </div>
+                        </a>
+                    </li>
+                @endif
+                @if (in_array('overtime.index', $permissions))
+                    <li class="menu-item @yield('overtime-active')">
+                        <a href="{{ route('overtime.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'overtime')) }}
+                            </div>
+                        </a>
+                    </li>
+                @endif
+                @if (in_array('checklog', $permissions))
+                    <li class="menu-item @yield('checklog-active')">
+                        <a href="{{ route('checklog') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'checklog')) }}
                             </div>
                         </a>
                     </li>

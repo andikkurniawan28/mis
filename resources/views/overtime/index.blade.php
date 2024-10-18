@@ -1,10 +1,10 @@
 @extends('template.sneat.master')
 
 @section('title')
-    {{ ucwords(str_replace('_', ' ', 'attendance')) }}
+    {{ ucwords(str_replace('_', ' ', 'overtime')) }}
 @endsection
 
-@section('attendance-active')
+@section('overtime-active')
     {{ 'active' }}
 @endsection
 
@@ -15,25 +15,20 @@
             <div class="card-body">
                 <h4>List of <strong>@yield('title')</strong></h4>
                 <div class="btn-group" role="group" aria-label="manage">
-                    <a href="{{ route('attendance.create') }}" class="btn btn-sm btn-primary">Create</a>
+                    <a href="{{ route('overtime.create') }}" class="btn btn-sm btn-primary">Create</a>
                 </div>
                 <div class="table-responsive">
                     <span class="half-line-break"></span>
-                    <table class="table table-bordered table-hovered" id="attendance_table" width="100%">
+                    <table class="table table-bordered table-hovered" id="overtime_table" width="100%">
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'employee')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'shift')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'check_in')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'eci')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'lci')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'check_out')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'eco')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'lco')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'net_salary')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'net_overtime')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -47,7 +42,7 @@
 @section('additional_script')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#attendance_table').DataTable({
+            $('#overtime_table').DataTable({
                 layout: {
                     bottomStart: {
                         buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
@@ -55,7 +50,7 @@
                 },
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('attendance.index') }}",
+                ajax: "{{ route('overtime.index') }}",
                 order: [
                     [0, 'desc']
                 ],
@@ -69,10 +64,6 @@
                         name: 'employee.name'
                     },
                     {
-                        data: 'shift_id',
-                        name: 'shift.name'
-                    },
-                    {
                         data: 'date',
                         name: 'date'
                     },
@@ -81,32 +72,16 @@
                         name: 'check_in'
                     },
                     {
-                        data: 'early_check_in',
-                        name: 'early_check_in'
-                    },
-                    {
-                        data: 'late_check_in',
-                        name: 'late_check_in'
-                    },
-                    {
                         data: 'check_out',
                         name: 'check_out'
-                    },
-                    {
-                        data: 'early_check_out',
-                        name: 'early_check_out'
-                    },
-                    {
-                        data: 'late_check_out',
-                        name: 'late_check_out'
                     },
                     {
                         data: 'credit',
                         name: 'credit'
                     },
                     {
-                        data: 'net_salary',
-                        name: 'net_salary'
+                        data: 'net_overtime',
+                        name: 'net_overtime'
                     },
                     {
                         data: null,
@@ -125,7 +100,7 @@
             // Event delegation for delete buttons
             $(document).on('click', '.delete-btn', function(event) {
                 event.preventDefault();
-                const attendanceId = $(this).data('id');
+                const overtimeId = $(this).data('id');
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 Swal.fire({
@@ -140,7 +115,7 @@
                     if (result.isConfirmed) {
                         const form = $('<form>', {
                             method: 'POST',
-                            action: `{{ url('attendance') }}/${attendanceId}`
+                            action: `{{ url('overtime') }}/${overtimeId}`
                         });
 
                         $('<input>', {

@@ -18,7 +18,18 @@ class Setup extends Model
         return $setup;
     }
 
-    public function retained_earning(){
+    public function retained_earning()
+    {
         return $this->belongsTo(Account::class, 'retained_earning_id');
+    }
+
+    public static function dailyWage()
+    {
+        return self::latest()->first()->daily_wage;
+    }
+
+    public static function hourlyOvertime()
+    {
+        return self::latest()->first()->hourly_overtime;
     }
 }
