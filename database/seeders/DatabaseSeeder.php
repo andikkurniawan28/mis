@@ -382,7 +382,9 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'show_overtime')), 'route' => 'overtime.show'],
             ['name' => ucfirst(str_replace('_', ' ', 'update_overtime')), 'route' => 'overtime.update'],
             ['name' => ucfirst(str_replace('_', ' ', 'delete_overtime')), 'route' => 'overtime.destroy'],
-            ['name' => ucfirst(str_replace('_', ' ', 'checklog')), 'route' => 'checklog'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_checklog')), 'route' => 'checklog.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_checklog')), 'route' => 'checklog.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_checklog')), 'route' => 'checklog.store'],
         ];
         Feature::insert($features);
 
@@ -820,6 +822,7 @@ class DatabaseSeeder extends Seeder
             ["name" => "Sastra Bahasa Inggris"],
             ["name" => "Sastra Bahasa Indonesia"],
             ["name" => "Sastra Bahasa Mandarin"],
+            ["name" => "Non Vokasi"],
         ]);
 
         Religion::insert([
@@ -1136,10 +1139,10 @@ class DatabaseSeeder extends Seeder
         }
 
         Shift::insert([
-            ["name" => "Harian", "start" => "07:00", "finish" => "15:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 0, "salary_multiplier" => 1],
-            ["name" => "Pagi", "start" => "05:00", "finish" => "13:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 0, "salary_multiplier" => 1],
-            ["name" => "Sore", "start" => "13:00", "finish" => "21:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 0, "salary_multiplier" => 1],
-            ["name" => "Malam", "start" => "21:00", "finish" => "05:00", "delta_day_of_start" => 0, "delta_day_of_finish" => 1, "salary_multiplier" => 2],
+            ["name" => "Harian", "start" => "07:00", "finish" => "15:00", "salary_multiplier" => 1],
+            ["name" => "Pagi", "start" => "05:00", "finish" => "13:00", "salary_multiplier" => 1],
+            ["name" => "Sore", "start" => "13:00", "finish" => "21:00", "salary_multiplier" => 1],
+            ["name" => "Malam", "start" => "21:00", "finish" => "05:00", "salary_multiplier" => 2],
         ]);
 
         $titles = \App\Models\Title::pluck('id')->toArray();

@@ -23,9 +23,9 @@
                         <thead>
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'employee')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'shift')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'check_in')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'eci')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'lci')) }}</th>
@@ -33,7 +33,8 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'eco')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'lco')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'net_salary')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'basic')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'net')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -65,16 +66,16 @@
                         name: 'id'
                     },
                     {
+                        data: 'date',
+                        name: 'date'
+                    },
+                    {
                         data: 'employee_id',
                         name: 'employee.name'
                     },
                     {
                         data: 'shift_id',
                         name: 'shift.name'
-                    },
-                    {
-                        data: 'date',
-                        name: 'date'
                     },
                     {
                         data: 'check_in',
@@ -105,8 +106,24 @@
                         name: 'credit'
                     },
                     {
+                        data: 'basic_salary',
+                        name: 'basic_salary',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
+                    },
+                    {
                         data: 'net_salary',
-                        name: 'net_salary'
+                        name: 'net_salary',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
                     },
                     {
                         data: null,

@@ -29,20 +29,12 @@ class Attendance extends Model
                 'user_id' => Auth::id(),
                 'description' => "Attendance '{$attendance->employee->name}' was created.",
             ]);
-            Checklog::create([
-                'employee_id' => $attendance->employee->id,
-                'created_at' => $attendance->check_in,
-            ]);
         });
 
         static::updated(function ($attendance) {
             ActivityLog::create([
                 'user_id' => Auth::id(),
                 'description' => "Attendance '{$attendance->employee->name}' was updated.",
-            ]);
-            Checklog::create([
-                'employee_id' => $attendance->employee->id,
-                'created_at' => $attendance->check_out,
             ]);
         });
 

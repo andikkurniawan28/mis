@@ -28,8 +28,8 @@
                                 <th>{{ ucwords(str_replace('_', ' ', 'finish')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'start_break')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'finish_break')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'delta_day_of_start')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'delta_day_of_finish')) }}</th>
+                                {{-- <th>{{ ucwords(str_replace('_', ' ', 'delta_day_of_start')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'delta_day_of_finish')) }}</th> --}}
                                 <th>{{ ucwords(str_replace('_', ' ', 'salary_multiplier')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
@@ -43,8 +43,8 @@
                                     <td>{{ $shift->finish }}</td>
                                     <td>{{ $shift->start_break ?? "-" }}</td>
                                     <td>{{ $shift->finish_break ?? "-" }}</td>
-                                    <td>{{ $shift->delta_day_of_start }}</td>
-                                    <td>{{ $shift->delta_day_of_finish }}</td>
+                                    {{-- <td>{{ $shift->delta_day_of_start }}</td>
+                                    <td>{{ $shift->delta_day_of_finish }}</td> --}}
                                     <td>{{ number_format($shift->salary_multiplier, 2) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">

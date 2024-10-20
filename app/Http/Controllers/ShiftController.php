@@ -38,8 +38,8 @@ class ShiftController extends Controller
             "finish" => "required",
             "start_break" => "nullable",
             "finish_break" => "nullable",
-            "delta_day_of_start" => "required",
-            "delta_day_of_finish" => "required",
+            // "delta_day_of_start" => "required",
+            // "delta_day_of_finish" => "required",
         ]);
         $shift = Shift::create($validated);
         return redirect()->back()->with("success", "Shift has been created");
@@ -75,8 +75,8 @@ class ShiftController extends Controller
             "finish" => "required",
             "start_break" => "nullable",
             "finish_break" => "nullable",
-            "delta_day_of_start" => "required",
-            "delta_day_of_finish" => "required",
+            // "delta_day_of_start" => "required",
+            // "delta_day_of_finish" => "required",
         ]);
         $shift->update($validated);
         return redirect()->route('shift.index')->with("success", "Shift has been updated");

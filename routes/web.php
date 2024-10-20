@@ -134,6 +134,8 @@ Route::resource('/employee', EmployeeController::class)->middleware(['auth', 'ch
 Route::resource('/shift', ShiftController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/attendance', AttendanceController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/overtime', OvertimeController::class)->middleware(['auth', 'check.permission']);
-Route::get('/checklog', ChecklogController::class)->name('checklog')->middleware(['auth', 'check.permission']);
+Route::get('/checklog', [ChecklogController::class, 'index'])->name('checklog.index')->middleware(['auth', 'check.permission']);
+Route::get('/checklog/create', [ChecklogController::class, 'create'])->name('checklog.create')->middleware(['auth', 'check.permission']);
+Route::post('/checklog', [ChecklogController::class, 'store'])->name('checklog.store')->middleware(['auth', 'check.permission']);
 
 

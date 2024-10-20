@@ -72,7 +72,7 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="delta_day_of_start">
                                     {{ ucwords(str_replace('_', ' ', 'delta_day_of_start')) }}
                                 </label>
@@ -88,7 +88,7 @@
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" id="delta_day_of_finish" name="delta_day_of_finish" value="{{ old("delta_day_of_finish") }}" step="any" required>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="salary_multiplier">

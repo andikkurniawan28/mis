@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('shifts', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->integer('delta_day_of_start');
-            $table->integer('delta_day_of_finish');
+            // $table->integer('delta_day_of_start');
+            // $table->integer('delta_day_of_finish');
             $table->time('start');
             $table->time('finish');
             $table->time('start_break')->nullable();

@@ -14,6 +14,9 @@
         <div class="card">
             <div class="card-body">
                 <h4><strong>@yield('title')</strong></h4>
+                <div class="btn-group" role="group" aria-label="manage">
+                    <a href="{{ route('checklog.create') }}" class="btn btn-sm btn-primary">Create</a>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hovered" id="checklog_table" width="100%">
                         <thead>
@@ -40,7 +43,7 @@
                 },
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('checklog') }}",
+                ajax: "{{ route('checklog.index') }}",
                 order: [
                     [0, 'desc']
                 ],
@@ -49,7 +52,8 @@
                         buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
                     },
                 },
-                columns: [{
+                columns: [
+                    {
                         data: 'created_at',
                         name: 'created_at'
                     },
