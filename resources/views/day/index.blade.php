@@ -24,7 +24,7 @@
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'name')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'num')) }}</th>
+                                {{-- <th>{{ ucwords(str_replace('_', ' ', 'num')) }}</th> --}}
                                 <th>{{ ucwords(str_replace('_', ' ', 'salary_multiplier')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'manage')) }}</th>
                             </tr>
@@ -34,7 +34,7 @@
                                 <tr>
                                     <td>{{ $day->id }}</td>
                                     <td>{{ $day->name }}</td>
-                                    <td>{{ $day->num }}</td>
+                                    {{-- <td>{{ $day->num }}</td> --}}
                                     <td>{{ number_format($day->salary_multiplier, 2) }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="manage">

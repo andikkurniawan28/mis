@@ -42,11 +42,20 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="date">
-                                    {{ ucwords(str_replace('_', ' ', 'date')) }}
+                                <label class="col-sm-2 col-form-label" for="from">
+                                    {{ ucwords(str_replace('_', ' ', 'from')) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="date" id="date" name="date" class="form-control" value="{{ date("Y-m-d") }}" required>
+                                    <input type="date" id="from" name="from" class="form-control" value="{{ date("Y-m-d") }}" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="to">
+                                    {{ ucwords(str_replace('_', ' ', 'to')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="date" id="to" name="to" class="form-control" value="{{ date("Y-m-d") }}" required>
                                 </div>
                             </div>
 

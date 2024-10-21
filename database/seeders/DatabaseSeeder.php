@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Day;
 use App\Models\Bank;
 use App\Models\Role;
 use App\Models\Unit;
@@ -16,6 +17,7 @@ use App\Models\Title;
 use App\Models\Campus;
 use App\Models\Account;
 use App\Models\Feature;
+use App\Models\Holiday;
 use App\Models\TaxRate;
 use App\Models\Business;
 use App\Models\Customer;
@@ -1266,6 +1268,32 @@ class DatabaseSeeder extends Seeder
                 DB::statement($query);
             }
         }
+
+        Day::insert([
+            ["name" => "Monday", "salary_multiplier" => 1],
+            ["name" => "Tuesday", "salary_multiplier" => 1],
+            ["name" => "Wednesday", "salary_multiplier" => 1],
+            ["name" => "Thursday", "salary_multiplier" => 1],
+            ["name" => "Friday", "salary_multiplier" => 1],
+            ["name" => "Saturday", "salary_multiplier" => 1.5],
+            ["name" => "Sunday", "salary_multiplier" => 2],
+        ]);
+
+        Holiday::insert([
+            ["date" => "2025-01-01", "name" => "Tahun Baru Masehi"],
+            ["date" => "2025-01-29", "name" => "Tahun Baru Imlek 2576"],
+            ["date" => "2025-03-29", "name" => "Hari Raya Nyepi 1947"],
+            ["date" => "2025-04-18", "name" => "Wafat Isa Almasih"],
+            ["date" => "2025-05-01", "name" => "Hari Buruh Internasional"],
+            ["date" => "2025-05-27", "name" => "Kenaikan Isa Almasih"],
+            ["date" => "2025-05-18", "name" => "Hari Raya Waisak 2569"],
+            ["date" => "2025-06-06", "name" => "Isra Mi'raj Nabi Muhammad SAW"],
+            ["date" => "2025-03-30", "name" => "Hari Raya Idul Fitri 1 Syawal 1446"],
+            ["date" => "2025-03-31", "name" => "Hari Raya Idul Fitri 2 Syawal 1446"],
+            ["date" => "2025-08-17", "name" => "Hari Kemerdekaan Indonesia"],
+            ["date" => "2025-10-05", "name" => "Maulid Nabi Muhammad SAW"],
+            ["date" => "2025-12-25", "name" => "Hari Raya Natal"],
+        ]);
 
     }
 }

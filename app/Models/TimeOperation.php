@@ -21,4 +21,11 @@ class TimeOperation extends Model
         $check_out_time = Carbon::createFromFormat('H:i:s', $check_out);
         return $check_in_time->diffInHours($check_out_time);
     }
+
+    public static function diffInDay($request)
+    {
+        $from_date = Carbon::createFromFormat('Y-m-d', $request->from);
+        $to_date = Carbon::createFromFormat('Y-m-d', $request->to);
+        return $to_date->diffInDays($from_date);
+    }
 }

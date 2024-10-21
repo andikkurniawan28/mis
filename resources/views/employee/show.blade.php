@@ -115,6 +115,15 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="leave">
+                                {{ ucwords(str_replace('_', ' ', 'leave')) }}
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="leave" name="leave" value="{{ $employee->leave }}" readonly>
+                            </div>
+                        </div>
+
                         @foreach($employee_identities as $employee_identity)
                         @php $column_name = str_replace(' ', '_', $employee_identity->name); @endphp
                         <div class="row mb-3">

@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Leave;
 use App\Models\Setup;
+use App\Models\Payroll;
 use App\Models\Checklog;
 use App\Models\Employee;
-use App\Models\Payroll;
+use App\Models\Overtime;
+use App\Models\Allowance;
+use App\Models\Deduction;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Models\TimeOperation;
 use Yajra\DataTables\DataTables;
@@ -38,29 +43,26 @@ class PayrollController extends Controller
     {
         $setup = Setup::init();
         $employees = Employee::all();
-        return view('payroll.create', compact('setup', 'employees'));
+        $allowances = Allowance::all();
+        $deductions = Deduction::all();
+        return view('payroll.create', compact('setup', 'employees', 'allowances', 'deductions'));
     }
 
     public function store(Request $request)
     {
-        $payroll_is_valid = self::checkValidity($request);
-        if($payroll_is_valid != null){
-            $credit = TimeOperation::diffInHour($request->check_in, $request->check_out);
-            $hourly_payroll = Setup::hourlyPayroll();
-            $net_payroll = $hourly_payroll * $credit;
-            Payroll::create([
-                "date" => $request->date,
-                "employee_id" => $request->employee_id,
-                "check_in" => $request->check_in,
-                "check_out" => $request->check_out,
-                "credit" => $credit,
-                "hourly_payroll" => $hourly_payroll,
-                "net_payroll" => $net_payroll,
-            ]);
-            return redirect()->route('payroll.index')->with("success", "Payroll has been recorded");
-        } else {
-            return redirect()->route('payroll.index')->with("fail", "Payroll is invalid");
-        }
+        $employee = Employee::findOrFail($request->employee_id);
+        $request->request->add([
+            "year" => date("Y", strtotime($request->month)),
+            "month" => date("F", strtotime($request->month)),
+            "salary" => Attendance::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('net_salary'),
+            "attendance_credit" => Attendance::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('credit'),
+            "overtime" => Overtime::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('net_overtime'),
+            "overtime_credit" => Overtime::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('credit'),
+            "leave" => Leave::where('employee_id', $request->employee_id)->whereBetween('to', [$request->from, $request->to])->sum('net_leave'),
+            "leave_credit" => Leave::where('employee_id', $request->employee_id)->whereBetween('to', [$request->from, $request->to])->sum('credit'),
+            "incentive" => $employee->title->incentive,
+        ]);
+        return $request;
     }
 
 
@@ -95,12 +97,5 @@ class PayrollController extends Controller
     {
         Payroll::findOrFail($id)->delete();
         return redirect()->back()->with("success", "Payroll has been deleted");
-    }
-
-    public static function checkValidity($request)
-    {
-        return Checklog::where('employee_id', $request->employee_id)
-            ->whereBetween('created_at', [$request->date." ".$request->check_in, $request->date." ".$request->check_out])
-            ->get() ?? null;
     }
 }

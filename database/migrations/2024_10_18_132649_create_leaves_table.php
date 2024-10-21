@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->date('from');
+            $table->date('to');
             $table->string('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees');
             $table->float('credit');
-            $table->double('basic_salary');
-            $table->double('net_salary');
+            $table->double('basic_leave');
+            $table->double('net_leave');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

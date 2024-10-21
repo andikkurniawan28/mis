@@ -33,7 +33,7 @@ class DayController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'num' => 'required',
+            // 'num' => 'required',
             "name" => "required|unique:days",
             'salary_multiplier' => 'required',
         ]);
@@ -66,7 +66,7 @@ class DayController extends Controller
     {
         $day = Day::findOrFail($id);
         $validated = $request->validate([
-            'num' => 'required',
+            // 'num' => 'required',
             'name' => 'required|unique:days,name,' . $day->id,
             'salary_multiplier' => 'required',
         ]);

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignId('religion_id')->constrained();
             $table->foreignId('marital_status_id')->constrained();
             $table->foreignId('bank_id')->constrained();
+            $table->integer('leave')->default(6);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

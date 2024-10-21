@@ -24,10 +24,11 @@
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'employee')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'from')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'to')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'basic_salary')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'net_salary')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'basic')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'net')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -63,20 +64,24 @@
                         name: 'employee.name'
                     },
                     {
-                        data: 'date',
-                        name: 'date'
+                        data: 'from',
+                        name: 'from'
+                    },
+                    {
+                        data: 'to',
+                        name: 'to'
                     },
                     {
                         data: 'credit',
                         name: 'credit'
                     },
                     {
-                        data: 'basic_salary',
-                        name: 'basic_salary'
+                        data: 'basic_leave',
+                        name: 'basic_leave'
                     },
                     {
-                        data: 'net_salary',
-                        name: 'net_salary'
+                        data: 'net_leave',
+                        name: 'net_leave'
                     },
                     {
                         data: null,

@@ -41,32 +41,119 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="date">
-                                    {{ ucwords(str_replace('_', ' ', 'date')) }}
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="from">
+                                    {{ ucwords(str_replace('_', ' ', 'from')) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="date" id="date" name="date" class="form-control" value="{{ date("Y-m-d") }}" required>
+                                    <input type="date" id="from" name="from" class="form-control" value="{{ date("Y-m-d") }}" required>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="check_in">
-                                    {{ ucwords(str_replace('_', ' ', 'check_in')) }}
+                                <label class="col-sm-2 col-form-label" for="to">
+                                    {{ ucwords(str_replace('_', ' ', 'to')) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="time" id="check_in" name="check_in" class="form-control" value="{{ date("H:i:s") }}" required>
+                                    <input type="date" id="to" name="to" class="form-control" value="{{ date("Y-m-d") }}" required>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="check_out">
-                                    {{ ucwords(str_replace('_', ' ', 'check_out')) }}
+                                <label class="col-sm-2 col-form-label" for="month">
+                                    {{ ucwords(str_replace('_', ' ', 'month')) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="time" id="check_out" name="check_out" class="form-control" value="{{ date("H:i:s") }}" required>
+                                    <input type="month" id="month" name="month" class="form-control" value="{{ date("m") }}" required>
                                 </div>
-                            </div> --}}
+                            </div>
+
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="salary">
+                                    {{ ucwords(str_replace('_', ' ', 'salary')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="salary" name="salary" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="attendance_credit">
+                                    {{ ucwords(str_replace('_', ' ', 'attendance_credit')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="attendance_credit" name="attendance_credit" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="overtime">
+                                    {{ ucwords(str_replace('_', ' ', 'overtime')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="overtime" name="overtime" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="overtime_credit">
+                                    {{ ucwords(str_replace('_', ' ', 'overtime_credit')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="overtime_credit" name="overtime_credit" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="leave">
+                                    {{ ucwords(str_replace('_', ' ', 'leave')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="leave" name="leave" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="leave_credit">
+                                    {{ ucwords(str_replace('_', ' ', 'leave_credit')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="leave_credit" name="leave_credit" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="incentive">
+                                    {{ ucwords(str_replace('_', ' ', 'incentive')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="incentive" name="incentive" class="form-control" value="" readonly>
+                                </div>
+                            </div>
+
+                            @foreach($allowances as $allowance)
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="{{ $allowance->name }}">
+                                    {{ ucwords(str_replace('_', ' ', $allowance->name)) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="{{ $allowance->name }}" name="{{ $allowance->name }}" class="form-control" value="" required>
+                                </div>
+                            </div>
+                            @endforeach
+
+                            @foreach($deductions as $deduction)
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="{{ $deduction->name }}">
+                                    {{ ucwords(str_replace('_', ' ', $deduction->name)) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="{{ $deduction->name }}" name="{{ $deduction->name }}" class="form-control" value="" required>
+                                </div>
+                            </div>
+                            @endforeach
 
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
@@ -84,38 +171,47 @@
 @section('additional_script')
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#title').select2({
-            theme: 'bootstrap',
-            placeholder: "Select a title"
-        });
-        $('#payroll_status').select2({
-            theme: 'bootstrap',
-            placeholder: "Select an payroll_status"
-        });
-        $('#education').select2({
-            theme: 'bootstrap',
-            placeholder: "Select an education"
-        });
-        $('#campus').select2({
-            theme: 'bootstrap',
-            placeholder: "Select a campus"
-        });
+        // Initialize select2 elements
         $('#employee').select2({
             theme: 'bootstrap',
-            placeholder: "Select a employee"
+            placeholder: "Select an employee"
         });
-        $('#religion').select2({
-            theme: 'bootstrap',
-            placeholder: "Select a religion"
-        });
-        $('#marital_status').select2({
-            theme: 'bootstrap',
-            placeholder: "Select a marital_status"
-        });
-        $('#bank').select2({
-            theme: 'bootstrap',
-            placeholder: "Select a bank"
+
+        // Function to call API and update salary details
+        function calculateSalary() {
+            var employee_id = $('#employee').val();
+            var from = $('#from').val();
+            var to = $('#to').val();
+
+            // Build the URL with query parameters
+            var url = "{{ url('/api/count_salary') }}" + "/" + employee_id + "/" + from + "/" + to;
+
+            $.ajax({
+                url: url, // Use the URL variable here
+                method: "GET",
+                success: function(response) {
+                    // Update the salary fields with the response data
+                    $('#salary').val(response.salary);
+                    $('#attendance_credit').val(response.attendance_credit);
+                    $('#overtime').val(response.overtime);
+                    $('#overtime_credit').val(response.overtime_credit);
+                    $('#leave').val(response.leave);
+                    $('#leave_credit').val(response.leave_credit);
+                    $('#incentive').val(response.incentive);
+                    // Handle other allowances or deductions if needed
+                },
+                error: function(xhr) {
+                    console.error("Error fetching salary data:", xhr);
+                    alert("Failed to calculate salary. Please try again.");
+                }
+            });
+        }
+
+        // Attach event listeners to employee, from, and to fields
+        $('#employee, #from, #to').change(function() {
+            calculateSalary();
         });
     });
 </script>
 @endsection
+

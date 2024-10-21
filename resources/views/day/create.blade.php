@@ -36,14 +36,14 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="num">
                                     {{ ucwords(str_replace('_', ' ', 'num')) }}
                                 </label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" id="num" name="num" value="{{ old("num") }}" required>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="salary_multiplier">

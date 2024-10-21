@@ -43,23 +43,29 @@ class LeaveController extends Controller
 
     public function store(Request $request)
     {
-        $leave_is_valid = self::checkValidity($request);
-        if($leave_is_valid != null){
-            $credit = TimeOperation::diffInHour($request->check_in, $request->check_out);
-            $hourly_leave = Setup::hourlyLeave();
-            $net_leave = $hourly_leave * $credit;
-            Leave::create([
-                "date" => $request->date,
-                "employee_id" => $request->employee_id,
-                "check_in" => $request->check_in,
-                "check_out" => $request->check_out,
+        $validated = $request->validate([
+            "employee_id" => "required",
+            "from" => "required",
+            "to" => "required",
+        ]);
+        $credit = TimeOperation::diffInDay($request);
+        $remaining_leave = self::checkRemaining($request);
+        $employee = Employee::findOrFail($request->employee_id);
+        if($credit < $remaining_leave) {
+            $daily_wage = Setup::get()->last()->daily_wage;
+            $basic_leave = $daily_wage * $employee->title->salary_multiplier;
+            $net_leave = $basic_leave * $credit;
+            $new_leave = $remaining_leave - $credit;
+            $request->request->add([
                 "credit" => $credit,
-                "hourly_leave" => $hourly_leave,
+                "basic_leave" => $basic_leave,
                 "net_leave" => $net_leave,
             ]);
+            Leave::create($request->all());
+            $employee->update(["leave" => $new_leave]);
             return redirect()->route('leave.index')->with("success", "Leave has been recorded");
         } else {
-            return redirect()->route('leave.index')->with("fail", "Leave is invalid");
+            return redirect()->route('leave.index')->with("fail", "{$employee->name} leave credit is {$employee->leave}");
         }
     }
 
@@ -93,14 +99,24 @@ class LeaveController extends Controller
      */
     public function destroy($id)
     {
-        Leave::findOrFail($id)->delete();
+        $leave = Leave::findOrFail($id);
+        self::restore($leave);
+        $leave->delete();
         return redirect()->back()->with("success", "Leave has been deleted");
     }
 
-    public static function checkValidity($request)
+    public static function checkRemaining($request)
     {
-        return Checklog::where('employee_id', $request->employee_id)
-            ->whereBetween('created_at', [$request->date." ".$request->check_in, $request->date." ".$request->check_out])
-            ->get() ?? null;
+        return Employee::whereId($request->employee_id)
+            ->get()->last()->leave;
     }
+
+    public static function restore($leave)
+    {
+        $last_leave = Employee::whereId($leave->employee_id)->get()->last()->leave;
+        $new_leave = $last_leave + $leave->credit;
+        Employee::whereId($leave->employee_id)->update(["leave" => $new_leave]);
+    }
+
+
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('days', function (Blueprint $table) {
             $table->id();
-            $table->integer('num');
+            // $table->integer('num');
             $table->string('name')->unique();
             $table->float('salary_multiplier');
             $table->timestamp('created_at')->useCurrent();
