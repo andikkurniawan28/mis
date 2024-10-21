@@ -23,6 +23,7 @@ use App\Models\Employee;
 use App\Models\Material;
 use App\Models\Religion;
 use App\Models\Supplier;
+use App\Models\Deduction;
 use App\Models\Education;
 use App\Models\Warehouse;
 use App\Models\Department;
@@ -385,6 +386,48 @@ class DatabaseSeeder extends Seeder
             ['name' => ucfirst(str_replace('_', ' ', 'list_of_checklog')), 'route' => 'checklog.index'],
             ['name' => ucfirst(str_replace('_', ' ', 'create_checklog')), 'route' => 'checklog.create'],
             ['name' => ucfirst(str_replace('_', ' ', 'save_checklog')), 'route' => 'checklog.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_allowance')), 'route' => 'allowance.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_allowance')), 'route' => 'allowance.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_allowance')), 'route' => 'allowance.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_allowance')), 'route' => 'allowance.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_allowance')), 'route' => 'allowance.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_allowance')), 'route' => 'allowance.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_allowance')), 'route' => 'allowance.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_deduction')), 'route' => 'deduction.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_deduction')), 'route' => 'deduction.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_deduction')), 'route' => 'deduction.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_deduction')), 'route' => 'deduction.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_deduction')), 'route' => 'deduction.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_deduction')), 'route' => 'deduction.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_deduction')), 'route' => 'deduction.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_payroll')), 'route' => 'payroll.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_payroll')), 'route' => 'payroll.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_payroll')), 'route' => 'payroll.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_payroll')), 'route' => 'payroll.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_payroll')), 'route' => 'payroll.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_payroll')), 'route' => 'payroll.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_payroll')), 'route' => 'payroll.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_day')), 'route' => 'day.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_day')), 'route' => 'day.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_day')), 'route' => 'day.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_day')), 'route' => 'day.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_day')), 'route' => 'day.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_day')), 'route' => 'day.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_day')), 'route' => 'day.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_holiday')), 'route' => 'holiday.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_holiday')), 'route' => 'holiday.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_holiday')), 'route' => 'holiday.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_holiday')), 'route' => 'holiday.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_holiday')), 'route' => 'holiday.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_holiday')), 'route' => 'holiday.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_holiday')), 'route' => 'holiday.destroy'],
+            ['name' => ucfirst(str_replace('_', ' ', 'list_of_leave')), 'route' => 'leave.index'],
+            ['name' => ucfirst(str_replace('_', ' ', 'create_leave')), 'route' => 'leave.create'],
+            ['name' => ucfirst(str_replace('_', ' ', 'save_leave')), 'route' => 'leave.store'],
+            ['name' => ucfirst(str_replace('_', ' ', 'edit_leave')), 'route' => 'leave.edit'],
+            ['name' => ucfirst(str_replace('_', ' ', 'show_leave')), 'route' => 'leave.show'],
+            ['name' => ucfirst(str_replace('_', ' ', 'update_leave')), 'route' => 'leave.update'],
+            ['name' => ucfirst(str_replace('_', ' ', 'delete_leave')), 'route' => 'leave.destroy'],
         ];
         Feature::insert($features);
 
@@ -1203,6 +1246,25 @@ class DatabaseSeeder extends Seeder
                 'marital_status_id' => $maritalStatuses[array_rand($maritalStatuses)],
                 'bank_id' => $banks[array_rand($banks)],
             ]);
+        }
+
+        Deduction::insert([
+            ["name" => "BPJS Kesehatan"],
+            ["name" => "BPJS Ketenagakerjaan"],
+            ["name" => "PPn"],
+            ["name" => "Tapera"],
+        ]);
+
+        $deductions = Deduction::all();
+        foreach ($deductions as $deduction) {
+            $column_name = str_replace(' ', '_', $deduction->name);
+            $queries = [
+                "ALTER TABLE payrolls ADD COLUMN `{$column_name}` DOUBLE NULL",
+            ];
+
+            foreach ($queries as $query) {
+                DB::statement($query);
+            }
         }
 
     }

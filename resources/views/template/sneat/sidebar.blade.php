@@ -531,7 +531,13 @@
                 in_array('shift.index', $permissions) ||
                 in_array('attendance.index', $permissions) ||
                 in_array('overtime.index', $permissions) ||
-                in_array('checklog.index', $permissions)
+                in_array('checklog.index', $permissions) ||
+                in_array('allowance.index', $permissions) ||
+                in_array('deduction.index', $permissions) ||
+                in_array('payroll.index', $permissions) ||
+                in_array('day.index', $permissions) ||
+                in_array('holiday.index', $permissions) ||
+                in_array('leave.index', $permissions)
             )
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Human Resource</span>
@@ -553,7 +559,11 @@
                 in_array('title.index', $permissions) ||
                 in_array('employee_identity.index', $permissions) ||
                 in_array('employee.index', $permissions) ||
-                in_array('shift.index', $permissions)
+                in_array('shift.index', $permissions) ||
+                in_array('allowance.index', $permissions) ||
+                in_array('deduction.index', $permissions) ||
+                in_array('day.index', $permissions) ||
+                in_array('holiday.index', $permissions)
             )
             <li
                 class="menu-item
@@ -572,6 +582,10 @@
                 @yield('employee_identity-active')
                 @yield('employee-active')
                 @yield('shift-active')
+                @yield('allowance-active')
+                @yield('deduction-active')
+                @yield('day-active')
+                @yield('holiday-active')
             ">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
@@ -698,6 +712,38 @@
                             </a>
                         </li>
                     @endif
+                    @if (in_array('allowance.index', $permissions))
+                    <li class="menu-item @yield('allowance-active')">
+                        <a href="{{ route('allowance.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'allowance')) }}
+                            </div>
+                        </a>
+                    </li>
+                    @endif
+                    @if (in_array('deduction.index', $permissions))
+                    <li class="menu-item @yield('deduction-active')">
+                        <a href="{{ route('deduction.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'deduction')) }}
+                            </div>
+                        </a>
+                    </li>
+                    @endif
+                    @if (in_array('day.index', $permissions))
+                    <li class="menu-item @yield('day-active')">
+                        <a href="{{ route('day.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'day')) }}
+                            </div>
+                        </a>
+                    </li>
+                    @endif
+                    @if (in_array('holiday.index', $permissions))
+                    <li class="menu-item @yield('holiday-active')">
+                        <a href="{{ route('holiday.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'holiday')) }}
+                            </div>
+                        </a>
+                    </li>
+                    @endif
                 </ul>
             </li>
         @endif
@@ -705,13 +751,17 @@
         @if (
                 in_array('attendance.index', $permissions) ||
                 in_array('overtime.index', $permissions) ||
-                in_array('checklog.index', $permissions)
+                in_array('checklog.index', $permissions) ||
+                in_array('payroll.index', $permissions) ||
+                in_array('leave.index', $permissions)
             )
             <li
                 class="menu-item
                 @yield('attendance-active')
                 @yield('overtime-active')
                 @yield('checklog-active')
+                @yield('payroll-active')
+                @yield('leave-active')
             ">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
@@ -741,6 +791,22 @@
                             </div>
                         </a>
                     </li>
+                @endif
+                @if (in_array('leave.index', $permissions))
+                    <li class="menu-item @yield('leave-active')">
+                        <a href="{{ route('leave.index') }}" class="menu-link">
+                            <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'leave')) }}
+                            </div>
+                        </a>
+                    </li>
+                @endif
+                @if (in_array('payroll.index', $permissions))
+                <li class="menu-item @yield('payroll-active')">
+                    <a href="{{ route('payroll.index') }}" class="menu-link">
+                        <div data-i18n="Without menu">{{ ucwords(str_replace('_', ' ', 'payroll')) }}
+                        </div>
+                    </a>
+                </li>
                 @endif
             </ul>
         @endif

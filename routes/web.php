@@ -1,11 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DayController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SetupController;
@@ -18,8 +20,10 @@ use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PostingController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TaxRateController;
@@ -32,7 +36,9 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\OvertimeController;
 use App\Http\Controllers\ReligionController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\AllowanceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\RepaymentController;
 use App\Http\Controllers\WarehouseController;
@@ -134,6 +140,12 @@ Route::resource('/employee', EmployeeController::class)->middleware(['auth', 'ch
 Route::resource('/shift', ShiftController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/attendance', AttendanceController::class)->middleware(['auth', 'check.permission']);
 Route::resource('/overtime', OvertimeController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/leave', LeaveController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/allowance', AllowanceController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/deduction', DeductionController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/day', DayController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/holiday', HolidayController::class)->middleware(['auth', 'check.permission']);
+Route::resource('/payroll', PayrollController::class)->middleware(['auth', 'check.permission']);
 Route::get('/checklog', [ChecklogController::class, 'index'])->name('checklog.index')->middleware(['auth', 'check.permission']);
 Route::get('/checklog/create', [ChecklogController::class, 'create'])->name('checklog.create')->middleware(['auth', 'check.permission']);
 Route::post('/checklog', [ChecklogController::class, 'store'])->name('checklog.store')->middleware(['auth', 'check.permission']);
