@@ -71,7 +71,9 @@ class PayrollController extends Controller
     {
         $setup = Setup::init();
         $payroll = Payroll::findOrFail($id);
-        return view('payroll.show', compact('setup', 'payroll'));
+        $allowances = Allowance::all();
+        $deductions = Deduction::all();
+        return view('payroll.show', compact('setup', 'payroll', 'allowances', 'deductions'));
     }
 
     /**
