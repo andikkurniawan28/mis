@@ -26,6 +26,7 @@ return new class extends Migration
             $table->double('leave');
             $table->float('leave_credit');
             $table->double('incentive');
+            $table->double('net_salary');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

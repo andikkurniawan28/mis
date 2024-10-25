@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Carbon\Carbon;
 use App\Models\Day;
 use App\Models\Bank;
 use App\Models\Role;
@@ -28,6 +29,7 @@ use App\Models\Supplier;
 use App\Models\Deduction;
 use App\Models\Education;
 use App\Models\Warehouse;
+use App\Models\Attendance;
 use App\Models\Department;
 use App\Models\Permission;
 use App\Models\SubAccount;
@@ -1294,6 +1296,34 @@ class DatabaseSeeder extends Seeder
             ["date" => "2025-10-05", "name" => "Maulid Nabi Muhammad SAW"],
             ["date" => "2025-12-25", "name" => "Hari Raya Natal"],
         ]);
+
+        $employee = Employee::first();
+        $employee_id = $employee->id;
+        $shift_id = 1;
+        $startDate = Carbon::create(2024, 9, 20);
+        $endDate = Carbon::create(2024, 10, 20);
+        while ($startDate->lte($endDate)) {
+            Attendance::insert([
+                'date' => $startDate->toDateString(),
+                'employee_id' => $employee_id,
+                'shift_id' => $shift_id,
+                'check_in' => '07:00:00',
+                'check_out' => '15:00:00',
+                'break' => null,
+                'early_check_in' => 0,
+                'late_check_in' => 0,
+                'early_check_out' => 0,
+                'late_check_out' => 0,
+                'early_break' => null,
+                'late_break' => null,
+                'credit' => 1,
+                'basic_salary' => 120000,
+                'net_salary' => 120000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $startDate->addDay();
+        }
 
     }
 }

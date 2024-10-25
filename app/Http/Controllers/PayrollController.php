@@ -54,24 +54,24 @@ class PayrollController extends Controller
         $request->request->add([
             "year" => date("Y", strtotime($request->month)),
             "month" => date("F", strtotime($request->month)),
-            "salary" => Attendance::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('net_salary'),
-            "attendance_credit" => Attendance::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('credit'),
-            "overtime" => Overtime::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('net_overtime'),
-            "overtime_credit" => Overtime::where('employee_id', $request->employee_id)->whereBetween('date', [$request->from, $request->to])->sum('credit'),
-            "leave" => Leave::where('employee_id', $request->employee_id)->whereBetween('to', [$request->from, $request->to])->sum('net_leave'),
-            "leave_credit" => Leave::where('employee_id', $request->employee_id)->whereBetween('to', [$request->from, $request->to])->sum('credit'),
-            "incentive" => $employee->title->incentive,
         ]);
-        return $request;
+        $payroll_exist = Payroll::where('month', $request->month)->where('year', $request->year)->first();
+        if(!$payroll_exist){
+            Payroll::create($request->all());
+            return redirect()->back()->with("success", "Payroll has been recorded");
+        }
+        return redirect()->back()->with("fail", "Payroll has been recorded for today. Come back tomorrow.");
     }
 
 
     /**
      * Display the specified resource.
      */
-    public function show(Payroll $payroll)
+    public function show($id)
     {
-        //
+        $setup = Setup::init();
+        $payroll = Payroll::findOrFail($id);
+        return view('payroll.show', compact('setup', 'payroll'));
     }
 
     /**

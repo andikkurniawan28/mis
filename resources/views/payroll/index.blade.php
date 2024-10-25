@@ -24,11 +24,9 @@
                             <tr>
                                 <th>{{ strtoupper(str_replace('_', ' ', 'id')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'employee')) }}</th>
-                                {{-- <th>{{ ucwords(str_replace('_', ' ', 'date')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'check_in')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'check_out')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'credit')) }}</th>
-                                <th>{{ ucwords(str_replace('_', ' ', 'net_payroll')) }}</th> --}}
+                                <th>{{ ucwords(str_replace('_', ' ', 'month')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'year')) }}</th>
+                                <th>{{ ucwords(str_replace('_', ' ', 'net_salary')) }}</th>
                                 <th>{{ ucwords(str_replace('_', ' ', 'action')) }}</th>
                             </tr>
                         </thead>
@@ -63,32 +61,31 @@
                         data: 'employee_id',
                         name: 'employee.name'
                     },
-                    // {
-                    //     data: 'date',
-                    //     name: 'date'
-                    // },
-                    // {
-                    //     data: 'check_in',
-                    //     name: 'check_in'
-                    // },
-                    // {
-                    //     data: 'check_out',
-                    //     name: 'check_out'
-                    // },
-                    // {
-                    //     data: 'credit',
-                    //     name: 'credit'
-                    // },
-                    // {
-                    //     data: 'net_payroll',
-                    //     name: 'net_payroll'
-                    // },
+                    {
+                        data: 'month',
+                        name: 'month'
+                    },
+                    {
+                        data: 'year',
+                        name: 'year'
+                    },
+                    {
+                        data: 'net_salary',
+                        name: 'net_salary',
+                        class: 'text-right',
+                        render: function(data, type, row) {
+                            return data === '-' ? '-' : parseFloat(data).toLocaleString('en-US', {
+                                maximumFractionDigits: 0 // Menghapus angka di belakang koma
+                            });
+                        }
+                    },
                     {
                         data: null,
                         name: 'actions',
                         render: function(data, type, row) {
                             return `
                                 <div class="btn-group" role="group" aria-label="manage">
+                                    <a href="{{ url('payroll') }}/${row.id}" class="btn btn-info btn-sm">Show</a>
                                     <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="${row.id}" data-name="${row.id}">Delete</button>
                                 </div>
                             `;

@@ -87,7 +87,6 @@
                                 </div>
                             </div>
 
-
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="overtime">
                                     {{ ucwords(str_replace('_', ' ', 'overtime')) }}
@@ -135,25 +134,34 @@
 
                             @foreach($allowances as $allowance)
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="{{ $allowance->name }}">
+                                <label class="col-sm-2 col-form-label" for="{{ ucwords(str_replace(' ', '_', $allowance->name)) }}">
                                     {{ ucwords(str_replace('_', ' ', $allowance->name)) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="number" id="{{ $allowance->name }}" name="{{ $allowance->name }}" class="form-control" value="" required>
+                                    <input type="number" id="{{ ucwords(str_replace(' ', '_', $allowance->name)) }}" name="{{ ucwords(str_replace(' ', '_', $allowance->name)) }}" class="form-control" value="" required>
                                 </div>
                             </div>
                             @endforeach
 
                             @foreach($deductions as $deduction)
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="{{ $deduction->name }}">
+                                <label class="col-sm-2 col-form-label" for="{{ ucwords(str_replace(' ', '_', $deduction->name)) }}">
                                     {{ ucwords(str_replace('_', ' ', $deduction->name)) }}
                                 </label>
                                 <div class="col-sm-10">
-                                    <input type="number" id="{{ $deduction->name }}" name="{{ $deduction->name }}" class="form-control" value="" required>
+                                    <input type="number" id="{{ ucwords(str_replace(' ', '_', $deduction->name)) }}" name="{{ ucwords(str_replace(' ', '_', $deduction->name)) }}" class="form-control" value="" required>
                                 </div>
                             </div>
                             @endforeach
+
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="net_salary">
+                                    {{ ucwords(str_replace('_', ' ', 'net_salary')) }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="number" id="net_salary" name="net_salary" class="form-control" value="" readonly>
+                                </div>
+                            </div>
 
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
@@ -178,7 +186,7 @@
         });
 
         // Function to call API and update salary details
-        function calculateSalary() {
+        function fetchSalaryData() {
             var employee_id = $('#employee').val();
             var from = $('#from').val();
             var to = $('#to').val();
@@ -198,7 +206,9 @@
                     $('#leave').val(response.leave);
                     $('#leave_credit').val(response.leave_credit);
                     $('#incentive').val(response.incentive);
-                    // Handle other allowances or deductions if needed
+
+                    // Recalculate net salary after updating the fields
+                    calculateSalary();
                 },
                 error: function(xhr) {
                     console.error("Error fetching salary data:", xhr);
@@ -207,11 +217,54 @@
             });
         }
 
-        // Attach event listeners to employee, from, and to fields
+        // Function to calculate net salary
+        function calculateSalary() {
+            console.log("calculateSalary");
+
+            // Parse the input values
+            var salary = parseFloat($('#salary').val()) || 0;
+            var overtime = parseFloat($('#overtime').val()) || 0;
+            var leave = parseFloat($('#leave').val()) || 0;
+            var incentive = parseFloat($('#incentive').val()) || 0;
+
+            // Calculate total allowances
+            var totalAllowances = 0;
+            @foreach($allowances as $allowance)
+                totalAllowances += parseFloat($('#{{ ucwords(str_replace(' ', '_', $allowance->name)) }}').val()) || 0;
+            @endforeach
+
+            // Calculate total deductions
+            var totalDeductions = 0;
+            @foreach($deductions as $deduction)
+                totalDeductions += parseFloat($('#{{ ucwords(str_replace(' ', '_', $deduction->name)) }}').val()) || 0;
+            @endforeach
+
+            // Calculate net salary
+            var netSalary = salary + overtime + leave + incentive + totalAllowances - totalDeductions;
+
+            // Update net_salary field
+            $('#net_salary').val(netSalary.toFixed(0));
+        }
+
+        // Attach event listeners to fields for fetching salary data
         $('#employee, #from, #to').change(function() {
-            calculateSalary();
+            fetchSalaryData();
         });
+
+        // Recalculate salary when allowances or deductions change
+        @foreach($allowances as $allowance)
+            $('#{{ ucwords(str_replace(' ', '_', $allowance->name)) }}').on('input', function() {
+                calculateSalary();
+            });
+        @endforeach
+
+        @foreach($deductions as $deduction)
+            $('#{{ ucwords(str_replace(' ', '_', $deduction->name)) }}').on('input', function() {
+                calculateSalary();
+            });
+        @endforeach
     });
+
 </script>
 @endsection
 
